@@ -1,0 +1,22 @@
+.search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+app-category-filter {
+    flex: 1.5;
+}
+
+app-location-search {
+    flex: 2;
+}
+
+app-radius-filter {
+    flex: 1;
+}
+
+app-price-range-filter {
+    flex: 2;
+}

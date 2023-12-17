@@ -1,0 +1,14 @@
+<form [formGroup]="priceForm">
+    <div class="price-range d-flex flex-column">
+        <mat-slider 
+        [min]="minPriceRange" 
+        [max]="maxPriceRange">
+            <input id="minPrice" matSliderStartThumb formControlName="minPrice">
+            <input id="maxPrice" matSliderEndThumb formControlName="maxPrice">
+        </mat-slider>
+        <div class="price-values d-flex justify-content-between">
+            <label for="minPrice">{{priceForm.get('minPrice')?.value || minPriceRange}} €</label>
+            <label for="maxPrice">{{priceForm.get('maxPrice')?.value || minPriceRange}} €</label>
+        </div>
+    </div>
+</form>

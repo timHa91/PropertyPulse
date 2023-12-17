@@ -1,0 +1,21 @@
+<mat-card class="search-item">
+    <div class="flex-container">
+        <mat-card-header class="search-item-header">
+            <div class="search-item-image">
+                <img mat-card-lg-image [src]="item.images" alt="">
+            </div>
+            <div class="search-item-title">
+                <mat-card-title>{{item.adress}}</mat-card-title>
+                <mat-card-subtitle>{{item.description}}</mat-card-subtitle>
+            </div>
+        </mat-card-header>
+        <mat-card-content align="end">
+            <mat-card-actions align="end">
+                <button mat-button>Detail</button>
+                <button mat-button>Bookmark</button>
+            </mat-card-actions>
+            <p>€ {{item.price}}</p>
+            <p>{{item.category}}</p>
+        </mat-card-content>
+    </div>
+</mat-card>
