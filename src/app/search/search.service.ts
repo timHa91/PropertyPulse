@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
 import { RealEstateItem } from "../shared/real-estate-item.model";
 import { Category } from "../shared/category.enum";
-import { SearchCriteria } from "./search.model";
+import { SearchCriteria } from "./search-criteria.model";
 
 @Injectable({providedIn: 'root'})
 export class SearchService {

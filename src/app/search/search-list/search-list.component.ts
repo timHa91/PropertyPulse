@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { SearchService } from "../search.service";
 import { RealEstateItem } from "src/app/shared/real-estate-item.model";
-import { SearchCriteria } from "../search.model";
+import { SearchCriteria } from "../search-criteria.model";
 
 @Component({
     selector: 'app-search-list',
