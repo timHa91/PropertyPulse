@@ -8,7 +8,7 @@ import { SearchService } from "../search.service";
 import { SearchCriteria } from "../search-criteria.model";
 import { Category } from "src/app/shared/category.enum";
 import { debounceTime, takeUntil } from "rxjs/operators";
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-search-bar',
@@ -22,17 +22,16 @@ export class SearchBarComponent implements AfterViewInit, OnDestroy {
     @ViewChild(RadiusFilterComponent) radiusFilter?: RadiusFilterComponent;
 
     searchForm!: FormGroup;
-    private unsubscribe$ = new Subject<void>();
+    private subscription!: Subscription;
 
     constructor(private searchService: SearchService) {}
 
     ngOnInit(): void {
         this.searchForm = new FormGroup({});
 
-        this.searchForm.valueChanges
+        this.subscription = this.searchForm.valueChanges
         .pipe(
-            debounceTime(500),
-            takeUntil(this.unsubscribe$)
+            debounceTime(500)
         )
         .subscribe(searchForm => {
             const convertedSearchForm = this.transformToSearchCriteria(searchForm);
@@ -48,10 +47,9 @@ export class SearchBarComponent implements AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.unsubscribe$.next();
-        this.unsubscribe$.complete();
+        this.subscription.unsubscribe();
     }
-    
+
     private transformToSearchCriteria(obj: any): SearchCriteria {
         const searchCriteria = new SearchCriteria();
 

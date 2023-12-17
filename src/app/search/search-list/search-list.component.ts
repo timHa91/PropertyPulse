@@ -25,6 +25,9 @@ export class SearchListComponent implements OnInit {
 
     private filterList(criteria: SearchCriteria) {
         this.filteredList = this.orginalList.filter(item => {
+
+            if (criteria.category && criteria.category.length <= 0) return false;
+
             let meetsCriteria = true;
     
             if (criteria.category != undefined && criteria.category.length > 0) {
