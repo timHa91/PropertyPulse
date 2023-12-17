@@ -54,6 +54,7 @@ export class SearchBarComponent implements AfterViewInit, OnDestroy {
         const searchCriteria = new SearchCriteria();
 
         if (obj.category) {
+            // Umwandlung Category Object aus dem Form in ein Category[]
             const categoryArray: Category[] = [];
             Object.entries(obj.category).forEach(([key, value]) => {
                 if (value === true) {
