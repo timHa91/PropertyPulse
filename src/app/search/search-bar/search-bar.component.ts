@@ -7,8 +7,8 @@ import { RadiusFilterComponent } from "./radius-filter/radius-filter.component";
 import { SearchService } from "../search.service";
 import { SearchCriteria } from "../search-criteria.model";
 import { Category } from "src/app/shared/category.enum";
-import { debounceTime, takeUntil } from "rxjs/operators";
-import { Subject, Subscription } from 'rxjs';
+import { debounceTime } from "rxjs/operators";
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-search-bar',

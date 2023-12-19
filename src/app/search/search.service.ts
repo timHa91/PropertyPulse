@@ -3,11 +3,13 @@ import { Subject } from "rxjs";
 import { RealEstateItem } from "../shared/real-estate-item.model";
 import { Category } from "../shared/category.enum";
 import { SearchCriteria } from "./search-criteria.model";
+import { PriceRange } from "../shared/price-range.model";
 
 @Injectable({providedIn: 'root'})
 export class SearchService {
 
     onUpdateList = new Subject<SearchCriteria>();
+    onPriceRangeChanged = new Subject<PriceRange>();
 
     searchResults: RealEstateItem[] = [
         {
@@ -43,5 +45,4 @@ export class SearchService {
     getAllResults() {
         return this.searchResults.slice();
     }
-
 }

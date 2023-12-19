@@ -16,6 +16,7 @@ import { SearchFilterComponent } from "./search-list-filter/search-list-filter.c
 import { SearchItemComponent } from "./search-list/search-item/search-item.component";
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
+import { MapComponent } from "../map/map.component";
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import {MatButtonModule} from '@angular/material/button';
         SearchListComponent,
         SearchDetailComponent,
         SearchFilterComponent,
-        SearchItemComponent
+        SearchItemComponent,
+        MapComponent
     ],
     imports: [
         CommonModule,
