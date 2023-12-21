@@ -1,33 +1,42 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, AfterViewChecked, AfterViewInit } from "@angular/core";
 import { SearchService } from "../search.service";
 import { RealEstateItem } from "src/app/shared/real-estate-item.model";
 import { SearchCriteria } from "../search-criteria.model";
 import { Subscription } from "rxjs";
 import { PriceRange } from "src/app/shared/price-range.model";
+import { MapboxService } from "src/app/map/map.service";
 
 @Component({
     selector: 'app-search-list',
     templateUrl: './search-list.component.html',
     styleUrls: ['./search-list.component.css']
 })
-export class SearchListComponent implements OnInit, OnDestroy {
+export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
 
     originalList: RealEstateItem[] = [];
     filteredList: RealEstateItem[] = [];
 
     subscripton!: Subscription
 
-    constructor(private searchService: SearchService) {}
+    constructor(private searchService: SearchService,
+                private mapService: MapboxService        
+        ) {}
 
     ngOnInit(): void {
         this.originalList = this.searchService.getAllResults();
         this.filteredList = this.originalList;
         this.subscripton = this.searchService.onUpdateList.subscribe( searchCriteria => {
             this.filterList(searchCriteria);
-            
+            this.setAllMarkers();
             const newPriceRange = this.getPriceRange();
+
             this.searchService.onPriceRangeChanged.next(newPriceRange);
         });
+    }
+
+    ngAfterViewInit(): void {
+        this.mapService.initializeMap(this.filteredList);
+        this.setAllMarkers();
     }
 
     ngOnDestroy(): void {
@@ -73,9 +82,9 @@ export class SearchListComponent implements OnInit, OnDestroy {
         return item.price <= maxPrice;
     }
 
-    private getPriceRangeFromList(): PriceRange {
-        let minPrice = Math.min(...this.filteredList.map(item => item.price));
-        let maxPrice = Math.max(...this.filteredList.map(item => item.price));
-        return {'minPrice': minPrice, 'maxPrice': maxPrice};
+    private setAllMarkers() {
+        this.filteredList.forEach( item => {
+            this.mapService.setMarker(item.geometry.geometry.coordinates)
+        });
     }
 }

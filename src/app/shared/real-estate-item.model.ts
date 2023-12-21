@@ -1,4 +1,5 @@
 import { Category } from "./category.enum"
+import { GeoJson } from "./geo.model"
 
 export class RealEstateItem {
     description: string
@@ -6,6 +7,7 @@ export class RealEstateItem {
     images: string[]
     price: number
     category: Category
+    geometry: GeoJson
 
     constructor(obj?: any) {
         this.description = obj && obj.description || null;
@@ -13,5 +15,6 @@ export class RealEstateItem {
         this.address = obj && obj.adress || null;
         this.price = obj && obj.price || null;
         this.category = obj && obj.category || [];
+        this.geometry = obj && obj.geometry || null;
     }
 }

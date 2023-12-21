@@ -17,6 +17,7 @@ import { SearchItemComponent } from "./search-list/search-item/search-item.compo
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
 import { MapComponent } from "../map/map.component";
+import {HttpClientModule} from '@angular/common/http'
 
 
 @NgModule({
@@ -41,7 +42,8 @@ import { MapComponent } from "../map/map.component";
         ReactiveFormsModule,
         MatInputModule,
         MatCardModule,
-        MatButtonModule
+        MatButtonModule,
+        HttpClientModule
     ]
 })
 export class SearchModule {

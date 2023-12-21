@@ -1,0 +1,11 @@
+.search-content {
+    display: flex;
+}
+
+app-search-list {
+    flex: 1;
+}
+
+app-map {
+    flex: 1;
+}
