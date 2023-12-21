@@ -45,6 +45,7 @@ export class SearchService {
             category: Category.Sale,
             geometry: new GeoJson ([-76.916156, 38.896954])
         },
+        
     ]
 
     getAllResults() {

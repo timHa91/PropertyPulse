@@ -8,4 +8,5 @@ app-search-list {
 
 app-map {
     flex: 1;
+    height: 87.5vh;
 }
