@@ -18,6 +18,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
 import { MapComponent } from "../map/map.component";
 import {HttpClientModule} from '@angular/common/http'
+import { PaginationControlsComponent } from "../pagination-controls/pagination-controls.component";
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import {HttpClientModule} from '@angular/common/http'
         SearchDetailComponent,
         SearchFilterComponent,
         SearchItemComponent,
-        MapComponent
+        MapComponent,
+        PaginationControlsComponent
     ],
     imports: [
         CommonModule,
@@ -43,7 +45,7 @@ import {HttpClientModule} from '@angular/common/http'
         MatInputModule,
         MatCardModule,
         MatButtonModule,
-        HttpClientModule
+        HttpClientModule,
     ]
 })
 export class SearchModule {

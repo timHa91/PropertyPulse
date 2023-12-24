@@ -1,10 +1,14 @@
-import { Component, OnInit, OnDestroy, AfterViewChecked, AfterViewInit } from "@angular/core";
+import { Component, OnInit, OnDestroy, AfterViewInit } from "@angular/core";
 import { SearchService } from "../search.service";
 import { RealEstateItem } from "src/app/shared/real-estate-item.model";
 import { SearchCriteria } from "../search-criteria.model";
 import { Subscription, map, of, switchMap } from "rxjs";
 import { PriceRange } from "src/app/shared/price-range.model";
 import { MapboxService } from "src/app/map/map.service";
+import { PaginationService } from "../pagination.service";
+
+const EARTH_RADIUS_IN_METERS = 6371e3;
+const METER_CONVERSION_FACTOR = 1000;
 
 @Component({
     selector: 'app-search-list',
@@ -15,102 +19,79 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
 
     originalList: RealEstateItem[] = [];
     filteredList: RealEstateItem[] = [];
-
-    subscripton!: Subscription
+    paginatedList: RealEstateItem[] = [];
+    page: number = 1;
+    itemsPerPage: number = 2;
+    filterChangesSubscription!: Subscription
 
     constructor(private searchService: SearchService,
-                private mapService: MapboxService        
-        ) {}
+                private mapService: MapboxService,
+                private paginationService: PaginationService) {}
 
-        ngOnInit(): void {
-            this.originalList = this.searchService.getAllResults();
-            this.filteredList = this.originalList;
-
-            this.subscripton = this.searchService.onUpdateList.pipe(
-                switchMap( searchCriteria => {
-                    if (searchCriteria.location && searchCriteria.radius) {
-                        return this.mapService.forwardGeocoder(searchCriteria.location.toLowerCase()).pipe(
-                            map(searchLocation => {
-                                this.filteredList = this.originalList.filter(item => this.doesItemMeetCriteria(item, searchCriteria, searchLocation));
-                            })
-                        );
-                    } else {
-                        this.filteredList = this.originalList.filter(item => this.doesItemMeetCriteria(item, searchCriteria));
-                        return of(null);
-                    }
-                })
-            ).subscribe(() => {
-                this.mapService.removeAllMarkers();
-                this.setAllMarkers();
-                const newPriceRange = this.getPriceRange();
-                this.searchService.onPriceRangeChanged.next(newPriceRange);
-            });
-        }
+    ngOnInit(): void {
+        this.originalList = this.searchService.getAllResults();
+        this.filteredList = this.originalList;
+        this.updatePaginationList(this.page);
+        this.filterChangesSubscription = this.subscribeToFilterChanges();
+    }    
 
     ngAfterViewInit(): void {
-        this.mapService.initializeMap(this.filteredList);
-        this.setAllMarkers();
+        // Argument is used to center to map based on the location of all items in a List
+        this.mapService.initializeMap(this.originalList);
     }
 
     ngOnDestroy(): void {
-        this.subscripton.unsubscribe();
+        this.filterChangesSubscription.unsubscribe();
     }
 
-    private getPriceRange(): PriceRange {
+    private calculatePriceRange(): PriceRange {
        const minPrice = Math.min(...this.filteredList.map(item => item.price));
        const maxPrice = Math.max(...this.filteredList.map(item => item.price));
        return {'minPrice': minPrice, 'maxPrice': maxPrice};
     }  
 
-    private doesItemMeetCriteria(item: RealEstateItem, criteria: SearchCriteria, searchLocation?: [number, number]): boolean {
+    private isItemMatchingCriteria(item: RealEstateItem, criteria: SearchCriteria, searchLocation?: [number, number]): boolean {
         if (!criteria.category || criteria.category.length <= 0) return false;
 
         let meetsCriteria = true;
 
-        meetsCriteria = meetsCriteria && this.filterByCategory(item, criteria.category);
+        meetsCriteria = meetsCriteria && this.isItemInCategory(item, criteria.category);
         if (criteria.location && !criteria.radius) {
-            meetsCriteria = meetsCriteria && this.filterByLocation(item, criteria.location)
+            meetsCriteria = meetsCriteria && this.isItemInLocation(item, criteria.location)
          } else {
             if (criteria.location && criteria.radius && searchLocation) {
-                meetsCriteria = meetsCriteria && this.filterByRadius(item, criteria.radius, searchLocation)
+                meetsCriteria = meetsCriteria && this.isItemInRadius(item, criteria.radius, searchLocation)
             };
          };
-        if (criteria.minPrice) meetsCriteria = meetsCriteria && this.filterByMinPrice(item, criteria.minPrice);
-        if (criteria.maxPrice) meetsCriteria = meetsCriteria && this.filterByMaxPrice(item, criteria.maxPrice);
+        if (criteria.minPrice) meetsCriteria = meetsCriteria && this.isItemAboveMinPrice(item, criteria.minPrice);
+        if (criteria.maxPrice) meetsCriteria = meetsCriteria && this.isItemBelowMaxPrice(item, criteria.maxPrice);
         
         return meetsCriteria;
     }
 
-    private filterByCategory(item: RealEstateItem, category: string[]): boolean {
+    private isItemInCategory(item: RealEstateItem, category: string[]): boolean {
         return category.includes(item.category);
     }
 
-    private filterByLocation(item: RealEstateItem, location: string): boolean {
+    private isItemInLocation(item: RealEstateItem, location: string): boolean {
         return item.address.toLowerCase().includes(location.toLowerCase());
     }
 
-    private filterByMinPrice(item: RealEstateItem, minPrice: number): boolean {
+    private isItemAboveMinPrice(item: RealEstateItem, minPrice: number): boolean {
         return item.price >= minPrice;
     }
 
-    private filterByMaxPrice(item: RealEstateItem, maxPrice: number): boolean {
+    private isItemBelowMaxPrice(item: RealEstateItem, maxPrice: number): boolean {
         return item.price <= maxPrice;
     }
 
-    private filterByRadius(item: RealEstateItem, radius: number, searchLocation: [number, number]): boolean {
-        const lat1 = searchLocation[1];
-        const lon1 = searchLocation[0];
-        const lat2 = item.geometry.geometry.coordinates[1];
-        const lon2 = item.geometry.geometry.coordinates[0];
-        const radiusMeter = radius * 1000;
-    
-        if (radius == null) {
-            return true;
-        }
+    private isItemInRadius(item: RealEstateItem, radius: number, searchLocation: [number, number]): boolean {
+        const [lon1, lat1] = searchLocation;
+        const [lon2, lat2] = item.geometry.geometry.coordinates;
+        const radiusInMeters = radius * METER_CONVERSION_FACTOR;
 
-        const R = 6371e3; // Erdradius in Metern
-        const φ1 = lat1 * Math.PI/180; // Breitengrad in Radians
-        const φ2 = lat2 * Math.PI/180; // Breitengrad in Radians
+        const φ1 = lat1 * Math.PI/180;
+        const φ2 = lat2 * Math.PI/180;
         const Δφ = (lat2-lat1) * Math.PI/180;
         const Δλ = (lon2-lon1) * Math.PI/180;
     
@@ -119,14 +100,65 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
                 Math.sin(Δλ/2) * Math.sin(Δλ/2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
     
-        const d = R * c; // in meters        
+        const distanceInMeters = EARTH_RADIUS_IN_METERS * c;       
         
-        return d <= radiusMeter;
+        return distanceInMeters <= radiusInMeters;
     }
 
-    private setAllMarkers() {
-        this.filteredList.forEach( item => {
+    private placeAllMarkers() {
+        this.paginatedList.forEach( item => {
             this.mapService.setMarker(item.geometry.geometry.coordinates)
         });
     }
+
+    updatePaginationList(page: number) {
+        this.page = page;
+        let sliceStart = 0;
+        let sliceEnd = 0;
+        if(this.page === 1) {
+            sliceStart = 0;
+            sliceEnd = sliceStart + this.itemsPerPage;
+        } else {
+            sliceStart = (this.page - 1) * this.itemsPerPage;
+            sliceEnd = sliceStart + this.itemsPerPage;
+        }
+        this.paginatedList = this.filteredList.slice(sliceStart, sliceEnd);
+        
+        this.mapService.removeAllMarkers();
+        this.placeAllMarkers();
+        const newPriceRange = this.calculatePriceRange();
+        this.searchService.onPriceRangeChanged.next(newPriceRange);
+    }
+
+    private subscribeToFilterChanges() {
+       return this.searchService.onUpdateList.pipe(
+            switchMap( searchCriteria => {
+                // If Search bar AND Radius have a Value
+                if (searchCriteria.location && searchCriteria.radius) {
+                    // Get Geo Data for the Search Value
+                    return this.mapService.forwardGeocoder(searchCriteria.location.toLowerCase())
+                    .pipe(
+                        map(searchLocation => {
+                            // Filters with Radius
+                            this.filteredList = this.originalList.filter(item => this.isItemMatchingCriteria(item, searchCriteria, searchLocation));
+                        })
+                    );
+                } else {
+                    // Filters without Radius
+                    this.filteredList = this.originalList.filter(item => this.isItemMatchingCriteria(item, searchCriteria));
+                    return of(null);
+                }
+            })
+        ).subscribe(() => {
+            this.updatePaginationList(this.page);
+            this.isListEmptyAfterFilter();
+        });
+    }
+
+    private isListEmptyAfterFilter() {
+        if (this.paginatedList.length < 1) {
+            this.updatePaginationList(1)
+            this.paginationService.resetPaginationControl.next();
+        }
+    }   
 }

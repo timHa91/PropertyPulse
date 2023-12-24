@@ -39,6 +39,7 @@ export class SearchBarComponent implements AfterViewInit, OnDestroy {
         });
     }
 
+    // Add Child Controls after View init 
     ngAfterViewInit(): void {
         this.searchForm.addControl('category', this.categoryFilter?.categoryForm);
         this.searchForm.addControl('location', this.locationSearch?.locationForm);

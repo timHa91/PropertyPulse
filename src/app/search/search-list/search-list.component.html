@@ -1,2 +1,9 @@
 <app-search-list-filter></app-search-list-filter>
-<app-search-item [item]="result" *ngFor="let result of filteredList"></app-search-item>
+<app-search-item 
+[item]="result" *ngFor="let result of paginatedList">
+</app-search-item>
+<app-pagination-controls 
+[listSize]="filteredList.length"
+(pageChange)="updatePaginationList($event)"
+[itemsPerPage]="itemsPerPage">
+</app-pagination-controls>

@@ -10,6 +10,7 @@ body {
     font-size: 16px;
     line-height: 1.7;
     padding: 200px;
+    background-color: rgb(205, 209, 228);
 }
 
 html, body { height: 100%; }
