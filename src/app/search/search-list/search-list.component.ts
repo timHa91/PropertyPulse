@@ -20,8 +20,6 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
     originalList: RealEstateItem[] = [];
     filteredList: RealEstateItem[] = [];
     paginatedList: RealEstateItem[] = [];
-    page: number = 1;
-    itemsPerPage: number = 2;
     filterChangesSubscription!: Subscription
 
     constructor(private searchService: SearchService,
@@ -31,7 +29,7 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
     ngOnInit(): void {
         this.originalList = this.searchService.getAllResults();
         this.filteredList = this.originalList;
-        this.updatePaginationList(this.page);
+        this.paginatedList = this.paginationService.setPaginationList(this.paginationService.page, this.filteredList);
         this.filterChangesSubscription = this.subscribeToFilterChanges();
     }    
 
@@ -112,18 +110,8 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
     }
 
     updatePaginationList(page: number) {
-        this.page = page;
-        let sliceStart = 0;
-        let sliceEnd = 0;
-        if(this.page === 1) {
-            sliceStart = 0;
-            sliceEnd = sliceStart + this.itemsPerPage;
-        } else {
-            sliceStart = (this.page - 1) * this.itemsPerPage;
-            sliceEnd = sliceStart + this.itemsPerPage;
-        }
-        this.paginatedList = this.filteredList.slice(sliceStart, sliceEnd);
-        
+        this.paginationService.page = page;
+        this.paginatedList = this.paginationService.setPaginationList(this.paginationService.page, this.filteredList);
         this.mapService.removeAllMarkers();
         this.placeAllMarkers();
         const newPriceRange = this.calculatePriceRange();
@@ -150,7 +138,7 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
                 }
             })
         ).subscribe(() => {
-            this.updatePaginationList(this.page);
+            this.updatePaginationList(this.paginationService.page);
             this.isListEmptyAfterFilter();
         });
     }
@@ -160,5 +148,9 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
             this.updatePaginationList(1)
             this.paginationService.resetPaginationControl.next();
         }
-    }   
+    }    
+    
+    get itemsPerPage() {
+        return this.paginationService.getItemsPerPage();
+    }
 }
