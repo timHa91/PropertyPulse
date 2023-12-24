@@ -119,29 +119,48 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
     }
 
     private subscribeToFilterChanges() {
-       return this.searchService.onUpdateList.pipe(
-            switchMap( searchCriteria => {
-                // If Search bar AND Radius have a Value
-                if (searchCriteria.location && searchCriteria.radius) {
-                    // Get Geo Data for the Search Value
-                    return this.mapService.forwardGeocoder(searchCriteria.location.toLowerCase())
-                    .pipe(
-                        map(searchLocation => {
-                            // Filters with Radius
-                            this.filteredList = this.originalList.filter(item => this.isItemMatchingCriteria(item, searchCriteria, searchLocation));
-                        })
-                    );
-                } else {
-                    // Filters without Radius
-                    this.filteredList = this.originalList.filter(item => this.isItemMatchingCriteria(item, searchCriteria));
-                    return of(null);
-                }
-            })
-        ).subscribe(() => {
-            this.updatePaginationList(this.paginationService.page);
-            this.isListEmptyAfterFilter();
-        });
+        return this.searchService.onUpdateList.pipe(
+            switchMap(searchCriteria => this.applyFilters(searchCriteria))
+        ).subscribe(() => this.updateFilteredItems());
     }
+    
+    private applyFilters(searchCriteria: SearchCriteria) {
+        if (this.isLocationRadiusFilter(searchCriteria)) {
+            return this.filterByLocationRadius(searchCriteria);
+        } else {
+            this.filterWithoutRadius(searchCriteria);
+            return of(null);
+        }
+    }
+    
+    private isLocationRadiusFilter(searchCriteria: SearchCriteria) {
+        return searchCriteria.location && searchCriteria.radius;
+    }
+    
+    private filterByLocationRadius(searchCriteria: SearchCriteria) {
+        if (searchCriteria.location) {
+            return this.mapService.forwardGeocoder(searchCriteria.location.toLowerCase()).pipe(
+                map(searchLocation => {
+                    this.filteredList = this.originalList.filter(item =>
+                        this.isItemMatchingCriteria(item, searchCriteria, searchLocation)
+                    );
+                })
+            );
+        }
+        return of(null);
+    }
+    
+    private filterWithoutRadius(searchCriteria: SearchCriteria) {
+        this.filteredList = this.originalList.filter(item =>
+            this.isItemMatchingCriteria(item, searchCriteria)
+        );
+    }
+    
+    private updateFilteredItems() {
+        this.updatePaginationList(this.paginationService.page);
+        this.isListEmptyAfterFilter();
+    }
+    
 
     private isListEmptyAfterFilter() {
         if (this.paginatedList.length < 1) {
