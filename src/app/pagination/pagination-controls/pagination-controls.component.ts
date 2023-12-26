@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { PaginationService } from '../search/pagination.service';
+import { PaginationService } from '../pagination.service';
 
 @Component({
   selector: 'app-pagination-controls',

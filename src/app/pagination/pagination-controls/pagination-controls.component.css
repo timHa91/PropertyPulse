@@ -1,0 +1,50 @@
+.pagination-control {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+}
+
+.pagination-page p {
+    margin: 0;
+}
+
+.pagination-next img, .pagination-previous img{
+    width: 30px;
+    height: 30px;
+}
+
+.pagination-previous, .pagination-next {
+    width: 50px;
+}
+
+.results, .pagination-next, .pagination-previous {
+    flex-grow: 1;
+}
+
+
+.results {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.current-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 40px;
+}
+
+.rotate180 {
+    -webkit-transform: rotate(180deg); /* Safari and Chrome */
+    -moz-transform: rotate(180deg);    /* Firefox */
+    -ms-transform: rotate(180deg);     /* IE 9 */
+    -o-transform: rotate(180deg);      /* Opera */
+    transform: rotate(180deg);         /* Standard syntax */
+  }

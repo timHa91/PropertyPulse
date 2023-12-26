@@ -1,6 +1,0 @@
-<div class="pagination-previous" [class.disabled]="page === 1">
-    <a *ngIf="page !== 1" (click)="previous()">Previous</a>
-</div>
-<div class="pagination-next" [class.disabled]="page < listSize / itemsPerPage">
-    <a *ngIf="page < listSize / itemsPerPage" (click)="next()">Next</a>
-</div>

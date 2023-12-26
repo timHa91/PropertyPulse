@@ -1,3 +1,7 @@
-.pagination-control {
-    margin-top: 20px;
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 }

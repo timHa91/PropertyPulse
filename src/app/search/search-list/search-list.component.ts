@@ -5,7 +5,7 @@ import { SearchCriteria } from "../search-criteria.model";
 import { Subscription, map, of, switchMap } from "rxjs";
 import { PriceRange } from "src/app/shared/price-range.model";
 import { MapboxService } from "src/app/map/map.service";
-import { PaginationService } from "../pagination.service";
+import { PaginationService } from "../../pagination/pagination.service";
 
 const EARTH_RADIUS_IN_METERS = 6371e3;
 const METER_CONVERSION_FACTOR = 1000;
@@ -48,7 +48,12 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
        return {'minPrice': minPrice, 'maxPrice': maxPrice};
     }  
 
-    private isItemMatchingCriteria(item: RealEstateItem, criteria: SearchCriteria, searchLocation?: [number, number]): boolean {
+    private isItemMatchingCriteria(
+        item: RealEstateItem, 
+        criteria: SearchCriteria, 
+        searchLocation?: [number, number])
+        : boolean 
+    {
         if (!criteria.category || criteria.category.length <= 0) return false;
 
         let meetsCriteria = true;

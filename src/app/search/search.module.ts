@@ -12,13 +12,15 @@ import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from "@angular/common";
 import { SearchListComponent } from "./search-list/search-list.component";
 import { SearchDetailComponent } from "./search-detail/search-detail.component";
-import { SearchFilterComponent } from "./search-list-filter/search-list-filter.component";
+import { SearchSortComponent } from "./search-list-sort/search-list-sort.component";
 import { SearchItemComponent } from "./search-list/search-item/search-item.component";
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
 import { MapComponent } from "../map/map.component";
 import {HttpClientModule} from '@angular/common/http'
-import { PaginationControlsComponent } from "../pagination-controls/pagination-controls.component";
+import { PaginationControlsComponent } from "../pagination/pagination-controls/pagination-controls.component";
+import {MatSelectModule} from '@angular/material/select';
+
 
 
 @NgModule({
@@ -31,7 +33,7 @@ import { PaginationControlsComponent } from "../pagination-controls/pagination-c
         LocationSearchComponent,
         SearchListComponent,
         SearchDetailComponent,
-        SearchFilterComponent,
+        SearchSortComponent,
         SearchItemComponent,
         MapComponent,
         PaginationControlsComponent
@@ -46,6 +48,7 @@ import { PaginationControlsComponent } from "../pagination-controls/pagination-c
         MatCardModule,
         MatButtonModule,
         HttpClientModule,
+        MatSelectModule
     ]
 })
 export class SearchModule {
