@@ -13,19 +13,24 @@ export class SearchSortComponent implements OnInit{
     rotate = true;
     selectedDirection: string = SortDirection.Ascending;
     isDistance: boolean = true;
+    location: string = '';
     @Output() triggerSort = new EventEmitter<SortDescriptor>();
     @Input() triggerReset!: Subject<void>;
-    @Input() hasLocation!: Subject<boolean>;
+    @Input() hasLocation!: Subject<{hasValue: boolean, locationValue: string}>;
 
     ngOnInit(): void {
         this.selected.valueChanges.subscribe(selectedCategory => {
-            this.triggerSort.emit({category: selectedCategory, direction: this.selectedDirection});
+            this.triggerSort.emit({
+                category: selectedCategory, 
+                direction: this.selectedDirection, 
+                location: this.location});
         });
         this.triggerReset.subscribe(() => {
             this.resetSort();
         });
         this.hasLocation.subscribe(value => {
-            this.isDistance = value;
+            this.isDistance = value.hasValue;
+            this.location = value.locationValue;
         });
     }
 
@@ -45,6 +50,10 @@ export class SearchSortComponent implements OnInit{
             this.selectedDirection = SortDirection.Ascending;
         }
         const selectedCategory = this.selected.value;
-        this.triggerSort.emit({category: selectedCategory, direction: this.selectedDirection})
+        this.triggerSort.emit({
+            category: selectedCategory, 
+            direction: this.selectedDirection,
+            location: this.location
+        })
     }
 }

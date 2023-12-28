@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import * as mapboxgl from 'mapbox-gl';
 import { environment } from 'src/environments/environment';
 import { RealEstateItem } from '../shared/real-estate-item.model';
-import { map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { FeatureCollection } from '../shared/geo.model';
 
 @Injectable({
@@ -25,7 +25,7 @@ export class MapboxService {
     });
   }
 
-  forwardGeocoder(searchText: string) {
+  forwardGeocoder(searchText: string): Observable<[number, number]> {
     const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(searchText)}.json?access_token=${environment.mapbox.accessToken}&limit=1`;
     return this.http.get<FeatureCollection>(url)
     .pipe(

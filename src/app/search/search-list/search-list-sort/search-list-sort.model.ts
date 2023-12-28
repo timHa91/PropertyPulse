@@ -5,5 +5,6 @@ export enum SortDirection {
 
 export interface SortDescriptor {
     category: string;
-    direction: string
+    direction: string;
+    location: string;
 }

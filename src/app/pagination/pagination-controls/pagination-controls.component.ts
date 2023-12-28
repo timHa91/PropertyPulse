@@ -30,4 +30,8 @@ export class PaginationControlsComponent implements OnInit{
     this.page = this.page + 1;
     this.pageChange.emit(this.page)
   }
+
+  ceil(value: number): number {
+    return Math.ceil(value);
+  }
 }

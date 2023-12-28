@@ -2,14 +2,11 @@ import { Component, OnInit, OnDestroy, AfterViewInit } from "@angular/core";
 import { SearchService } from "../search.service";
 import { RealEstateItem } from "src/app/shared/real-estate-item.model";
 import { SearchCriteria } from "../search-criteria.model";
-import { Subject, Subscription, map, of, switchMap } from "rxjs";
+import { Observable, Subject, Subscription, forkJoin, map, of, switchMap } from "rxjs";
 import { PriceRange } from "src/app/shared/price-range.model";
 import { MapboxService } from "src/app/map/map.service";
 import { PaginationService } from "../../pagination/pagination.service";
 import { SortDescriptor, SortDirection } from "./search-list-sort/search-list-sort.model";
-
-const EARTH_RADIUS_IN_METERS = 6371e3;
-const METER_CONVERSION_FACTOR = 1000;
 
 @Component({
     selector: 'app-search-list',
@@ -23,7 +20,8 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
     paginatedList: RealEstateItem[] = [];
     filterChangesSubscription!: Subscription
     resetSort = new Subject<void>();
-    hasLocationAndRadiusValue = new Subject<boolean>();
+    hasLocationValue = new Subject<{hasValue: boolean, locationValue: string}>();
+    isDistanceSort : boolean = false;
 
     constructor(private searchService: SearchService,
                 private mapService: MapboxService,
@@ -62,7 +60,9 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
         let meetsCriteria = true;
 
         meetsCriteria = meetsCriteria && this.isItemInCategory(item, criteria.category);
-        if (criteria.location && !criteria.radius) {
+        if (criteria.location && !criteria.radius && !this.isDistanceSort) {
+            console.log('search');
+            
             meetsCriteria = meetsCriteria && this.isItemInLocation(item, criteria.location)
          } else {
             if (criteria.location && criteria.radius && searchLocation) {
@@ -92,29 +92,43 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
     }
 
     private isItemInRadius(item: RealEstateItem, radius: number, searchLocation: [number, number]): boolean {
-        const [lon1, lat1] = searchLocation;
-        const [lon2, lat2] = item.geometry.geometry.coordinates;
-        const radiusInMeters = radius * METER_CONVERSION_FACTOR;
-
-        const φ1 = lat1 * Math.PI/180;
-        const φ2 = lat2 * Math.PI/180;
-        const Δφ = (lat2-lat1) * Math.PI/180;
-        const Δλ = (lon2-lon1) * Math.PI/180;
+        const itemCoords = item.geometry.geometry.coordinates;
+        const distanceInMeters = this.calculateDistance(
+            searchLocation[1], 
+            searchLocation[0], 
+            itemCoords[1], 
+            itemCoords[0]);
     
-        const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
-                Math.cos(φ1) * Math.cos(φ2) *
-                Math.sin(Δλ/2) * Math.sin(Δλ/2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return distanceInMeters <= radius * 1000;
+    }
     
-        const distanceInMeters = EARTH_RADIUS_IN_METERS * c;       
-        
-        return distanceInMeters <= radiusInMeters;
+    private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+        const R = 6371e3; // Radius of the earth in m
+        const φ1 = this.deg2rad(lat1);
+        const φ2 = this.deg2rad(lat2);
+        const Δφ = this.deg2rad(lat2 - lat1);
+        const Δλ = this.deg2rad(lon2 - lon1);
+    
+        const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    
+        return R * c; // Distance in m
     }
 
-    private getDistance(item: RealEstateItem, searchLocation: string): number {
-        const searchLocationGeo = this.mapService.forwardGeocoder(searchLocation.toLowerCase());
-        return 1
-        
+    private getDistance(item: RealEstateItem, searchLocation: string): Observable<number> {
+        return this.mapService.forwardGeocoder(searchLocation.toLowerCase())
+        .pipe(
+            map( searchLocationCords => {
+                const itemCords = item.geometry.geometry.coordinates;
+                return this.calculateDistance(itemCords[1], itemCords[0], searchLocationCords[1], searchLocationCords[0]);
+            })
+        );    
+    }
+    
+    private deg2rad(deg: number): number {
+        return deg * (Math.PI / 180);
     }
 
     private placeAllMarkers() {
@@ -140,8 +154,12 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
     }
     
     private applyFilters(searchCriteria: SearchCriteria) {
+        this.hasLocationValue.next({
+            hasValue: !searchCriteria.location,
+            locationValue: searchCriteria.location || ''
+        });
+
         if (this.isLocationRadiusFilter(searchCriteria)) {
-            this.hasLocationAndRadiusValue.next(false);
             return this.filterByLocationRadius(searchCriteria);
         } else {
             this.filterWithoutRadius(searchCriteria);
@@ -186,29 +204,34 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
     }   
     
     onSort(sortValues: SortDescriptor) {
-        let sortCategory = '';
-        sortCategory === 'distance' ? sortCategory = 'coordinates' : sortCategory = sortValues.category;
-        
-        if (sortValues.direction === SortDirection.Ascending) {
-         this.paginatedList.sort((a, b) => {
-           if (typeof a[sortCategory] === 'string') {
-            console.log(a[sortCategory]);
-            
-             return a[sortCategory].localeCompare(b[sortCategory]);
-           } else {
-             return a[sortCategory] - b[sortCategory];
-           }
-         });
-        } else {
-         this.paginatedList.sort((a, b) => {
-           if (typeof a[sortCategory] === 'string') {
-             return b[sortCategory].localeCompare(a[sortCategory]);
-           } else {
-             return b[sortCategory] - a[sortCategory];
-           }
-         });
+        if (sortValues.category === 'distance') {
+            this.isDistanceSort = true;
+            this.sortByDistance(sortValues);
+        } else if (sortValues.category === 'price') {
+            this.sortByPrice(sortValues);
         }
-       }
+    }
+    
+    private sortByDistance(sortValues: SortDescriptor) {
+        const searchLocation = sortValues.location;
+        const distanceObservableArray = this.originalList.map(item => this.getDistance(item, searchLocation));
+        console.log('sorts');
+        
+        forkJoin(distanceObservableArray).subscribe(distances => {
+            this.paginatedList = this.originalList.map((item, index) => ({...item, distance: distances[index]}));
+            this.paginatedList.sort((a, b) => {
+                const compareResult = a["distance"] - b["distance"];
+                return sortValues.direction === SortDirection.Ascending ? compareResult : -compareResult;
+            });
+        });
+    }
+    
+    private sortByPrice(sortValues: SortDescriptor) {
+        this.paginatedList.sort((a, b) => {
+            const compareResult = a.price - b.price;
+            return sortValues.direction === SortDirection.Ascending ? compareResult : -compareResult;
+        });
+    }
     
     get itemsPerPage() {
         return this.paginationService.getItemsPerPage();

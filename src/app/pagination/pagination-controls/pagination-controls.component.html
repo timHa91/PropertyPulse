@@ -9,7 +9,7 @@
             </a>
         </div>
         <div class="current-page">
-            <p>page {{page}} of {{listSize / itemsPerPage}}</p>
+            <p>page {{page}} of {{listSize === 0 ? 1 : ceil(listSize / itemsPerPage)}}</p>
         </div>
         <div class="pagination-next" [class.disabled]="page < listSize / itemsPerPage">
             <a *ngIf="page < listSize / itemsPerPage" (click)="next()">
