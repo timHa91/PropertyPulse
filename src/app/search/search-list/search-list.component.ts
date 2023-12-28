@@ -62,7 +62,6 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
         meetsCriteria = meetsCriteria && this.isItemInCategory(item, criteria.category);
         if (criteria.location && !criteria.radius && !this.isDistanceSort) {
             console.log('search');
-            
             meetsCriteria = meetsCriteria && this.isItemInLocation(item, criteria.location)
          } else {
             if (criteria.location && criteria.radius && searchLocation) {
@@ -204,6 +203,8 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
     }   
     
     onSort(sortValues: SortDescriptor) {
+        console.log('onSort Called');
+        this.isDistanceSort = false;
         if (sortValues.category === 'distance') {
             this.isDistanceSort = true;
             this.sortByDistance(sortValues);
