@@ -12,7 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from "@angular/common";
 import { SearchListComponent } from "./search-list/search-list.component";
 import { SearchDetailComponent } from "./search-detail/search-detail.component";
-import { SearchSortComponent } from "./search-list-sort/search-list-sort.component";
+import { SearchSortComponent } from "./search-list/search-list-sort/search-list-sort.component";
 import { SearchItemComponent } from "./search-list/search-item/search-item.component";
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';

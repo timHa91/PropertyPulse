@@ -8,6 +8,7 @@ export class RealEstateItem {
     price: number
     category: Category
     geometry: GeoJson
+    
 
     constructor(obj?: any) {
         this.description = obj && obj.description || null;
@@ -17,4 +18,6 @@ export class RealEstateItem {
         this.category = obj && obj.category || [];
         this.geometry = obj && obj.geometry || null;
     }
+    
+    [key: string]: any;
 }

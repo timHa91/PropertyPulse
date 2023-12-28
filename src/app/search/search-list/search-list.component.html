@@ -1,5 +1,9 @@
 <div class="list-header">
-    <app-search-list-sort></app-search-list-sort>
+    <app-search-list-sort 
+    [triggerReset]="resetSort" 
+    (triggerSort)="onSort($event)" 
+    [hasLocation]="hasLocationAndRadiusValue">
+</app-search-list-sort>
     <app-pagination-controls 
     [listSize]="filteredList.length"
     (pageChange)="updatePaginationList($event)"

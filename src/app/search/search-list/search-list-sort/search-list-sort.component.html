@@ -1,0 +1,9 @@
+<mat-form-field>
+    <mat-select [formControl]="selected">
+        <mat-option value="price">Price</mat-option>
+        <mat-option value="distance" [disabled]="isDistance">Distance {{isDistance ? '(disabled)': ''}}</mat-option>
+    </mat-select>
+</mat-form-field>
+<a class="sort-direction" (click)="toggleSortDirection()">
+    <img [ngClass]="{'rotate180': rotate}" src="assets/images/Arrow_sort.png" alt="Sort">
+</a>

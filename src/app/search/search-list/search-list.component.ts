@@ -2,10 +2,11 @@ import { Component, OnInit, OnDestroy, AfterViewInit } from "@angular/core";
 import { SearchService } from "../search.service";
 import { RealEstateItem } from "src/app/shared/real-estate-item.model";
 import { SearchCriteria } from "../search-criteria.model";
-import { Subscription, map, of, switchMap } from "rxjs";
+import { Subject, Subscription, map, of, switchMap } from "rxjs";
 import { PriceRange } from "src/app/shared/price-range.model";
 import { MapboxService } from "src/app/map/map.service";
 import { PaginationService } from "../../pagination/pagination.service";
+import { SortDescriptor, SortDirection } from "./search-list-sort/search-list-sort.model";
 
 const EARTH_RADIUS_IN_METERS = 6371e3;
 const METER_CONVERSION_FACTOR = 1000;
@@ -21,6 +22,8 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
     filteredList: RealEstateItem[] = [];
     paginatedList: RealEstateItem[] = [];
     filterChangesSubscription!: Subscription
+    resetSort = new Subject<void>();
+    hasLocationAndRadiusValue = new Subject<boolean>();
 
     constructor(private searchService: SearchService,
                 private mapService: MapboxService,
@@ -108,6 +111,12 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
         return distanceInMeters <= radiusInMeters;
     }
 
+    private getDistance(item: RealEstateItem, searchLocation: string): number {
+        const searchLocationGeo = this.mapService.forwardGeocoder(searchLocation.toLowerCase());
+        return 1
+        
+    }
+
     private placeAllMarkers() {
         this.paginatedList.forEach( item => {
             this.mapService.setMarker(item.geometry.geometry.coordinates)
@@ -121,6 +130,7 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
         this.placeAllMarkers();
         const newPriceRange = this.calculatePriceRange();
         this.searchService.onPriceRangeChanged.next(newPriceRange);
+        this.resetSort.next();
     }
 
     private subscribeToFilterChanges() {
@@ -131,6 +141,7 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
     
     private applyFilters(searchCriteria: SearchCriteria) {
         if (this.isLocationRadiusFilter(searchCriteria)) {
+            this.hasLocationAndRadiusValue.next(false);
             return this.filterByLocationRadius(searchCriteria);
         } else {
             this.filterWithoutRadius(searchCriteria);
@@ -172,7 +183,32 @@ export class SearchListComponent implements OnInit, AfterViewInit ,OnDestroy {
             this.updatePaginationList(1)
             this.paginationService.resetPaginationControl.next();
         }
-    }    
+    }   
+    
+    onSort(sortValues: SortDescriptor) {
+        let sortCategory = '';
+        sortCategory === 'distance' ? sortCategory = 'coordinates' : sortCategory = sortValues.category;
+        
+        if (sortValues.direction === SortDirection.Ascending) {
+         this.paginatedList.sort((a, b) => {
+           if (typeof a[sortCategory] === 'string') {
+            console.log(a[sortCategory]);
+            
+             return a[sortCategory].localeCompare(b[sortCategory]);
+           } else {
+             return a[sortCategory] - b[sortCategory];
+           }
+         });
+        } else {
+         this.paginatedList.sort((a, b) => {
+           if (typeof a[sortCategory] === 'string') {
+             return b[sortCategory].localeCompare(a[sortCategory]);
+           } else {
+             return b[sortCategory] - a[sortCategory];
+           }
+         });
+        }
+       }
     
     get itemsPerPage() {
         return this.paginationService.getItemsPerPage();
