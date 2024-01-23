@@ -15,28 +15,22 @@ export class FilterService {
     constructor(private mapService: MapboxService) {}
     
     filterList(originalList: RealEstateItem[], searchCriteria: SearchCriteria): Observable<RealEstateItem[]> {
-        let filteredList = originalList;
+        let filteredList = [...originalList];
         // Apply all synchronous filters
-        if (searchCriteria.category && searchCriteria.category !== undefined) {
+        if (searchCriteria.category) {
             filteredList = filteredList.filter(item => this.isItemInCategory(item, searchCriteria.category as Category[]));
         }
-        if (searchCriteria.maxPrice && searchCriteria.maxPrice !== undefined) {
+        if (searchCriteria.maxPrice) {
             filteredList = filteredList.filter(item => this.isItemBelowMaxPrice(item, searchCriteria.maxPrice as number));
         }
-        if (searchCriteria.minPrice  && searchCriteria.minPrice !== undefined) {
+        if (searchCriteria.minPrice) {
             filteredList = filteredList.filter(item => this.isItemOverMinPrice(item, searchCriteria.minPrice as number));
         }
-        if (searchCriteria.location && 
-            !searchCriteria.radius && 
-            searchCriteria.location !== '' && 
-            searchCriteria.location !== undefined) {
+        if (searchCriteria.location && !searchCriteria.radius) {
                 filteredList = filteredList.filter(item => this.isItemInLocation(item, searchCriteria.location as string));
             }
         // Handle the radius search criteria asynchronously
-        if (searchCriteria.location && 
-            searchCriteria.radius && 
-            searchCriteria.radius !== undefined &&
-            searchCriteria.location !== undefined) {
+        if (searchCriteria.location && searchCriteria.radius) {
                 this.filterHasLocation$.next({
                     hasValue: true, 
                     locationValue: searchCriteria.location

@@ -7,7 +7,7 @@ export class PaginationService {
     
     onReset$ = new Subject<void>();
     page = 1;
-    itemsPerPage = 2;
+    itemsPerPage = 3;
     onPaginationChanged$ = new Subject<void>();
 
   setPaginationList(list: RealEstateItem[]): RealEstateItem[] {
