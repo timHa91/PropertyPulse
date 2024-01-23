@@ -15,43 +15,67 @@ export class FilterService {
     constructor(private mapService: MapboxService) {}
     
     filterList(originalList: RealEstateItem[], searchCriteria: SearchCriteria): Observable<RealEstateItem[]> {
-        let filteredList = [...originalList];
-        // Apply all synchronous filters
-        if (searchCriteria.category) {
-            filteredList = filteredList.filter(item => this.isItemInCategory(item, searchCriteria.category as Category[]));
-        }
-        if (searchCriteria.maxPrice) {
-            filteredList = filteredList.filter(item => this.isItemBelowMaxPrice(item, searchCriteria.maxPrice as number));
-        }
-        if (searchCriteria.minPrice) {
-            filteredList = filteredList.filter(item => this.isItemOverMinPrice(item, searchCriteria.minPrice as number));
-        }
-        if (searchCriteria.location && !searchCriteria.radius) {
-                filteredList = filteredList.filter(item => this.isItemInLocation(item, searchCriteria.location as string));
-            }
+        let filteredList = [... originalList];
+        filteredList = this.applySynchronousFilters(filteredList, searchCriteria);
+
         // Handle the radius search criteria asynchronously
         if (searchCriteria.location && searchCriteria.radius) {
-                this.filterHasLocation$.next({
-                    hasValue: true, 
-                    locationValue: searchCriteria.location
-                })
-                return this.mapService.getLocationCoordinates(searchCriteria.location)
-                    .pipe(
-                        switchMap(searchLocationCords => {
-                            return from(filteredList).pipe(
-                                filter(item => this.isItemInRadius(item, searchCriteria.radius as number, searchLocationCords)),
-                                toArray()
-                            );
-                        })
-                    );
+            return this.applyAsynchronousFilters(filteredList, searchCriteria);
         }   
         // If no asynchronous filters are applied, return an Observable of the filtered list
         return of(filteredList);
+    }
+    
+
+    private applySynchronousFilters(originalList: RealEstateItem[], searchCriteria: SearchCriteria): RealEstateItem[] {
+        let filteredList = originalList;
+    
+        if (searchCriteria.category !== undefined) {
+            filteredList = filteredList.filter(item => this.isItemInCategory(item, searchCriteria.category as Category[]));
+        }
+    
+        if (searchCriteria.maxPrice !== undefined) {
+            filteredList = filteredList.filter(item => this.isItemBelowMaxPrice(item, searchCriteria.maxPrice as number));
+        }
+    
+        if (searchCriteria.minPrice !== undefined) {
+            filteredList = filteredList.filter(item => this.isItemOverMinPrice(item, searchCriteria.minPrice as number));
+        }
+    
+        if (searchCriteria.location && !searchCriteria.radius) {
+            this.emitFilterHasLocation(searchCriteria.location);
+            filteredList = filteredList.filter(item => this.isItemInLocation(item, searchCriteria.location as string));
+        }
+    
+        return filteredList;
+    }
+
+    private applyAsynchronousFilters(originalList: RealEstateItem[], searchCriteria: SearchCriteria): Observable<RealEstateItem[]> {
+        if (searchCriteria.location && searchCriteria.radius) {
+            this.emitFilterHasLocation(searchCriteria.location);
+            return this.mapService.getLocationCoordinates(searchCriteria.location)
+                .pipe(
+                    switchMap(searchLocationCords => {
+                        return from(originalList).pipe(
+                            filter(item => this.isItemInRadius(item, searchCriteria.radius as number, searchLocationCords)),
+                            toArray()
+                        );
+                    })
+                );
+        }   
+        return of(originalList)
     }
 
     setPriceRangeFromList(list: RealEstateItem[]) {
         const calculatedPriceRange = this.calculatePriceRange(list);
         this.setPriceRange$.next(calculatedPriceRange);
+    }
+
+    private emitFilterHasLocation(location: string): void {
+        this.filterHasLocation$.next({
+            hasValue: true,
+            locationValue: location
+        });
     }
     
     private isItemInCategory(item: RealEstateItem, filterCategory: Category[]): boolean {
