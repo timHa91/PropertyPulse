@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { SortDirection } from "./search-list-sort.model";
+import { SortDirection } from "./sort-descriptor.model";
 import { SortService } from "./sort.service";
 import { FilterService } from "../../filter-bar/filter.service";
 
@@ -22,12 +22,12 @@ export class SearchSortComponent implements OnInit{
 
     ngOnInit(): void {
         this.selected.valueChanges.subscribe(selectedCategory => {
-            this.sortService.triggerSort.next({
+            this.sortService.triggerSort$.next({
                 category: selectedCategory, 
                 direction: this.selectedDirection, 
                 location: this.location});
         });
-        this.sortService.triggerReset.subscribe(() => {
+        this.sortService.triggerReset$.subscribe(() => {
             this.resetSort();
         });
         this.filterService.filterHasLocation$.subscribe(value => {
@@ -50,7 +50,7 @@ export class SearchSortComponent implements OnInit{
             this.selectedDirection = SortDirection.Ascending;
         }
         const selectedCategory = this.selected.value;
-        this.sortService.triggerSort.next({
+        this.sortService.triggerSort$.next({
             category: selectedCategory, 
             direction: this.selectedDirection,
             location: this.location

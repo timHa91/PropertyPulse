@@ -16,7 +16,7 @@ export class FilterService {
     
     filterList(originalList: RealEstateItem[], searchCriteria: SearchCriteria): Observable<RealEstateItem[]> {
         let filteredList = originalList;
-        // Apply all synchronous filters first
+        // Apply all synchronous filters
         if (searchCriteria.category && searchCriteria.category !== undefined) {
             filteredList = filteredList.filter(item => this.isItemInCategory(item, searchCriteria.category as Category[]));
         }
@@ -30,10 +30,6 @@ export class FilterService {
             !searchCriteria.radius && 
             searchCriteria.location !== '' && 
             searchCriteria.location !== undefined) {
-                this.filterHasLocation$.next({
-                    hasValue: true, 
-                    locationValue: searchCriteria.location
-                })
                 filteredList = filteredList.filter(item => this.isItemInLocation(item, searchCriteria.location as string));
             }
         // Handle the radius search criteria asynchronously

@@ -6,7 +6,7 @@ import { PriceRangeFilterComponent } from "./price-range-filter/price-range-filt
 import { RadiusFilterComponent } from "./radius-filter/radius-filter.component";
 import { SearchCriteria } from "../search-criteria.model";
 import { Category } from "src/app/shared/category.enum";
-import { debounceTime } from "rxjs/operators";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { Subscription } from 'rxjs';
 import { FilterService } from "./filter.service";
 import { FilterForm } from "./filter-form.model";
@@ -29,14 +29,16 @@ export class SearchBarComponent implements OnInit, AfterViewInit, OnDestroy {
 
     ngOnInit(): void {
         this.searchForm = new FormGroup({});
-
+    
         this.subscription = this.searchForm.valueChanges
         .pipe(
-            debounceTime(500)
+            debounceTime(500),
+            distinctUntilChanged()
         )
         .subscribe(searchForm => {
             const convertedSearchForm = this.transformToSearchCriteria(searchForm);
             this.filterService.onFilterList$.next(convertedSearchForm);
+            this.updateLocationFilter(convertedSearchForm);
         });
     }
 
@@ -84,4 +86,19 @@ export class SearchBarComponent implements OnInit, AfterViewInit, OnDestroy {
             });
             return categoryArray;
     }
+
+    private updateLocationFilter(convertedSearchForm: SearchCriteria): void {
+        if (convertedSearchForm.location && convertedSearchForm.location !== '') {
+            this.filterService.filterHasLocation$.next({
+                hasValue: true, 
+                locationValue: convertedSearchForm.location
+            });
+        } else {
+            this.filterService.filterHasLocation$.next({
+                hasValue: false, 
+                locationValue: ''
+            });
+        }
+    }
+    
 }

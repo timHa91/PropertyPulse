@@ -39,23 +39,25 @@ export class SearchListComponent implements OnInit, OnDestroy {
             .subscribe((filteredList) => {
                 this.filteredList = filteredList;
                 this.updateMap();
-                this.sortService.triggerReset.next();
+                this.sortService.triggerReset$.next();
             });
         });
-        this.sortSubscribtion = this.sortService.triggerSort.subscribe(sortDescriptor => {
-            this.filteredList = this.sortService.sortList(this.filteredList, sortDescriptor);
+        this.sortSubscribtion = this.sortService.triggerSort$.subscribe(sortDescriptor => {
+            this.sortService.sortList(this.filteredList, sortDescriptor).subscribe(sortedList => {
+                this.filteredList = sortedList;
+            });
         })
     }   
 
-   ngOnDestroy(): void {
+    ngOnDestroy(): void {
        this.filterSubscribtion.unsubscribe();
        this.sortSubscribtion.unsubscribe();
-   }
+    }
 
-   private initMap() {
+    private initMap() {
         this.mapService.initializeMap(this.filteredList);
         this.mapService.placeAllMarkers(this.filteredList);
-   }
+    }
 
     private updateMap() {
         this.mapService.removeAllMarkers();
