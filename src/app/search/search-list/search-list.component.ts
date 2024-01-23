@@ -53,18 +53,12 @@ export class SearchListComponent implements OnInit, OnDestroy {
    }
 
    private initMap() {
-        this.mapService.initializeMap(this.originalList);
-        this.placeAllMarkers();
+        this.mapService.initializeMap(this.filteredList);
+        this.mapService.placeAllMarkers(this.filteredList);
    }
-
-   private placeAllMarkers() {
-        this.filteredList.forEach( item => {
-            this.mapService.setMarker(item.geometry.geometry.coordinates)
-        });
-    }
 
     private updateMap() {
         this.mapService.removeAllMarkers();
-        this.placeAllMarkers();
+        this.mapService.placeAllMarkers(this.filteredList);
     }
 }

@@ -41,6 +41,12 @@ export class MapboxService {
     }
   }
 
+  placeAllMarkers(list: RealEstateItem[]) {
+    list.forEach( item => {
+        this.setMarker(item.geometry.geometry.coordinates)
+    });
+}
+
   calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
     const R = 6371e3; // Radius of the earth in m
     const φ1 = this.deg2rad(lat1);
