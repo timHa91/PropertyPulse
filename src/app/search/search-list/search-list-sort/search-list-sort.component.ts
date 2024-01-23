@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { SortDescriptor, SortDirection } from "./search-list-sort.model";
+import { SortDirection } from "./search-list-sort.model";
 import { Subject } from "rxjs";
+import { SortService } from "../../sort.service";
 
 @Component({
     selector: 'app-search-list-sort',
@@ -12,20 +13,21 @@ export class SearchSortComponent implements OnInit{
     selected: FormControl = new FormControl('price')
     rotate = true;
     selectedDirection: string = SortDirection.Ascending;
-    isDistance: boolean = true;
-    location: string = '';
-    @Output() triggerSort = new EventEmitter<SortDescriptor>();
-    @Input() triggerReset!: Subject<void>;
+    isDistance = true;
+    location = '';
+  
     @Input() hasLocation!: Subject<{hasValue: boolean, locationValue: string}>;
+
+    constructor (private sortService: SortService) {}
 
     ngOnInit(): void {
         this.selected.valueChanges.subscribe(selectedCategory => {
-            this.triggerSort.emit({
+            this.sortService.triggerSort.next({
                 category: selectedCategory, 
                 direction: this.selectedDirection, 
                 location: this.location});
         });
-        this.triggerReset.subscribe(() => {
+        this.sortService.triggerReset.subscribe(() => {
             this.resetSort();
         });
         this.hasLocation.subscribe(value => {
@@ -35,25 +37,24 @@ export class SearchSortComponent implements OnInit{
     }
 
     resetSort() {
-        this.selectedDirection === SortDirection.Descending ? this.rotate = !this.rotate : this.rotate = this.rotate;
+        this.selectedDirection === SortDirection.Descending ? this.rotate = !this.rotate : this.rotate;
         this.selectedDirection = SortDirection.Ascending;
         this.selected.setValue('price');
     }
 
-
     toggleSortDirection() {
         this.rotate = !this.rotate;
-
         if (this.selectedDirection === SortDirection.Ascending) {
             this.selectedDirection = SortDirection.Descending;
         } else {
             this.selectedDirection = SortDirection.Ascending;
         }
         const selectedCategory = this.selected.value;
-        this.triggerSort.emit({
+        this.sortService.triggerSort.next({
             category: selectedCategory, 
             direction: this.selectedDirection,
             location: this.location
         })
     }
+    
 }

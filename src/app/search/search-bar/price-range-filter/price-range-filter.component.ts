@@ -1,14 +1,14 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { AfterViewInit, Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
-import { SearchService } from "../../search.service";
-import { Subscription, take } from "rxjs";
+import { Subscription } from "rxjs";
+import { FilterService } from "../../filter.service";
 
 @Component({
     selector: 'app-price-range-filter',
     templateUrl: './price-range-filter.component.html',
     styleUrls: ['./price-range-filter.component.css']
 })
-export class PriceRangeFilterComponent implements OnInit, OnDestroy{
+export class PriceRangeFilterComponent implements OnInit, OnDestroy {
 
     priceForm!: FormGroup;
     minPriceRange!: number;
@@ -16,20 +16,17 @@ export class PriceRangeFilterComponent implements OnInit, OnDestroy{
 
     subscription!: Subscription;
 
-    constructor(private searchService: SearchService) {}
+    constructor(private filterService: FilterService) {}
 
     ngOnInit(): void {
-        this.subscription = this.searchService.onPriceRangeChanged
-        .pipe(
-            take(1)
-        )
+        this.initForm();  
+        this.subscription = this.filterService.setPriceRange$
         .subscribe(priceRange => {
                 this.minPriceRange = priceRange.minPrice;
                 this.maxPriceRange = priceRange.maxPrice; 
                 this.priceForm.get('minPrice')?.setValue(this.minPriceRange);
                 this.priceForm.get('maxPrice')?.setValue(this.maxPriceRange); 
         });
-        this.initForm();
     }
     
     ngOnDestroy(): void {

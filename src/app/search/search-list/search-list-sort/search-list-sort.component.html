@@ -4,6 +4,8 @@
         <mat-option value="distance" [disabled]="isDistance">Distance {{isDistance ? '(disabled)': ''}}</mat-option>
     </mat-select>
 </mat-form-field>
-<a class="sort-direction" (click)="toggleSortDirection()">
+<a class="sort-direction" tabindex="0" 
+    (click)="toggleSortDirection()" 
+    (keyup)="toggleSortDirection()">
     <img [ngClass]="{'rotate180': rotate}" src="assets/images/Arrow_sort.png" alt="Sort">
 </a>

@@ -1,16 +1,10 @@
 import { Injectable } from "@angular/core";
-import { Subject } from "rxjs";
 import { RealEstateItem } from "../shared/real-estate-item.model";
 import { Category } from "../shared/category.enum";
-import { SearchCriteria } from "./search-criteria.model";
-import { PriceRange } from "../shared/price-range.model";
 import { GeoJson } from "../shared/geo.model";
 
 @Injectable({providedIn: 'root'})
 export class SearchService {
-
-    onUpdateList = new Subject<SearchCriteria>();
-    onPriceRangeChanged = new Subject<PriceRange>();
 
     searchResults: RealEstateItem[] = [
         {
@@ -45,6 +39,14 @@ export class SearchService {
             category: Category.Sale,
             geometry: new GeoJson ([-76.916156, 38.896954])
         },
+        {
+            address: '527 45th Street Northeast Washington, DC',
+            description: 'Townhome - 4 BD 3 BA',
+            images: ['https://images.unsplash.com/photo-1625602812206-5ec545ca1231?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YW1lcmljYW4lMjBob3VzZXN8ZW58MHx8MHx8fDA%3D'],
+            price: 125000,
+            category: Category.Sale,
+            geometry: new GeoJson ([-76.9380523, 38.892946])
+        }
         
     ]
 
