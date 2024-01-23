@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { Subscription } from "rxjs";
-import { FilterService } from "../../filter.service";
+import { FilterService } from "../filter.service";
 
 @Component({
     selector: 'app-price-range-filter',

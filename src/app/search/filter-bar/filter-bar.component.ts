@@ -8,13 +8,13 @@ import { SearchCriteria } from "../search-criteria.model";
 import { Category } from "src/app/shared/category.enum";
 import { debounceTime } from "rxjs/operators";
 import { Subscription } from 'rxjs';
-import { FilterService } from "../filter.service";
-import { SearchForm } from "./search-form.model";
+import { FilterService } from "./filter.service";
+import { FilterForm } from "./filter-form.model";
 
 @Component({
-    selector: 'app-search-bar',
-    templateUrl: './search-bar.component.html',
-    styleUrls: ['./search-bar.component.css']
+    selector: 'app-filter-bar',
+    templateUrl: './filter-bar.component.html',
+    styleUrls: ['./filter-bar.component.css']
 })
 export class SearchBarComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild(CategoryFilterComponent) categoryFilter?: CategoryFilterComponent;
@@ -52,7 +52,7 @@ export class SearchBarComponent implements OnInit, AfterViewInit, OnDestroy {
         this.subscription.unsubscribe();
     }
 
-    private transformToSearchCriteria(searchForm: SearchForm): SearchCriteria {
+    private transformToSearchCriteria(searchForm: FilterForm): SearchCriteria {
         const searchCriteria = new SearchCriteria();
 
         if (searchForm.category) {

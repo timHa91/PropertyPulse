@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { SortDirection } from "./search-list-sort.model";
-import { Subject } from "rxjs";
-import { SortService } from "../../sort.service";
+import { SortService } from "./sort.service";
+import { FilterService } from "../../filter-bar/filter.service";
 
 @Component({
     selector: 'app-search-list-sort',
@@ -15,10 +15,10 @@ export class SearchSortComponent implements OnInit{
     selectedDirection: string = SortDirection.Ascending;
     isDistance = true;
     location = '';
-  
-    @Input() hasLocation!: Subject<{hasValue: boolean, locationValue: string}>;
 
-    constructor (private sortService: SortService) {}
+    constructor (private sortService: SortService,
+                 private filterService: FilterService
+        ) {}
 
     ngOnInit(): void {
         this.selected.valueChanges.subscribe(selectedCategory => {
@@ -30,8 +30,8 @@ export class SearchSortComponent implements OnInit{
         this.sortService.triggerReset.subscribe(() => {
             this.resetSort();
         });
-        this.hasLocation.subscribe(value => {
-            this.isDistance = value.hasValue;
+        this.filterService.filterHasLocation$.subscribe(value => {
+            this.isDistance = !value.hasValue;
             this.location = value.locationValue;
         });
     }

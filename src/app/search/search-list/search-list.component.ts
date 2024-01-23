@@ -4,8 +4,8 @@ import { RealEstateItem } from "src/app/shared/real-estate-item.model";
 import { Subject, Subscription} from "rxjs";
 import { MapboxService } from "src/app/map/map.service";
 import { PaginationService } from "../../pagination/pagination.service";
-import { FilterService } from "../filter.service";
-import { SortService } from "../sort.service";
+import { FilterService } from "../filter-bar/filter.service";
+import { SortService } from "./search-list-sort/sort.service";
 
 @Component({
     selector: 'app-search-list',

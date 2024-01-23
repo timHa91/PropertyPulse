@@ -1,11 +1,11 @@
 import { NgModule } from "@angular/core";
 import { SearchComponent } from "./search.component";
-import { CategoryFilterComponent } from "./search-bar/category-filter/category-filter.component";
-import { PriceRangeFilterComponent } from "./search-bar/price-range-filter/price-range-filter.component";
-import { RadiusFilterComponent } from "./search-bar/radius-filter/radius-filter.component";
-import { SearchBarComponent } from "./search-bar/search-bar.component";
+import { CategoryFilterComponent } from "./filter-bar/category-filter/category-filter.component";
+import { PriceRangeFilterComponent } from "./filter-bar/price-range-filter/price-range-filter.component";
+import { RadiusFilterComponent } from "./filter-bar/radius-filter/radius-filter.component";
+import { SearchBarComponent } from "./filter-bar/filter-bar.component";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { LocationSearchComponent } from "./search-bar/location-search/location-search.component";
+import { LocationSearchComponent } from "./filter-bar/location-search/location-search.component";
 import { MatSliderModule } from '@angular/material/slider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';

@@ -1,15 +1,16 @@
 import { Observable, Subject, from, of, toArray, filter, switchMap, BehaviorSubject} from "rxjs";
-import { RealEstateItem } from "../shared/real-estate-item.model";
-import { SearchCriteria } from "./search-criteria.model";
-import { PriceRange } from "../shared/price-range.model";
+import { RealEstateItem } from "../../shared/real-estate-item.model";
+import { SearchCriteria } from "../search-criteria.model";
+import { PriceRange } from "../../shared/price-range.model";
 import { Injectable } from "@angular/core";
-import { MapboxService } from "../map/map.service";
-import { Category } from "../shared/category.enum";
+import { MapboxService } from "../../map/map.service";
+import { Category } from "../../shared/category.enum";
 
 @Injectable({providedIn: 'root'})
 export class FilterService {
     onFilterList$ = new Subject<SearchCriteria>();
     setPriceRange$ = new BehaviorSubject<PriceRange>({minPrice: 0, maxPrice: 0});
+    filterHasLocation$ = new Subject<{hasValue: boolean, locationValue: string}>
 
     constructor(private mapService: MapboxService) {}
     
@@ -29,6 +30,10 @@ export class FilterService {
             !searchCriteria.radius && 
             searchCriteria.location !== '' && 
             searchCriteria.location !== undefined) {
+                this.filterHasLocation$.next({
+                    hasValue: true, 
+                    locationValue: searchCriteria.location
+                })
                 filteredList = filteredList.filter(item => this.isItemInLocation(item, searchCriteria.location as string));
             }
         // Handle the radius search criteria asynchronously
@@ -36,7 +41,11 @@ export class FilterService {
             searchCriteria.radius && 
             searchCriteria.radius !== undefined &&
             searchCriteria.location !== undefined) {
-                return this.getLocationCoordinates(searchCriteria.location)
+                this.filterHasLocation$.next({
+                    hasValue: true, 
+                    locationValue: searchCriteria.location
+                })
+                return this.mapService.getLocationCoordinates(searchCriteria.location)
                     .pipe(
                         switchMap(searchLocationCords => {
                             return from(filteredList).pipe(
@@ -73,36 +82,13 @@ export class FilterService {
 
     private isItemInRadius(item: RealEstateItem, radius: number, searchLocation: [number, number]): boolean {
         const itemCoords = item.geometry.geometry.coordinates;
-        const distanceInMeters = this.calculateDistance(
+        const distanceInMeters = this.mapService.calculateDistance(
             searchLocation[1], 
             searchLocation[0], 
             itemCoords[1], 
             itemCoords[0]
         );
         return distanceInMeters <= radius * 1000;
-    }
-    
-    private getLocationCoordinates(location: string): Observable<[number, number]> {
-       return this.mapService.forwardGeocoder(location.toLocaleLowerCase());
-    }
-
-    private calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
-        const R = 6371e3; // Radius of the earth in m
-        const φ1 = this.deg2rad(lat1);
-        const φ2 = this.deg2rad(lat2);
-        const Δφ = this.deg2rad(lat2 - lat1);
-        const Δλ = this.deg2rad(lon2 - lon1);
-    
-        const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-            Math.cos(φ1) * Math.cos(φ2) *
-            Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    
-        return R * c; // Distance in m
-    }
-    
-    private deg2rad(deg: number): number {
-        return deg * (Math.PI / 180);
     }
 
     private calculatePriceRange(list: RealEstateItem[]): PriceRange {

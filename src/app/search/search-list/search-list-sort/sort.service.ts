@@ -1,14 +1,13 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
-import { SortDescriptor, SortDirection } from "./search-list/search-list-sort/search-list-sort.model";
-import { RealEstateItem } from "../shared/real-estate-item.model";
+import { SortDescriptor, SortDirection } from "./search-list-sort.model";
+import { RealEstateItem } from "../../../shared/real-estate-item.model";
 
 @Injectable({providedIn: 'root'})
 export class SortService {
     resetSort = new Subject<void>();
     triggerSort = new Subject<SortDescriptor>();
     triggerReset = new Subject<void>();
-
 
     sortList(list: RealEstateItem[], sortDescriptor: SortDescriptor): RealEstateItem[] {
         if (sortDescriptor.category === 'price') {
