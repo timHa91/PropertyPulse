@@ -37,10 +37,10 @@ export class SearchListComponent implements OnInit, OnDestroy {
         this.initMap()
         this.filterSubscription = this.filterService.onFilterList$.subscribe(searchCriteria => {
             this.filterService.filterList(this.originalList, searchCriteria).subscribe((filteredList) => {
+                this.sortService.onReset$.next();
                 this.filteredList = filteredList;
                 this.paginatedList = this.paginationService.setPaginationList(filteredList);
                 this.updateMap();
-                this.sortService.onReset$.next();
                 this.paginationService.onReset$.next();
             });
         });

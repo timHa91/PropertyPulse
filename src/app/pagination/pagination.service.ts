@@ -11,6 +11,7 @@ export class PaginationService {
     onPaginationChanged$ = new Subject<void>();
 
   setPaginationList(list: RealEstateItem[]): RealEstateItem[] {
+    if(list.length <= 1) return list;
     let sliceStart = 0;
     let sliceEnd = 0;
     if(this.page === 1) {
