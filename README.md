@@ -1,27 +1,18 @@
-# MarketplaceApp
+# EstateExplorer
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.4.
+EstateExplorer ist eine Angular-Anwendung, die als Immobilienmarktplatz dient. Mit unserer App können Benutzer die Art und Weise, wie sie nach und in Immobilien suchen und investieren, revolutionieren.
 
-## Development server
+## Hauptmerkmale
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+* **Mapbox Integration**: Wir nutzen Mapbox, eine leistungsstarke Bibliothek für interaktive Karten, um Immobilienstandorte zu visualisieren. Um Mapbox zu verwenden, benötigen Sie einen eigenen Access Token, den Sie in der Datei `environment.ts` Ihres Projekts speichern können (https://docs.mapbox.com/help/getting-started/access-tokens/).
+* **Immobilienanzeige**: Benutzer können eine Liste aller Immobilien anzeigen, sortieren und filtern.
+* **Immobilieneinsatz**: Benutzer können Immobilien direkt in der App einstellen.
 
-## Code scaffolding
+## Installation
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Um das Projekt lokal zu installieren und auszuführen, führen Sie bitte die folgenden Schritte aus:
 
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+1. Klonen Sie das Repository: `git clone https://github.com/timHa91/EstateExplorer.git`
+2. Navigieren Sie in das Projektverzeichnis: `cd EstateExplorer`
+3. Installieren Sie die Abhängigkeiten: `npm install` (oder `yarn`, je nachdem, was Sie verwenden)
+4. Starten Sie die Entwicklungsumgebung: `npm start` (oder `yarn start`)
