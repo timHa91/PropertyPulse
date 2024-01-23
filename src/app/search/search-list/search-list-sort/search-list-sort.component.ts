@@ -27,7 +27,7 @@ export class SearchSortComponent implements OnInit{
                 direction: this.selectedDirection, 
                 location: this.location});
         });
-        this.sortService.triggerReset$.subscribe(() => {
+        this.sortService.onReset$.subscribe(() => {
             this.resetSort();
         });
         this.filterService.filterHasLocation$.subscribe(value => {

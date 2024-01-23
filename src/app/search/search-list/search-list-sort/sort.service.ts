@@ -8,7 +8,7 @@ import { MapboxService } from "src/app/map/map.service";
 export class SortService {
     resetSort = new Subject<void>();
     triggerSort$ = new Subject<SortDescriptor>();
-    triggerReset$ = new Subject<void>();
+    onReset$ = new Subject<void>();
 
     constructor (private mapService: MapboxService) {}
 

@@ -5,12 +5,12 @@ import { RealEstateItem } from "../shared/real-estate-item.model";
 @Injectable({providedIn: 'root'})
 export class PaginationService {
     
-    resetPaginationControl = new Subject<void>();
-    page: number = 1;
-    itemsPerPage: number = 2;
+    onReset$ = new Subject<void>();
+    page = 1;
+    itemsPerPage = 2;
+    onPaginationChanged$ = new Subject<void>();
 
-  setPaginationList(page: number, filteredList: RealEstateItem[]): RealEstateItem[] {
-    this.page = page;
+  setPaginationList(list: RealEstateItem[]): RealEstateItem[] {
     let sliceStart = 0;
     let sliceEnd = 0;
     if(this.page === 1) {
@@ -20,11 +20,6 @@ export class PaginationService {
         sliceStart = (this.page - 1) * this.itemsPerPage;
         sliceEnd = sliceStart + this.itemsPerPage;
     }
-    return filteredList.slice(sliceStart, sliceEnd);
+    return list.slice(sliceStart, sliceEnd);
   }
-
-  getItemsPerPage() {
-    return this.itemsPerPage;
-  }
-
 }

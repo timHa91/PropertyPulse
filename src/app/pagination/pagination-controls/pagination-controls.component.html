@@ -4,15 +4,15 @@
     </div>
 <div class="pagination-page">
     <div class="pagination-previous rotate180" [class.disabled]="page === 1">
-        <a *ngIf="page !== 1" (click)="previous()">
-                <img src="/assets/images/Arrow_right.png" alt="Left arrow">    
-            </a>
+        <a *ngIf="page !== 1" (click)="previous()" (keydown.enter)="previous()" (keydown.space)="previous()" tabindex="0">
+            <img src="/assets/images/Arrow_right.png" alt="Left arrow">    
+        </a>
         </div>
         <div class="current-page">
             <p>page {{page}} of {{listSize === 0 ? 1 : ceil(listSize / itemsPerPage)}}</p>
         </div>
         <div class="pagination-next" [class.disabled]="page < listSize / itemsPerPage">
-            <a *ngIf="page < listSize / itemsPerPage" (click)="next()">
+            <a *ngIf="page < listSize / itemsPerPage" (click)="next()" (keydown.enter)="next()" (keydown.space)="next()" tabindex="0">
                 <img src="/assets/images/Arrow_right.png" alt="Right arrow">
             </a>
         </div>

@@ -1,9 +1,12 @@
 <div class="list-header">
     <app-search-list-sort></app-search-list-sort>
+    <app-pagination-controls
+    [listSize]="this.filteredList.length"
+    ></app-pagination-controls>
 </div>
 <ng-container *ngIf="filteredList.length > 0">
     <app-search-item 
-    [item]="result" *ngFor="let result of filteredList">
+    [item]="result" *ngFor="let result of paginatedList">
     </app-search-item>
 </ng-container>
 <p *ngIf="filteredList.length < 1">There are no Search Results</p>

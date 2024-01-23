@@ -19,8 +19,9 @@ export class SearchListComponent implements OnInit, OnDestroy {
     paginatedList: RealEstateItem[] = [];
     hasLocationValue = new Subject<{hasValue: boolean, locationValue: string}>();
     isDistanceSort  = false;
-    filterSubscribtion!: Subscription;
-    sortSubscribtion!: Subscription;
+    filterSubscription!: Subscription;
+    sortSubscription!: Subscription;
+    paginationSubscription! : Subscription;
 
     constructor(private searchService: SearchService,
                 private mapService: MapboxService,
@@ -34,24 +35,27 @@ export class SearchListComponent implements OnInit, OnDestroy {
         this.filterService.setPriceRangeFromList(this.originalList);
         this.filteredList = this.originalList;
         this.initMap()
-        this.filterSubscribtion = this.filterService.onFilterList$.subscribe(searchCriteria => {
-            this.filterService.filterList(this.originalList, searchCriteria)
-            .subscribe((filteredList) => {
+        this.filterSubscription = this.filterService.onFilterList$.subscribe(searchCriteria => {
+            this.filterService.filterList(this.originalList, searchCriteria).subscribe((filteredList) => {
                 this.filteredList = filteredList;
+                this.paginatedList = this.paginationService.setPaginationList(filteredList);
                 this.updateMap();
-                this.sortService.triggerReset$.next();
+                this.sortService.onReset$.next();
+                this.paginationService.onReset$.next();
             });
         });
-        this.sortSubscribtion = this.sortService.triggerSort$.subscribe(sortDescriptor => {
-            this.sortService.sortList(this.filteredList, sortDescriptor).subscribe(sortedList => {
-                this.filteredList = sortedList;
-            });
+        this.sortSubscription = this.sortService.triggerSort$.subscribe(sortDescriptor => {
+            this.sortService.sortList(this.filteredList, sortDescriptor).subscribe(sortedList => this.filteredList = sortedList);
+        })
+        this.paginationSubscription = this.paginationService.onPaginationChanged$.subscribe( () => {
+            this.paginatedList = this.paginationService.setPaginationList(this.filteredList);
         })
     }   
 
     ngOnDestroy(): void {
-       this.filterSubscribtion.unsubscribe();
-       this.sortSubscribtion.unsubscribe();
+       this.filterSubscription.unsubscribe();
+       this.sortSubscription.unsubscribe();
+       this.paginationSubscription.unsubscribe();
     }
 
     private initMap() {
@@ -62,5 +66,9 @@ export class SearchListComponent implements OnInit, OnDestroy {
     private updateMap() {
         this.mapService.removeAllMarkers();
         this.mapService.placeAllMarkers(this.filteredList);
+    }
+
+    updatePaginatedList() {
+        this.filteredList = this.paginationService.setPaginationList(this.filteredList);
     }
 }
