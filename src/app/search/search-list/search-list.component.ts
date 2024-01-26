@@ -23,6 +23,8 @@ export class SearchListComponent implements OnInit, OnDestroy {
   filterSubscription!: Subscription;
   sortSubscription!: Subscription;
   paginationSubscription!: Subscription;
+  isDetailView = false;
+  detailViewItem!: RealEstateItem;
 
   constructor(
     private searchService: SearchService,
@@ -43,6 +45,15 @@ export class SearchListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.unsubscribeAll();
+  }
+
+  onDetailView(item: RealEstateItem) {
+    this.detailViewItem = item;
+    this.isDetailView = true;
+  }
+
+  onCloseDetailView() : void {
+    this.isDetailView = false;
   }
 
   private initializeLists() {

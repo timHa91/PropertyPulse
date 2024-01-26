@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { RealEstateItem } from "src/app/shared/real-estate-item.model";
 
 @Component({
@@ -9,9 +9,14 @@ import { RealEstateItem } from "src/app/shared/real-estate-item.model";
 export class SearchItemComponent implements OnInit{
 
     @Input('item') item!: RealEstateItem;
+    @Output() triggerDetailView = new EventEmitter<RealEstateItem>();
 
     ngOnInit(): void {
         
+    }
+
+    onDetailView() {
+        this.triggerDetailView.emit(this.item);
     }
 
 }
