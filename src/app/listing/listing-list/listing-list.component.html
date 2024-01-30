@@ -1,0 +1,3 @@
+<ng-container *ngIf="listings.length > 0">
+    <app-listing-item [item]="result" *ngFor="let result of listings; index as i"></app-listing-item>
+</ng-container>

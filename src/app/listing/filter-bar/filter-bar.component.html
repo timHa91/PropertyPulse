@@ -1,0 +1,14 @@
+<div class="filter-bar">
+<mat-form-field>
+    <mat-label>Filter by status</mat-label>
+    <mat-select formControlName="status" multiple>
+        <mat-option *ngFor="let status of filterStatus" [value]="status">{{status}}</mat-option>
+    </mat-select>
+</mat-form-field>
+<mat-form-field>
+    <mat-label>Filter by type</mat-label>
+    <mat-select formControlName="type" multiple>
+        <mat-option *ngFor="let type of filterTypes" [value]="type">{{type}}</mat-option>
+    </mat-select>
+</mat-form-field>
+</div>
