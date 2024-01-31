@@ -1,0 +1,28 @@
+.description-form mat-form-field, .address-form mat-form-field {
+    margin-top: 20px;
+    width: 100%;
+    padding: 0 40px;
+}
+
+.type {
+    margin-top: 20px;
+    padding-left: 40px;
+}
+
+.form-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 40px;
+    margin-top: 20px;
+}
+
+.buttons {
+    display: flex;
+    padding: 0 40px;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.mat-checkbox-inner-container{
+    margin-top: 4px;
+}

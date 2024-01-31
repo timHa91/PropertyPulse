@@ -7,19 +7,26 @@ import {MatButtonModule} from '@angular/material/button';
 import { ListingListComponent } from './listing-list/listing-list.component';
 import { ListingItemComponent } from './listing-item/listing-item.component';
 import {MatCardModule} from '@angular/material/card';
+import { CreateListingComponent } from './create-listing/create-listing.component';
+import {MatInputModule} from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
 
 @NgModule({
   declarations: [
     ListingComponent,
     FilterBarComponent,
     ListingListComponent,
-    ListingItemComponent
+    ListingItemComponent,
+    CreateListingComponent
   ],
   imports: [
     CommonModule,
     MatSelectModule,
     MatButtonModule,
-    MatCardModule
+    MatCardModule,
+    MatInputModule,
+    MatCheckboxModule
   ]
 })
 export class ListingModule { }

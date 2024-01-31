@@ -1,0 +1,41 @@
+<form class="create-listing">
+    <div class="description-form">
+      <mat-form-field>
+        <mat-label>Description</mat-label>
+        <input class="description" matInput formControlName="description">
+      </mat-form-field>
+    </div>
+    <div class="type">
+        <mat-label>Type:</mat-label>
+        <br>
+        <mat-checkbox formControlName="rent">For Rent</mat-checkbox>
+        <mat-checkbox formControlName="sale">For Sale</mat-checkbox>
+        <mat-checkbox formControlName="sold">Sold</mat-checkbox>
+    </div>    
+    <div class="address-form">
+        <mat-form-field>
+            <mat-label>Address</mat-label>
+            <input class="adress" matInput formControlName="adress">
+          </mat-form-field>
+    </div>
+    <div class="form-container">
+        <div class="price-form">
+            <mat-form-field>
+                <mat-label>Price</mat-label>
+                <input class="price" matInput formControlName="price">
+            </mat-form-field>
+        </div>
+        <div class="image-form">
+            <mat-form-field>
+                <mat-label>Image URL</mat-label>
+                <input class="image" matInput formControlName="image">
+            </mat-form-field>
+        </div>
+    </div>
+    <hr>
+    <div class="buttons">
+        <button mat-raised-button color="warn">Delete</button>
+        <button mat-raised-button color="accent">Save Draft</button>
+        <button mat-raised-button color="primary">Publish</button>
+    </div>
+</form>

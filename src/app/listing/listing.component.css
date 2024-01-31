@@ -14,3 +14,11 @@
     display: flex;
     gap: 20px;
 }
+
+.list {
+    flex: 1;
+}
+
+.creation {
+    flex: 1;
+}
