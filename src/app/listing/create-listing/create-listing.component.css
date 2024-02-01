@@ -26,3 +26,7 @@
 .mat-checkbox-inner-container{
     margin-top: 4px;
 }
+
+.example-right-align {
+    text-align: right;
+  }

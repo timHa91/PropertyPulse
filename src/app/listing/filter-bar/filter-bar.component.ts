@@ -17,11 +17,15 @@ export class FilterBarComponent implements OnInit {
     constructor(private listingService: ListingService) {}
 
     ngOnInit(): void {
+      this.initForm();
+      this.filterStatus = this.listingService.getAllStatus();
+      this.filterTypes = this.listingService.getAllTypes();
+    }
+
+    initForm() {
       this.filterForm = new FormGroup({
         'status': new FormControl(null),
         'type': new FormControl(null)
       })
-      this.filterStatus = this.listingService.getAllStatus();
-      this.filterTypes = this.listingService.getAllTypes();
     }
 }

@@ -1,41 +1,48 @@
-<form class="create-listing">
+<form class="create-listing" [formGroup]="creationForm" (ngSubmit)="onSafeDraft()">
     <div class="description-form">
       <mat-form-field>
         <mat-label>Description</mat-label>
-        <input class="description" matInput formControlName="description">
+        <input class="description" matInput formControlName="description" required>
+        <mat-error>{{getErrorMessage('description')}}</mat-error>
       </mat-form-field>
     </div>
-    <div class="type">
-        <mat-label>Type:</mat-label>
-        <br>
-        <mat-checkbox formControlName="rent">For Rent</mat-checkbox>
-        <mat-checkbox formControlName="sale">For Sale</mat-checkbox>
-        <mat-checkbox formControlName="sold">Sold</mat-checkbox>
-    </div>    
+    <div class="type" formGroupName="type">
+      <mat-label>Type:</mat-label>
+      <br>
+      <mat-checkbox formControlName="rent">For Rent</mat-checkbox>
+      <mat-checkbox formControlName="sale">For Sale</mat-checkbox>
+      <mat-checkbox formControlName="sold">Sold</mat-checkbox>
+    <mat-error>{{getErrorMessage('type')}}</mat-error>
+    </div>
     <div class="address-form">
-        <mat-form-field>
-            <mat-label>Address</mat-label>
-            <input class="adress" matInput formControlName="adress">
-          </mat-form-field>
+      <mat-form-field>
+        <mat-label>Address</mat-label>
+        <input class="adress" matInput formControlName="address" required>
+        <mat-error>{{getErrorMessage('address')}}</mat-error>
+      </mat-form-field>
     </div>
     <div class="form-container">
-        <div class="price-form">
-            <mat-form-field>
-                <mat-label>Price</mat-label>
-                <input class="price" matInput formControlName="price">
-            </mat-form-field>
-        </div>
-        <div class="image-form">
-            <mat-form-field>
-                <mat-label>Image URL</mat-label>
-                <input class="image" matInput formControlName="image">
-            </mat-form-field>
-        </div>
+      <div class="price-form">
+        <mat-form-field floatLabel="always">
+            <mat-label>Price</mat-label>
+            <input matInput type="number" class="example-right-align" placeholder="0" formControlName="price" required>
+            <span matTextPrefix>€&nbsp;</span>
+            <span matTextSuffix>.00</span>
+            <mat-error>{{getErrorMessage('price')}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="image-form">
+        <mat-form-field>
+          <mat-label>Image URL</mat-label>
+          <input class="image" matInput formControlName="image" required>
+          <mat-error>{{getErrorMessage('image')}}</mat-error>
+        </mat-form-field>
+      </div>
     </div>
     <hr>
     <div class="buttons">
-        <button mat-raised-button color="warn">Delete</button>
-        <button mat-raised-button color="accent">Save Draft</button>
-        <button mat-raised-button color="primary">Publish</button>
+      <button mat-raised-button color="warn">Delete</button>
+      <button type="submit" [disabled]="!creationForm.valid" mat-raised-button color="accent">Save Draft</button>
+      <button mat-raised-button color="primary">Publish</button>
     </div>
-</form>
+  </form>
