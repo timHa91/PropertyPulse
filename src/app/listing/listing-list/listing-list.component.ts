@@ -10,7 +10,7 @@ import { RealEstateItem } from 'src/app/shared/real-estate-item.model';
 export class ListingListComponent implements OnInit{
 
   listings: RealEstateItem[] = [];
-
+ 
   constructor(private listingService: ListingService) {}
 
   ngOnInit(): void {

@@ -11,10 +11,10 @@
         </mat-card-header>
         <mat-card-content align="end">
             <mat-card-actions align="end">
-                <button mat-button>Detail</button>
+                <button (click)="onEditItem()" mat-button>Edit</button>
             </mat-card-actions>
             <p>€ {{item.price}}</p>
-            <p>{{item.category}}</p>
+            <p [ngClass]="getItemStatusClass(item.status!)">{{item.status}}</p>
         </mat-card-content>
-    </div>
+    </div>  
 </mat-card>

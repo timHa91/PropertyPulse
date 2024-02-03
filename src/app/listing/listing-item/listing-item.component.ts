@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { RealEstateItem } from 'src/app/shared/real-estate-item.model';
+import { Status } from '../listing-status.enum';
+import { ListingService } from '../listing.service';
 
 @Component({
   selector: 'app-listing-item',
@@ -8,4 +10,16 @@ import { RealEstateItem } from 'src/app/shared/real-estate-item.model';
 })
 export class ListingItemComponent {
   @Input() item!: RealEstateItem;
+  @Input() index!: number;
+
+  constructor(private listingService: ListingService){}
+
+  getItemStatusClass(status: Status): string {
+    return status === Status.DRAFT ? 'draft' : 'published';
+  } 
+
+  onEditItem() {
+    this.listingService.showCreationForm.next(true);
+    this.listingService.startedEditing.next(this.index);
+  }
 }

@@ -10,12 +10,11 @@ export class RealEstateItem {
     category: Category
     geometry: GeoJson
     status?: Status
-    
 
     constructor(obj?: any) {
         this.description = obj && obj.description || null;
         this.images = obj && obj.image || [];
-        this.address = obj && obj.adress || null;
+        this.address = obj && obj.address || null;
         this.price = obj && obj.price || null;
         this.category = obj && obj.category || [];
         this.geometry = obj && obj.geometry || null;

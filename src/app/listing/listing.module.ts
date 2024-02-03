@@ -11,6 +11,8 @@ import { CreateListingComponent } from './create-listing/create-listing.componen
 import {MatInputModule} from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReactiveFormsModule } from '@angular/forms';
+import {MatRadioModule} from '@angular/material/radio';
+import {FormsModule} from '@angular/forms';
 
 
 @NgModule({
@@ -19,7 +21,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     FilterBarComponent,
     ListingListComponent,
     ListingItemComponent,
-    CreateListingComponent
+    CreateListingComponent  
   ],
   imports: [
     CommonModule,
@@ -28,7 +30,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatCardModule,
     MatInputModule,
     MatCheckboxModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatRadioModule,
+    FormsModule
   ]
 })
 export class ListingModule { }

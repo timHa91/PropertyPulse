@@ -9,7 +9,7 @@ import { ListingModule } from './listing/listing.module';
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
   ],
   imports: [
     BrowserModule,

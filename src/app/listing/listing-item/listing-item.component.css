@@ -19,3 +19,13 @@
     background-size: cover;
     margin-right: 20px;
 }
+
+.published {
+  color: green;
+  font-weight: 500;
+}
+
+.draft {
+  color: grey;
+  font-weight: 500;
+}
