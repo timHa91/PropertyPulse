@@ -22,3 +22,7 @@
 .creation {
     flex: 1;
 }
+
+.none {
+    display: none;
+}

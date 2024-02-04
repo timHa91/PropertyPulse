@@ -13,12 +13,15 @@ import { GeoJson } from "src/app/shared/geo.model";
     templateUrl: './create-listing.component.html',
     styleUrls: ['./create-listing.component.css']
 })
-export class CreateListingComponent implements OnInit, OnDestroy{
+export class CreateListingComponent implements OnInit, OnDestroy {
 
     creationForm!: FormGroup;
-    editMode = false;
     startEditSubscription!: Subscription;
+    formResetSubscription!: Subscription;
+    showCreationSubscription!: Subscription;
     toEditItem!: RealEstateItem;
+    showForm = false;
+    editMode = false;
 
     constructor(private listingService: ListingService,
                 private mapService: MapboxService
@@ -26,30 +29,48 @@ export class CreateListingComponent implements OnInit, OnDestroy{
     
         ngOnInit(): void {
             this.initForm();
-        
-            this.startEditSubscription = this.listingService.startedEditing.subscribe(itemIndex => {
-                if (itemIndex !== null) {
-                    this.editMode = true;
-                    
-                    this.toEditItem = this.listingService.getItemByIndex(itemIndex);
-                    this.patchFormValues();
-                }
-            });
+            this.subscribeToStartEdit();
+            this.subscribeToFormReset();
+            this.subscribeToShowForm();
         }
     
         ngOnDestroy(): void {
             this.startEditSubscription.unsubscribe();
+            this.formResetSubscription.unsubscribe();
+            this.showCreationSubscription.unsubscribe();
         }
+
+        subscribeToShowForm (): void {
+            this.showCreationSubscription = this.listingService.showCreationForm.subscribe( showCreationForm => {
+                this.showForm = showCreationForm;
+              })
+        }
+
+        subscribeToStartEdit(): void {
+            this.startEditSubscription = this.listingService.startedEditing.subscribe(itemIndex => {
+                if (itemIndex !== null) {
+                    this.editMode = true;
+                    this.toEditItem = this.listingService.getItemByIndex(itemIndex);
+                    this.setFormValues();
+                }
+            });
+    }
+
+    private subscribeToFormReset(): void {
+        this.formResetSubscription = this.listingService.onFormReset.subscribe( () => {
+             this.resetForm();
+        })
+    }
     
-        private patchFormValues(): void {
-            
-            this.creationForm.patchValue({
+    private setFormValues(): void {
+            this.creationForm.setValue({
                 description: this.toEditItem.description,
                 type: this.convertCategoryToString(),
                 address: this.toEditItem.address,
                 price: this.toEditItem.price,
                 image: this.toEditItem.images
             });
+            this.creationForm.markAsDirty();
         }
 
     onSafeDraft() {
@@ -60,6 +81,7 @@ export class CreateListingComponent implements OnInit, OnDestroy{
         const newCategory = this.convertToCategory(this.creationForm.get('type')?.value);
         const newStatus = Status.DRAFT;
 
+        
         this.getCordsForCreatedItem(newAddress).subscribe(coords => {
             const listingItem: RealEstateItem = {
                 description: newDescription,
@@ -124,6 +146,7 @@ export class CreateListingComponent implements OnInit, OnDestroy{
     }
     
     private resetForm(): void {
+        this.editMode = false;
         this.creationForm.reset(); 
         this.clearValidationErrors(); 
     }
@@ -131,7 +154,7 @@ export class CreateListingComponent implements OnInit, OnDestroy{
       private clearValidationErrors(): void {
         Object.keys(this.creationForm.controls).forEach(field => {
             const control = this.creationForm.get(field);
-            if (control) {
+            if (control) {  
                 control.setErrors(null);
             }
         });
@@ -142,11 +165,9 @@ export class CreateListingComponent implements OnInit, OnDestroy{
     }
 
     checkIfSaveEnabled() {
-        if (this.creationForm.pristine || !this.creationForm.valid) {
+        if (!this.creationForm.dirty || !this.creationForm.valid || this.creationForm.pristine) {
           return true;
         }
         return false;
       }
-    
-     
 }
