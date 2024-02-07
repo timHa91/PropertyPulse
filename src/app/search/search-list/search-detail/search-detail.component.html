@@ -2,7 +2,7 @@
 <div class="item-detail">
     <h1>{{item.address}}</h1>
     <h2>€ {{item.price}}</h2>
-    <img *ngFor="let img of item.images" [src]="img" [alt]="img">
+    <img *ngFor="let img of item.image" [src]="img" [alt]="img">
     <hr>
     <div class="description">
         <p>{{item.description}}</p>

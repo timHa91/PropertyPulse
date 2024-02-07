@@ -5,7 +5,7 @@ import { GeoJson } from "./geo.model"
 export class RealEstateItem {
     description: string
     address: string
-    images: string[]
+    image: string
     price: number
     category: Category
     geometry: GeoJson
@@ -13,7 +13,7 @@ export class RealEstateItem {
 
     constructor(obj?: any) {
         this.description = obj && obj.description || null;
-        this.images = obj && obj.image || [];
+        this.image = obj && obj.image || null;
         this.address = obj && obj.address || null;
         this.price = obj && obj.price || null;
         this.category = obj && obj.category || [];

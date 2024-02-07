@@ -9,9 +9,11 @@
     <div class="type">
       <label for="type">Type:</label>
       <mat-radio-group formControlName="type">
-          <mat-radio-button [checked]="true" value="rent">For Rent</mat-radio-button>
-          <mat-radio-button value="sale">For Sale</mat-radio-button>
-          <mat-radio-button value="sold">Sold</mat-radio-button>
+          <mat-radio-button *ngFor="let option of checkBoxOptions" 
+          [value]="option.value"
+          [checked]="option.checked">
+          {{option.name}}
+        </mat-radio-button>
       </mat-radio-group>
   </div>
     <div class="address-form">
@@ -42,7 +44,7 @@
     <hr>
     <div class="buttons">
       <button mat-raised-button color="warn">Delete</button>
-      <button type="submit" [disabled]="checkIfSaveEnabled()" mat-raised-button color="accent">Save Draft</button>
-      <button mat-raised-button [disabled]="" color="primary">Publish</button>
+      <button type="submit" [disabled]="creationForm.invalid" mat-raised-button color="accent">Save Draft</button>
+      <button (click)="publishItem()" mat-raised-button [disabled]="isItemAdraft()" color="primary">Publish</button>
     </div>
   </form>

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ListingService } from "../listing.service";
 import { Status } from "../listing-status.enum";
 import { Category } from "src/app/shared/category.enum";
@@ -7,6 +7,7 @@ import { RealEstateItem } from "src/app/shared/real-estate-item.model";
 import { MapboxService } from "src/app/map/map.service";
 import { Observable, Subscription } from "rxjs";
 import { GeoJson } from "src/app/shared/geo.model";
+import { Option } from "./type-option.model";
 
 @Component({
     selector: 'app-create-listing',
@@ -14,12 +15,17 @@ import { GeoJson } from "src/app/shared/geo.model";
     styleUrls: ['./create-listing.component.css']
 })
 export class CreateListingComponent implements OnInit, OnDestroy {
-
+    checkBoxOptions: Option[] = [
+        { name: 'For Rent', checked: true, value: 'rent'},
+        { name: 'For Sale', checked: false, value: 'sale'},
+        { name: 'Sold', checked: false, value: 'sold'},
+    ]
     creationForm!: FormGroup;
     startEditSubscription!: Subscription;
     formResetSubscription!: Subscription;
     showCreationSubscription!: Subscription;
     toEditItem!: RealEstateItem;
+    editItemIndex!: number;
     showForm = false;
     editMode = false;
 
@@ -27,33 +33,34 @@ export class CreateListingComponent implements OnInit, OnDestroy {
                 private mapService: MapboxService
         ) {}
     
-        ngOnInit(): void {
-            this.initForm();
-            this.subscribeToStartEdit();
-            this.subscribeToFormReset();
-            this.subscribeToShowForm();
-        }
+    ngOnInit(): void {
+        this.initForm();
+        this.subscribeToStartEdit();
+        this.subscribeToFormReset();
+        this.subscribeToShowForm();
+    }
     
-        ngOnDestroy(): void {
+    ngOnDestroy(): void {
             this.startEditSubscription.unsubscribe();
             this.formResetSubscription.unsubscribe();
             this.showCreationSubscription.unsubscribe();
         }
 
-        subscribeToShowForm (): void {
-            this.showCreationSubscription = this.listingService.showCreationForm.subscribe( showCreationForm => {
-                this.showForm = showCreationForm;
-              })
+    private subscribeToShowForm (): void {
+        this.showCreationSubscription = this.listingService.showCreationForm.subscribe( showCreationForm => {
+            this.showForm = showCreationForm;
+            })
         }
 
-        subscribeToStartEdit(): void {
-            this.startEditSubscription = this.listingService.startedEditing.subscribe(itemIndex => {
-                if (itemIndex !== null) {
-                    this.editMode = true;
-                    this.toEditItem = this.listingService.getItemByIndex(itemIndex);
-                    this.setFormValues();
-                }
-            });
+    private subscribeToStartEdit(): void {
+        this.startEditSubscription = this.listingService.startedEditing.subscribe(itemIndex => {
+            if (itemIndex !== null) {
+                this.editMode = true;
+                this.editItemIndex = itemIndex;
+                this.toEditItem = this.listingService.getItemByIndex(itemIndex);
+                this.setFormValues();
+            }
+        });
     }
 
     private subscribeToFormReset(): void {
@@ -61,16 +68,15 @@ export class CreateListingComponent implements OnInit, OnDestroy {
              this.resetForm();
         })
     }
-    
+
     private setFormValues(): void {
             this.creationForm.setValue({
                 description: this.toEditItem.description,
                 type: this.convertCategoryToString(),
                 address: this.toEditItem.address,
                 price: this.toEditItem.price,
-                image: this.toEditItem.images
+                image: this.toEditItem.image
             });
-            this.creationForm.markAsDirty();
         }
 
     onSafeDraft() {
@@ -80,22 +86,45 @@ export class CreateListingComponent implements OnInit, OnDestroy {
         const newPrice = this.creationForm.get('price')?.value;
         const newCategory = this.convertToCategory(this.creationForm.get('type')?.value);
         const newStatus = Status.DRAFT;
-
         
-        this.getCordsForCreatedItem(newAddress).subscribe(coords => {
-            const listingItem: RealEstateItem = {
-                description: newDescription,
-                images: newImage,
-                address: newAddress,
-                geometry: new GeoJson(coords),
-                price: newPrice,
-                category: newCategory,
-                status: newStatus
+        const listingItem: RealEstateItem = {
+            description: newDescription,    
+            geometry: this.toEditItem ? this.toEditItem.geometry : new GeoJson([0, 0]),
+            image: newImage,
+            address: newAddress,
+            price: newPrice,
+            category: newCategory,
+            status: newStatus,
+        };
+        
+        if (this.editMode && newAddress === this.toEditItem.address) {
+            this.updateListing(listingItem);
+        } else {
+            this.createListing(listingItem);
+        }
+    }
+        
+    private updateListing(listingItem: RealEstateItem) {
+        this.listingService.updateItem(listingItem, this.editItemIndex);
+        this.resetForm();
+    }
+        
+    private createListing(listingItem: RealEstateItem) {
+        this.getCordsForCreatedItem(listingItem.address).subscribe(coords => {
+            if (coords !== undefined) {
+                listingItem.geometry = new GeoJson(coords);
             }
-            const newListingItem = new RealEstateItem(listingItem);
-            this.listingService.addNewListing(newListingItem);
+            this.saveListing(listingItem);
             this.resetForm();
         });
+    }
+        
+    private saveListing(listingItem: RealEstateItem) {
+        if (this.editMode) {               
+            this.listingService.updateItem(listingItem, this.editItemIndex);
+        } else {
+            this.listingService.addNewListing(listingItem);
+        }
     }
 
     private initForm() {
@@ -104,13 +133,14 @@ export class CreateListingComponent implements OnInit, OnDestroy {
             'type': new FormControl(null),
             'address': new FormControl(null, Validators.required),
             'price': new FormControl(null, Validators.required),
-            'image': new FormControl(null, Validators.required)
+            'image': new FormControl(null, [Validators.required, this.urlValidator])
         })
+        this.creationForm.get('type')?.setValue('rent');
     }
 
     getErrorMessage(controlName: string): string {
         const control = this.creationForm.get(controlName)
-        if (control && control.hasError('required')) {
+        if (control && control.hasError('required') && control.touched) {
             return 'You must enter a value';
         }
         return '';
@@ -132,6 +162,11 @@ export class CreateListingComponent implements OnInit, OnDestroy {
         return typeValue;
     }
 
+    private urlValidator(control: AbstractControl): { [key: string]: any } | null {
+        const valid = /^(ftp|http|https):\/\/[^ "]+$/.test(control.value);
+        return valid ? null : { invalidUrl: { value: control.value } };
+    }
+
     private convertToCategory(categoryString: string): Category {
         switch (categoryString) {
             case 'rent':
@@ -147,17 +182,8 @@ export class CreateListingComponent implements OnInit, OnDestroy {
     
     private resetForm(): void {
         this.editMode = false;
-        this.creationForm.reset(); 
-        this.clearValidationErrors(); 
-    }
-
-      private clearValidationErrors(): void {
-        Object.keys(this.creationForm.controls).forEach(field => {
-            const control = this.creationForm.get(field);
-            if (control) {  
-                control.setErrors(null);
-            }
-        });
+        this.creationForm.reset();
+        this.creationForm.get('type')?.setValue('rent');
     }
 
     private getCordsForCreatedItem(location: string): Observable<[number, number]> {
@@ -165,9 +191,17 @@ export class CreateListingComponent implements OnInit, OnDestroy {
     }
 
     checkIfSaveEnabled() {
-        if (!this.creationForm.dirty || !this.creationForm.valid || this.creationForm.pristine) {
-          return true;
+        return !this.creationForm.valid || this.creationForm.pristine;
+    }
+
+    isItemAdraft() {
+        if(this.toEditItem) {
+            return this.toEditItem.status === Status.DRAFT ? false : true;
         }
-        return false;
+        return true;
+      }
+
+      publishItem() {
+
       }
 }
