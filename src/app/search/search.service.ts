@@ -2,9 +2,11 @@ import { Injectable } from "@angular/core";
 import { RealEstateItem } from "../shared/real-estate-item.model";
 import { Category } from "../shared/category.enum";
 import { GeoJson } from "../shared/geo.model";
+import { Subject } from "rxjs";
 
 @Injectable({providedIn: 'root'})
 export class SearchService {
+    searchListHasChanged = new Subject<RealEstateItem[]>();
 
     searchResults: RealEstateItem[] = [
         {
@@ -52,5 +54,15 @@ export class SearchService {
 
     getAllResults() {
         return this.searchResults.slice();
+    }
+
+    addNewItem(item: RealEstateItem) {
+        this.searchResults.push(item);
+        this.searchListHasChanged.next(this.searchResults.slice());
+    }
+
+    deleteItem(index: number) {
+        this.searchResults.splice(index, 1);
+        this.searchListHasChanged.next(this.searchResults.slice());
     }
 }

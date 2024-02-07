@@ -23,6 +23,7 @@ export class SearchListComponent implements OnInit, OnDestroy {
   filterSubscription!: Subscription;
   sortSubscription!: Subscription;
   paginationSubscription!: Subscription;
+  searchListChangedSubscription!: Subscription;
   isDetailView = false;
   detailViewItem!: RealEstateItem;
 
@@ -38,6 +39,7 @@ export class SearchListComponent implements OnInit, OnDestroy {
     this.initializeLists();
     this.initializeMap();
 
+    this.subscribeToSearchListChanges();
     this.subscribeToFilterChanges();
     this.subscribeToSortChanges();
     this.subscribeToPaginationChanges();
@@ -65,6 +67,14 @@ export class SearchListComponent implements OnInit, OnDestroy {
   private initializeMap() {
     this.mapService.initializeMap(this.filteredList);
     this.mapService.placeAllMarkers(this.paginatedList);
+  }
+
+  private subscribeToSearchListChanges() {
+    this.searchListChangedSubscription = this.searchService.searchListHasChanged.subscribe(changedList => {
+      this.originalList = changedList;
+      this.filterService.setPriceRangeFromList(this.originalList);
+      this.filteredList = this.originalList;
+    })
   }
 
   private subscribeToFilterChanges() {

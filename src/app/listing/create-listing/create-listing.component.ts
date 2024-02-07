@@ -8,6 +8,7 @@ import { MapboxService } from "src/app/map/map.service";
 import { Observable, Subscription } from "rxjs";
 import { GeoJson } from "src/app/shared/geo.model";
 import { Option } from "./type-option.model";
+import { SearchService } from "src/app/search/search.service";
 
 @Component({
     selector: 'app-create-listing',
@@ -30,7 +31,8 @@ export class CreateListingComponent implements OnInit, OnDestroy {
     editMode = false;
 
     constructor(private listingService: ListingService,
-                private mapService: MapboxService
+                private mapService: MapboxService,
+                private searchService: SearchService
         ) {}
     
     ngOnInit(): void {
@@ -180,7 +182,7 @@ export class CreateListingComponent implements OnInit, OnDestroy {
         }
     }
     
-    private resetForm(): void {
+    resetForm(): void {
         this.editMode = false;
         this.creationForm.reset();
         this.creationForm.get('type')?.setValue('rent');
@@ -202,6 +204,17 @@ export class CreateListingComponent implements OnInit, OnDestroy {
       }
 
       publishItem() {
+        if (this.toEditItem) {
+            this.toEditItem.status = Status.PUBLISHED;
+            this.listingService.updateItem(this.toEditItem, this.editItemIndex);
+            this.searchService.addNewItem(this.toEditItem);
+        }
+        this.resetForm();
+      }
 
+      onDeleteItem() {
+        this.listingService.deleteItem(this.editItemIndex);
+        this.searchService.deleteItem(this.editItemIndex);
+        this.resetForm();
       }
 }

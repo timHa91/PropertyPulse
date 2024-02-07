@@ -103,4 +103,9 @@ export class ListingService {
         this.listingResults[index] = item;
         this.listingHasChanged.next(this.listingResults.slice());
     }
+
+    deleteItem(index: number) {
+        this.listingResults.splice(index, 1);
+        this.listingHasChanged.next(this.listingResults.slice());
+    }
 }

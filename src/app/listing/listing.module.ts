@@ -13,6 +13,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatRadioModule} from '@angular/material/radio';
 import {FormsModule} from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import {FormsModule} from '@angular/forms';
     MatCheckboxModule,
     ReactiveFormsModule,
     MatRadioModule,
-    FormsModule
+    FormsModule,
+    RouterModule
   ]
 })
 export class ListingModule { }

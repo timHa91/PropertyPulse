@@ -20,6 +20,7 @@ import { MapComponent } from "../map/map.component";
 import {HttpClientModule} from '@angular/common/http'
 import { PaginationControlsComponent } from "../pagination/pagination-controls/pagination-controls.component";
 import {MatSelectModule} from '@angular/material/select';
+import { RouterModule } from "@angular/router";
 
 
 
@@ -48,7 +49,8 @@ import {MatSelectModule} from '@angular/material/select';
         MatCardModule,
         MatButtonModule,
         HttpClientModule,
-        MatSelectModule
+        MatSelectModule,
+        RouterModule
     ]
 })
 export class SearchModule {

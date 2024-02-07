@@ -4,6 +4,9 @@
     [listSize]="this.filteredList.length"
     ></app-pagination-controls>
 </div>
+<div>
+    <a [routerLink]="['/marketplace-listing']" routerLinkActive="router-link-active" >Go To Listing</a>
+</div>
 <ng-container *ngIf="filteredList.length > 0">
     <app-search-item 
     [item]="result" *ngFor="let result of paginatedList; index as i"
