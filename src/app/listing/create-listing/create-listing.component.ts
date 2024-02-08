@@ -49,13 +49,13 @@ export class CreateListingComponent implements OnInit, OnDestroy {
         }
 
     private subscribeToShowForm (): void {
-        this.showCreationSubscription = this.listingService.showCreationForm.subscribe( showCreationForm => {
+        this.showCreationSubscription = this.listingService.showCreationForm$.subscribe( showCreationForm => {
             this.showForm = showCreationForm;
             })
         }
 
     private subscribeToStartEdit(): void {
-        this.startEditSubscription = this.listingService.startedEditing.subscribe(itemIndex => {
+        this.startEditSubscription = this.listingService.startedEditing$.subscribe(itemIndex => {
             if (itemIndex !== null) {
                 this.editMode = true;
                 this.editItemIndex = itemIndex;
@@ -66,7 +66,7 @@ export class CreateListingComponent implements OnInit, OnDestroy {
     }
 
     private subscribeToFormReset(): void {
-        this.formResetSubscription = this.listingService.onFormReset.subscribe( () => {
+        this.formResetSubscription = this.listingService.onFormReset$.subscribe( () => {
              this.resetForm();
         })
     }

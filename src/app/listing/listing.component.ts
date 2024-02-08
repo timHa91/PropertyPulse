@@ -12,13 +12,13 @@ export class ListingComponent implements OnInit {
   constructor(private listingService: ListingService){}
 
   ngOnInit(): void {
-    this.listingService.showCreationForm.subscribe( showForm => {
+    this.listingService.showCreationForm$.subscribe( showForm => {
       this.showCreationForm = showForm;
     })
   }
   
   toogleShowCreationForm() {
-    this.listingService.showCreationForm.next(!this.showCreationForm)
+    this.listingService.showCreationForm$.next(!this.showCreationForm)
     this.listingService.resetForm();
   }
 }

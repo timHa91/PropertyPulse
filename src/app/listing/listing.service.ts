@@ -8,10 +8,10 @@ import { Subject } from "rxjs";
 @Injectable({providedIn: 'root'})
 export class ListingService {
 
-    listingHasChanged = new Subject<RealEstateItem[]>();
-    startedEditing = new Subject<number>();
-    showCreationForm = new Subject<boolean>();
-    onFormReset = new Subject<void>();
+    listingHasChanged$ = new Subject<RealEstateItem[]>();
+    startedEditing$ = new Subject<number>();
+    showCreationForm$ = new Subject<boolean>();
+    onFormReset$ = new Subject<void>();
 
     listingResults: RealEstateItem[] = [
         {
@@ -88,7 +88,7 @@ export class ListingService {
 
     addNewListing(newItem: RealEstateItem) {
         this.listingResults.push(newItem);
-        this.listingHasChanged.next(this.listingResults.slice());
+        this.listingHasChanged$.next(this.listingResults.slice());
     }
 
     getItemByIndex(index: number) {
@@ -96,16 +96,16 @@ export class ListingService {
     }
 
     resetForm() {
-        this.onFormReset.next();
+        this.onFormReset$.next();
     }
 
     updateItem(item: RealEstateItem, index: number) {
         this.listingResults[index] = item;
-        this.listingHasChanged.next(this.listingResults.slice());
+        this.listingHasChanged$.next(this.listingResults.slice());
     }
 
     deleteItem(index: number) {
         this.listingResults.splice(index, 1);
-        this.listingHasChanged.next(this.listingResults.slice());
+        this.listingHasChanged$.next(this.listingResults.slice());
     }
 }

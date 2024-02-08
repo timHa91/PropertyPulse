@@ -19,7 +19,7 @@ export class ListingItemComponent {
   } 
 
   onEditItem() {
-    this.listingService.showCreationForm.next(true);
-    this.listingService.startedEditing.next(this.index);
+    this.listingService.showCreationForm$.next(true);
+    this.listingService.startedEditing$.next(this.index);
   }
 }

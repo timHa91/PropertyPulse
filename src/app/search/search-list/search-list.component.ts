@@ -39,10 +39,10 @@ export class SearchListComponent implements OnInit, OnDestroy {
     this.initializeLists();
     this.initializeMap();
 
-    this.subscribeToSearchListChanges();
-    this.subscribeToFilterChanges();
     this.subscribeToSortChanges();
+    this.subscribeToFilterChanges();
     this.subscribeToPaginationChanges();
+    this.subscribeToSearchListChanges();
   }
 
   ngOnDestroy(): void {
@@ -114,11 +114,11 @@ export class SearchListComponent implements OnInit, OnDestroy {
     this.updateMap();
   }
 
-  private handleFilteredListChanges(filteredList: RealEstateItem[]) {
-    this.sortService.onReset$.next();
+  private handleFilteredListChanges(filteredList: RealEstateItem[]) { 
     this.filteredList = filteredList;
     this.paginatedList = this.paginationService.setPaginationList(filteredList);
     this.updateMap();
+    this.sortService.onReset$.next();
     this.paginationService.onReset$.next();
   }
 
