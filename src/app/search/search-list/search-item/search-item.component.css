@@ -4,6 +4,7 @@
 
 .flex-container {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .search-item-header {

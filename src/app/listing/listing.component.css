@@ -6,12 +6,14 @@
 
 .header {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
 }
 
 .listing-content {
     display: flex;
+    flex-wrap: wrap;
     gap: 20px;
 }
 

@@ -92,7 +92,7 @@ export class CreateListingComponent implements OnInit, OnDestroy {
         const listingItem: RealEstateItem = {
             description: newDescription,    
             geometry: this.toEditItem ? this.toEditItem.geometry : new GeoJson([0, 0]),
-            image: newImage,
+            image: newImage,    
             address: newAddress,
             price: newPrice,
             category: newCategory,

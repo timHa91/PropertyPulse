@@ -1,8 +1,12 @@
-<div class="container">
+<div class="search-container">
     <app-filter-bar></app-filter-bar>
     <div class="search-content">
-        <app-search-list></app-search-list>
-        <app-map></app-map>
+        <div class="search-list-container">
+            <app-search-list></app-search-list>
+        </div>
+        <div *ngIf="!isSmallView" class="map-container">
+            <app-map></app-map>
+        </div>
     </div>
 </div>
         

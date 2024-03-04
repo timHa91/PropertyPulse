@@ -24,6 +24,7 @@ export class SearchListComponent implements OnInit, OnDestroy {
   sortSubscription!: Subscription;
   paginationSubscription!: Subscription;
   searchListChangedSubscription!: Subscription;
+  updateMapSubscription!: Subscription;
   isDetailView = false;
   detailViewItem!: RealEstateItem;
 
@@ -37,12 +38,11 @@ export class SearchListComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initializeLists();
-    this.initializeMap();
-
     this.subscribeToSortChanges();
     this.subscribeToFilterChanges();
     this.subscribeToPaginationChanges();
     this.subscribeToSearchListChanges();
+    this.subscribeToUpdateMap();
   }
 
   ngOnDestroy(): void {
@@ -64,9 +64,15 @@ export class SearchListComponent implements OnInit, OnDestroy {
     this.filteredList = this.originalList;
   }
 
-  private initializeMap() {
-    this.mapService.initializeMap(this.filteredList);
-    this.mapService.placeAllMarkers(this.paginatedList);
+  private updateMap() {
+      this.mapService.updateMapCenter(this.filteredList);
+      this.mapService.placeAllMarkers(this.paginatedList);
+  }
+
+  private subscribeToUpdateMap() {
+    this.updateMapSubscription = this.mapService.updateMap.subscribe( () => {
+      this.updateMap();
+    })
   }
 
   private subscribeToSearchListChanges() {
@@ -105,24 +111,24 @@ export class SearchListComponent implements OnInit, OnDestroy {
 
   private handlePaginationChanges() {
     this.paginatedList = this.paginationService.setPaginationList(this.filteredList);
-    this.updateMap();
+    this.updateMapMarkers();
   }
 
   private handleSortListChanges(sortedList: RealEstateItem[]) {
     this.paginationService.onReset$.next();
     this.paginatedList = this.paginationService.setPaginationList(sortedList);
-    this.updateMap();
+    this.updateMapMarkers();
   }
 
   private handleFilteredListChanges(filteredList: RealEstateItem[]) { 
     this.filteredList = filteredList;
     this.paginatedList = this.paginationService.setPaginationList(filteredList);
-    this.updateMap();
+    this.updateMapMarkers();
     this.sortService.onReset$.next();
     this.paginationService.onReset$.next();
   }
 
-  private updateMap() {
+  private updateMapMarkers() {
     this.mapService.removeAllMarkers();
     this.mapService.placeAllMarkers(this.paginatedList);
   }
@@ -136,5 +142,6 @@ export class SearchListComponent implements OnInit, OnDestroy {
     this.filterSubscription.unsubscribe();
     this.sortSubscription.unsubscribe();
     this.paginationSubscription.unsubscribe();
+    this.updateMapSubscription.unsubscribe();
   }
 }

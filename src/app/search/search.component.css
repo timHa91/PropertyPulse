@@ -1,4 +1,4 @@
-.container {
+.search-container {
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
     padding: 20px 20px;
     background-color: white;
@@ -9,11 +9,11 @@
     gap: 20px;
 }
 
-app-search-list {
+.search-list-container {
     flex: 1;
 }
 
-app-map {
+.map-container {
     flex: 1;
     height: 51vh;
     margin-top: 90px;
