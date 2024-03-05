@@ -16,7 +16,7 @@ import { SearchSortComponent } from "./search-list/search-list-sort/search-list-
 import { SearchItemComponent } from "./search-list/search-item/search-item.component";
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
-import { MapComponent } from "../map/map.component";
+import { MapComponent } from "../mapbox/mapbox.component";
 import {HttpClientModule} from '@angular/common/http'
 import { PaginationControlsComponent } from "../pagination/pagination-controls/pagination-controls.component";
 import {MatSelectModule} from '@angular/material/select';

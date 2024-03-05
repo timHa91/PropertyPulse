@@ -4,7 +4,7 @@ import { ListingService } from "../listing.service";
 import { Status } from "../listing-status.enum";
 import { Category } from "src/app/shared/category.enum";
 import { RealEstateItem } from "src/app/shared/real-estate-item.model";
-import { MapboxService } from "src/app/map/map.service";
+import { MapboxService } from "src/app/mapbox/mapbox.service";
 import { Observable, Subscription } from "rxjs";
 import { GeoJson } from "src/app/shared/geo.model";
 import { Option } from "./type-option.model";

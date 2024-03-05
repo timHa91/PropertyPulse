@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
-import { ViewportService } from "../viewport.service";
+import { ViewportService } from "../shared/viewport.service";
 
 @Component({
     selector: 'app-search',

@@ -3,7 +3,7 @@ import { Subscription, Subject, of } from "rxjs";
 import { catchError, switchMap } from "rxjs/operators";
 import { RealEstateItem } from "src/app/shared/real-estate-item.model";
 import { SearchService } from "../search.service";
-import { MapboxService } from "src/app/map/map.service";
+import { MapboxService } from "src/app/mapbox/mapbox.service";
 import { PaginationService } from "../../pagination/pagination.service";
 import { FilterService } from "../filter-bar/filter.service";
 import { SortService } from "./search-list-sort/sort.service";

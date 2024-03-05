@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject, map, of } from "rxjs";
 import { SortDescriptor, SortDirection } from "./sort-descriptor.model";
 import { RealEstateItem } from "../../../shared/real-estate-item.model";
-import { MapboxService } from "src/app/map/map.service";
+import { MapboxService } from "src/app/mapbox/mapbox.service";
 
 @Injectable({providedIn: 'root'})
 export class SortService {

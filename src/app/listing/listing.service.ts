@@ -3,14 +3,14 @@ import { RealEstateItem } from "../shared/real-estate-item.model";
 import { Category } from "../shared/category.enum";
 import { GeoJson } from "../shared/geo.model";
 import { Status } from "./listing-status.enum";
-import { Subject } from "rxjs";
+import { BehaviorSubject, Subject } from "rxjs";
 
 @Injectable({providedIn: 'root'})
 export class ListingService {
 
     listingHasChanged$ = new Subject<RealEstateItem[]>();
     startedEditing$ = new Subject<number>();
-    showCreationForm$ = new Subject<boolean>();
+    showCreationForm$ = new BehaviorSubject<boolean>(false);
     onFormReset$ = new Subject<void>();
 
     listingResults: RealEstateItem[] = [

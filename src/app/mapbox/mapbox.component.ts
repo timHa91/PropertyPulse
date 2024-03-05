@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { MapboxService } from './map.service';
+import { MapboxService } from './mapbox.service';
 
 @Component({
   selector: 'app-map',
   template: '<div #mapContainer id="map" class="map"></div>',
-  styleUrls: ['./map.component.css']
+  styleUrls: ['./mapbox.component.css']
 })
 export class MapComponent implements OnInit {
 

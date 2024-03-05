@@ -3,7 +3,7 @@ import { RealEstateItem } from "../../shared/real-estate-item.model";
 import { SearchCriteria } from "../search-criteria.model";
 import { PriceRange } from "../../shared/price-range.model";
 import { Injectable } from "@angular/core";
-import { MapboxService } from "../../map/map.service";
+import { MapboxService } from "../../mapbox/mapbox.service";
 import { Category } from "../../shared/category.enum";
 
 @Injectable({providedIn: 'root'})
