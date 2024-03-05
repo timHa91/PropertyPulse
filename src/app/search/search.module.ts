@@ -21,8 +21,6 @@ import {HttpClientModule} from '@angular/common/http'
 import { PaginationControlsComponent } from "../pagination/pagination-controls/pagination-controls.component";
 import {MatSelectModule} from '@angular/material/select';
 import { RouterModule } from "@angular/router";
-import { LayoutModule } from '@angular/cdk/layout';
-
 
 
 
@@ -52,8 +50,7 @@ import { LayoutModule } from '@angular/cdk/layout';
         MatButtonModule,
         HttpClientModule,
         MatSelectModule,
-        RouterModule,
-        LayoutModule
+        RouterModule
     ]
 })
 export class SearchModule {

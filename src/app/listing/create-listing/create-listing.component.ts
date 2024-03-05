@@ -16,11 +16,13 @@ import { SearchService } from "src/app/search/search.service";
     styleUrls: ['./create-listing.component.css']
 })
 export class CreateListingComponent implements OnInit, OnDestroy {
+
     checkBoxOptions: Option[] = [
         { name: 'For Rent', checked: true, value: 'rent'},
         { name: 'For Sale', checked: false, value: 'sale'},
         { name: 'Sold', checked: false, value: 'sold'},
     ]
+
     creationForm!: FormGroup;
     startEditSubscription!: Subscription;
     formResetSubscription!: Subscription;
@@ -32,8 +34,7 @@ export class CreateListingComponent implements OnInit, OnDestroy {
 
     constructor(private listingService: ListingService,
                 private mapService: MapboxService,
-                private searchService: SearchService
-        ) {}
+                private searchService: SearchService) {}
     
     ngOnInit(): void {
         this.initForm();
@@ -43,16 +44,16 @@ export class CreateListingComponent implements OnInit, OnDestroy {
     }
     
     ngOnDestroy(): void {
-            this.startEditSubscription.unsubscribe();
-            this.formResetSubscription.unsubscribe();
-            this.showCreationSubscription.unsubscribe();
-        }
+        this.startEditSubscription.unsubscribe();
+        this.formResetSubscription.unsubscribe();
+        this.showCreationSubscription.unsubscribe();
+    }
 
     private subscribeToShowForm (): void {
         this.showCreationSubscription = this.listingService.showCreationForm$.subscribe( showCreationForm => {
             this.showForm = showCreationForm;
-            })
-        }
+        })
+    }
 
     private subscribeToStartEdit(): void {
         this.startEditSubscription = this.listingService.startedEditing$.subscribe(itemIndex => {
@@ -72,14 +73,14 @@ export class CreateListingComponent implements OnInit, OnDestroy {
     }
 
     private setFormValues(): void {
-            this.creationForm.setValue({
-                description: this.toEditItem.description,
-                type: this.convertCategoryToString(),
-                address: this.toEditItem.address,
-                price: this.toEditItem.price,
-                image: this.toEditItem.image
-            });
-        }
+        this.creationForm.setValue({
+            description: this.toEditItem.description,
+            type: this.convertCategoryToString(),
+            address: this.toEditItem.address,
+            price: this.toEditItem.price,
+            image: this.toEditItem.image
+        });
+    }
 
     onSafeDraft() {
         const newDescription = this.creationForm.get('description')?.value;
@@ -192,29 +193,29 @@ export class CreateListingComponent implements OnInit, OnDestroy {
        return this.mapService.getLocationCoordinates(location);
     }
 
-    checkIfSaveEnabled() {
-        return !this.creationForm.valid || this.creationForm.pristine;
-    }
+    // checkIfSaveEnabled() {
+    //     return !this.creationForm.valid || this.creationForm.pristine;
+    // }
 
     isItemAdraft() {
         if(this.toEditItem) {
             return this.toEditItem.status === Status.DRAFT ? false : true;
         }
         return true;
-      }
+    }
 
-      publishItem() {
+    publishItem() {
         if (this.toEditItem) {
             this.toEditItem.status = Status.PUBLISHED;
             this.listingService.updateItem(this.toEditItem, this.editItemIndex);
             this.searchService.addNewItem(this.toEditItem);
         }
         this.resetForm();
-      }
+    }
 
-      onDeleteItem() {
+    onDeleteItem() {
         this.listingService.deleteItem(this.editItemIndex);
         this.searchService.deleteItem(this.editItemIndex);
         this.resetForm();
-      }
+    }
 }

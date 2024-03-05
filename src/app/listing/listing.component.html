@@ -1,12 +1,12 @@
-<div class="container">
-    <div class="header">
+<div class="listing-container">
+    <div class="listing-header">
         <app-filter-bar></app-filter-bar>
         <button *ngIf="!showCreationForm" (click)="toogleShowCreationForm()" mat-raised-button color="primary">Create a New Listing</button>
         <button *ngIf="showCreationForm" (click)="toogleShowCreationForm()" mat-raised-button color="primary">Hide Creation</button>
   </div>
   <hr>
   <div class="listing-content">
-    <app-listing-list class="list"></app-listing-list>
-    <app-create-listing [ngClass]="!showCreationForm ? 'none': 'creation'"></app-create-listing>
+    <app-listing-list *ngIf="!isSmallView || !showCreationForm" class="list"></app-listing-list>
+    <app-create-listing class="creation" *ngIf="showCreationForm"></app-create-listing>
   </div>
 </div>

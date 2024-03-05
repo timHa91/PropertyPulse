@@ -1,28 +1,27 @@
-import { BreakpointObserver, BreakpointState } from "@angular/cdk/layout";
-import { Component, OnInit } from "@angular/core";
-import { MapboxService } from "../map/map.service";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Subscription } from "rxjs";
+import { ViewportService } from "../viewport.service";
 
 @Component({
     selector: 'app-search',
     templateUrl: './search.component.html',
     styleUrls: ['./search.component.css']
 })
-export class SearchComponent implements OnInit{
+export class SearchComponent implements OnInit, OnDestroy {
 
     isSmallView = false;
+    viewportSubscription!: Subscription;
 
-    constructor(private responsive: BreakpointObserver,
-                private mapService: MapboxService) {}
+    constructor(private viewportService: ViewportService) {}
 
     ngOnInit(): void {
-        this.responsive.observe('(max-width: 1500px)')
-        .subscribe((state: BreakpointState) => {
-            if (state.matches) {
-                this.isSmallView = true;
-            } else {
-                this.isSmallView = false;
-            }
-          });
+        this.viewportSubscription = this.viewportService.isSmallView$
+        .subscribe((isStateMatched: boolean) => {
+            this.isSmallView = isStateMatched;
+        });
+    }   
+    
+    ngOnDestroy(): void {
+        this.viewportSubscription.unsubscribe();
     }
-
 }

@@ -21,11 +21,23 @@ export class ListingListComponent implements OnInit, OnDestroy{
     ) {}
 
   ngOnInit(): void {
+    this.initLists();
+    this.subscribeToListChanged();
+    this.subscribeToFilter();
+  }
+
+  private initLists() {
     this.orginalList = this.listingService.getAllListings();
     this.filteredList = this.orginalList;
+  }
+
+  private subscribeToListChanged() {
     this.listChangedSubscription = this.listingService.listingHasChanged$.subscribe(changedList => {
       this.filteredList = changedList; 
     })
+  }
+
+  private subscribeToFilter() {
     this.filterSubscription = this.filterService.onFilterList$.subscribe(filterCritera => {
       this.filteredList = this.filterService.filterList(this.orginalList, filterCritera);
     })
@@ -33,5 +45,6 @@ export class ListingListComponent implements OnInit, OnDestroy{
 
   ngOnDestroy(): void {
     this.listChangedSubscription.unsubscribe();
+    this.filterSubscription.unsubscribe();
   }
 }
