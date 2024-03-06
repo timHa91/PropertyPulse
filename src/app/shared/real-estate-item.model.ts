@@ -10,6 +10,7 @@ export class RealEstateItem {
     category: Category
     geometry: GeoJson
     status?: Status
+    id?: string
 
     constructor(obj?: any) {
         this.description = obj && obj.description || null;

@@ -57,7 +57,7 @@ export class CreateListingComponent implements OnInit, OnDestroy {
 
     private subscribeToStartEdit(): void {
         this.startEditSubscription = this.listingService.startedEditing$.subscribe(itemIndex => {
-            if (itemIndex !== null) {
+            if (itemIndex !== -1) {
                 this.editMode = true;
                 this.editItemIndex = itemIndex;
                 this.toEditItem = this.listingService.getItemByIndex(itemIndex);
@@ -208,7 +208,7 @@ export class CreateListingComponent implements OnInit, OnDestroy {
         if (this.toEditItem) {
             this.toEditItem.status = Status.PUBLISHED;
             this.listingService.updateItem(this.toEditItem, this.editItemIndex);
-            this.searchService.addNewItem(this.toEditItem);
+            this.searchService.createNewListing(this.toEditItem);
         }
         this.resetForm();
     }

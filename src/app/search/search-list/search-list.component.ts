@@ -15,19 +15,28 @@ import { SortService } from "./search-list-sort/sort.service";
 })
 export class SearchListComponent implements OnInit, OnDestroy {
 
+  // Lists
   originalList: RealEstateItem[] = [];
   filteredList: RealEstateItem[] = [];
   paginatedList: RealEstateItem[] = [];
+
+  // Others
   hasLocationValue = new Subject<{ hasValue: boolean, locationValue: string }>();
+  detailViewItem!: RealEstateItem;
+ 
+  // Booleans
+  isFetching = false;
   isDistanceSort = false;
+  isDetailView = false;
+
+  // Subscriptions
   filterSubscription!: Subscription;
   sortSubscription!: Subscription;
   paginationSubscription!: Subscription;
   searchListChangedSubscription!: Subscription;
   updateMapSubscription!: Subscription;
-  isDetailView = false;
-  detailViewItem!: RealEstateItem;
-
+  isFetchingSubscription!: Subscription;
+ 
   constructor(
     private searchService: SearchService,
     private mapService: MapboxService,
@@ -36,6 +45,7 @@ export class SearchListComponent implements OnInit, OnDestroy {
     private sortService: SortService
   ) {}
 
+  // Lifecycle Methods
   ngOnInit(): void {
     this.initializeLists();
     this.subscribeToSortChanges();
@@ -43,12 +53,14 @@ export class SearchListComponent implements OnInit, OnDestroy {
     this.subscribeToPaginationChanges();
     this.subscribeToSearchListChanges();
     this.subscribeToUpdateMap();
+    this.subscribeToIsFetching();
   }
 
   ngOnDestroy(): void {
     this.unsubscribeAll();
   }
 
+  // Detail View Methods
   onDetailView(item: RealEstateItem) {
     this.detailViewItem = item;
     this.isDetailView = true;
@@ -58,21 +70,17 @@ export class SearchListComponent implements OnInit, OnDestroy {
     this.isDetailView = false;
   }
 
-  private initializeLists() {
-    this.originalList = this.searchService.getAllResults();
-    this.filterService.setPriceRangeFromList(this.originalList);
-    this.filteredList = this.originalList;
-  }
-
-  private updateMap() {
-      this.mapService.updateMapCenter(this.filteredList);
-      this.mapService.placeAllMarkers(this.paginatedList);
-  }
-
+  // Subscribe Methods
   private subscribeToUpdateMap() {
     this.updateMapSubscription = this.mapService.updateMap.subscribe( () => {
       this.updateMap();
     })
+  }
+
+  private subscribeToIsFetching() {
+    this.isFetchingSubscription = this.searchService.onFetching$.subscribe( isFetching => {
+        this.isFetching = isFetching;
+    });
   }
 
   private subscribeToSearchListChanges() {
@@ -109,6 +117,13 @@ export class SearchListComponent implements OnInit, OnDestroy {
     });
   }
 
+  // List Methods
+  private initializeLists() {
+    this.originalList = this.searchService.getAllResults();
+    this.filterService.setPriceRangeFromList(this.originalList);
+    this.filteredList = this.originalList;
+  }
+
   private handlePaginationChanges() {
     this.paginatedList = this.paginationService.setPaginationList(this.filteredList);
     this.updateMapMarkers();
@@ -128,11 +143,18 @@ export class SearchListComponent implements OnInit, OnDestroy {
     this.paginationService.onReset$.next();
   }
 
+  // Map Methods
+  private updateMap() {
+    this.mapService.updateMapCenter(this.filteredList);
+    this.mapService.placeAllMarkers(this.paginatedList);
+}
+
   private updateMapMarkers() {
     this.mapService.removeAllMarkers();
     this.mapService.placeAllMarkers(this.paginatedList);
   }
 
+  // Other Methods
   private handleError(error: any) {
     console.log(error);
     return of([]);
@@ -143,5 +165,6 @@ export class SearchListComponent implements OnInit, OnDestroy {
     this.sortSubscription.unsubscribe();
     this.paginationSubscription.unsubscribe();
     this.updateMapSubscription.unsubscribe();
+    this.isFetchingSubscription.unsubscribe();
   }
 }

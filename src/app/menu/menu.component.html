@@ -1,0 +1,21 @@
+<button mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item>
+      <mat-icon>account_circle</mat-icon>
+      <span>Sign Up</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>lock_open</mat-icon>
+      <span>Sign In</span>
+    </button>
+    <button (click)="goToListing()" mat-menu-item>
+      <mat-icon>view_list</mat-icon>
+      <span>Listing</span>
+    </button>
+    <button (click)="goToSearch()" mat-menu-item>
+      <mat-icon>view_list</mat-icon>
+      <span>Search</span>
+    </button>
+  </mat-menu>

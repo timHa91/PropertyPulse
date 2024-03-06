@@ -28,3 +28,14 @@
 .none {
     display: none;
 }
+
+.left-bar, .right-bar {
+    flex: 1;
+}
+
+.right-bar {
+    display: flex; 
+    justify-content: flex-end;
+    align-items: center;
+}
+

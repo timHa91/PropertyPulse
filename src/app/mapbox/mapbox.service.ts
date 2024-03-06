@@ -17,13 +17,13 @@ export class MapboxService {
   constructor(private http: HttpClient) { }
 
 initializeMap() {
-     this.map = new mapboxgl.Map({
-       container: 'map',
-       style: 'mapbox://styles/mapbox/streets-v12',
-       zoom: 13,
-       accessToken: environment.mapbox.accessToken,
-     });
-     this.updateMap.next();
+  this.map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/streets-v12',
+    zoom: 13,
+    accessToken: environment.mapbox.accessToken,
+  });
+  this.updateMap.next();
 }
 
 setMarker(coordinates: [number, number]) {
@@ -63,7 +63,7 @@ calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): numbe
 }
 
 private forwardGeocoder(searchText: string): Observable<[number, number]> {
-  const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(searchText)}.json?access_token={environment.mapbox.accessToken}&limit=1`;
+  const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(searchText)}.json?access_token=${environment.mapbox.accessToken}&limit=1`;
   return this.http.get<FeatureCollection>(url)
    .pipe(
     map( response => {

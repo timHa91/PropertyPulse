@@ -23,6 +23,11 @@ export class ListingComponent implements OnInit, OnDestroy {
     this.subscribeToViewport();
   }
 
+  ngOnDestroy(): void {
+    this.showCreationFormSubscription.unsubscribe();
+    this.viewportSubscription.unsubscribe();
+  }
+
   private subscribeToViewport() {
     this.viewportSubscription = this.viewportService.isSmallView$.subscribe((isStateMatched: boolean) => {
       this.isSmallView = isStateMatched;
@@ -34,14 +39,10 @@ export class ListingComponent implements OnInit, OnDestroy {
       this.showCreationForm = showForm;
     })
   }
-
-  ngOnDestroy(): void {
-    this.showCreationFormSubscription.unsubscribe();
-    this.viewportSubscription.unsubscribe();
-  }
-  
+ 
   toogleShowCreationForm() {
-    this.listingService.showCreationForm$.next(!this.showCreationForm)
     this.listingService.resetForm();
+    this.listingService.showCreationForm$.next(!this.showCreationForm)
+    this.listingService.startedEditing$.next(-1);
   }
 }

@@ -1,8 +1,13 @@
 <div class="listing-container">
     <div class="listing-header">
+      <div class="left-bar">
         <app-filter-bar></app-filter-bar>
-        <button *ngIf="!showCreationForm" (click)="toogleShowCreationForm()" mat-raised-button color="primary">Create a New Listing</button>
-        <button *ngIf="showCreationForm" (click)="toogleShowCreationForm()" mat-raised-button color="primary">Hide Creation</button>
+      </div>
+        <div class="right-bar">
+          <button class="creation-button" *ngIf="!showCreationForm" (click)="toogleShowCreationForm()" mat-raised-button color="primary">Create a New Listing</button>
+          <button *ngIf="showCreationForm" (click)="toogleShowCreationForm()" mat-raised-button color="primary">Hide Creation</button>
+          <app-menu></app-menu>
+      </div>
   </div>
   <hr>
   <div class="listing-content">

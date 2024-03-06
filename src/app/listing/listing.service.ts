@@ -9,7 +9,7 @@ import { BehaviorSubject, Subject } from "rxjs";
 export class ListingService {
 
     listingHasChanged$ = new Subject<RealEstateItem[]>();
-    startedEditing$ = new Subject<number>();
+    startedEditing$ = new BehaviorSubject<number>(-1);
     showCreationForm$ = new BehaviorSubject<boolean>(false);
     onFormReset$ = new Subject<void>();
 

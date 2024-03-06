@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MapboxService } from './mapbox.service';
 
 @Component({
-  selector: 'app-map',
+  selector: 'app-mapbox',
   template: '<div #mapContainer id="map" class="map"></div>',
   styleUrls: ['./mapbox.component.css']
 })

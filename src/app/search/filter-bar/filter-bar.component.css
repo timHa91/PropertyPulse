@@ -23,3 +23,8 @@ app-radius-filter {
 app-price-range-filter {
     flex: 2;
 }
+
+app-menu {
+    flex:0.1;
+    padding-bottom: 20px;
+}
