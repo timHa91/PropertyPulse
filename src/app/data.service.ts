@@ -1,13 +1,12 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { RealEstateItem } from "./shared/real-estate-item.model";
-import { Observable, Subject, catchError, map, throwError } from "rxjs";
+import { Observable, catchError, map, throwError } from "rxjs";
 import { environment } from "src/environments/environment";
 
 @Injectable({providedIn: 'root'})
 export class DataService {
     private apiUrl = environment.apiUrl;
-   
     constructor(private http: HttpClient) {
     }
 

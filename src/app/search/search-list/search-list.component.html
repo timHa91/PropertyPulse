@@ -13,4 +13,8 @@
 </ng-container>
 <app-search-detail (triggerCloseDetailView)="onCloseDetailView()" *ngIf="isDetailView" [item]="detailViewItem"></app-search-detail>
 <p *ngIf="filteredList.length < 1 && !isFetching">There are no Search Results</p>
-<p *ngIf="isFetching">Loading...</p>
+<p *ngIf="isFetching && !errorMessage">Loading...</p>
+<div *ngIf="errorMessage">
+    <h1>An Error Occurred!</h1>
+    <p>{{errorMessage}}</p>
+</div>

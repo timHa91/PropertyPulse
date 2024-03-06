@@ -9,6 +9,7 @@ export class SearchService {
     searchListHasChanged = new Subject<RealEstateItem[]>();
     searchList: RealEstateItem[] = [];
     onFetching$ = new Subject<boolean>();
+    onError$ = new Subject<string>();
 
     constructor(private dataService: DataService, private mapboxService: MapboxService) {
         this.loadData();
@@ -65,6 +66,9 @@ export class SearchService {
             this.searchListHasChanged.next(this.searchList.slice());
             this.mapboxService.updateMap.next();
             this.onFetching$.next(false);
+        },
+        error => {
+            this.onError$.next(error.message);
         })
     }
 
@@ -75,6 +79,9 @@ export class SearchService {
     createNewListing(newItem: RealEstateItem) {
         this.dataService.storeItem(newItem).subscribe(() => {
             this.loadData();
+        },
+        error => {
+            this.onError$.next(error.message);
         })
     }
 

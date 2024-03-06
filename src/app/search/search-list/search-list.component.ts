@@ -19,15 +19,12 @@ export class SearchListComponent implements OnInit, OnDestroy {
   originalList: RealEstateItem[] = [];
   filteredList: RealEstateItem[] = [];
   paginatedList: RealEstateItem[] = [];
-
-  // Others
-  hasLocationValue = new Subject<{ hasValue: boolean, locationValue: string }>();
-  detailViewItem!: RealEstateItem;
  
-  // Booleans
+  // Flags
   isFetching = false;
   isDistanceSort = false;
   isDetailView = false;
+  errorMessage: string | null = null;
 
   // Subscriptions
   filterSubscription!: Subscription;
@@ -35,7 +32,12 @@ export class SearchListComponent implements OnInit, OnDestroy {
   paginationSubscription!: Subscription;
   searchListChangedSubscription!: Subscription;
   updateMapSubscription!: Subscription;
-  isFetchingSubscription!: Subscription;
+  onFetchingSubscription!: Subscription;
+  onErrorSubscription!: Subscription;
+
+  // Others
+  hasLocationValue = new Subject<{ hasValue: boolean, locationValue: string }>();
+  detailViewItem!: RealEstateItem;
  
   constructor(
     private searchService: SearchService,
@@ -54,6 +56,7 @@ export class SearchListComponent implements OnInit, OnDestroy {
     this.subscribeToSearchListChanges();
     this.subscribeToUpdateMap();
     this.subscribeToIsFetching();
+    this.subscribeToError();
   }
 
   ngOnDestroy(): void {
@@ -71,14 +74,20 @@ export class SearchListComponent implements OnInit, OnDestroy {
   }
 
   // Subscribe Methods
+  private subscribeToError() {
+    this.onErrorSubscription = this.searchService.onError$.subscribe( errorMsg => {
+      this.errorMessage = errorMsg;
+    });
+  }
+
   private subscribeToUpdateMap() {
     this.updateMapSubscription = this.mapService.updateMap.subscribe( () => {
       this.updateMap();
-    })
+    });
   }
 
   private subscribeToIsFetching() {
-    this.isFetchingSubscription = this.searchService.onFetching$.subscribe( isFetching => {
+    this.onFetchingSubscription = this.searchService.onFetching$.subscribe( isFetching => {
         this.isFetching = isFetching;
     });
   }
@@ -88,7 +97,7 @@ export class SearchListComponent implements OnInit, OnDestroy {
       this.originalList = changedList;
       this.filterService.setPriceRangeFromList(this.originalList);
       this.filteredList = this.originalList;
-    })
+    });
   }
 
   private subscribeToFilterChanges() {
@@ -165,6 +174,8 @@ export class SearchListComponent implements OnInit, OnDestroy {
     this.sortSubscription.unsubscribe();
     this.paginationSubscription.unsubscribe();
     this.updateMapSubscription.unsubscribe();
-    this.isFetchingSubscription.unsubscribe();
+    this.onFetchingSubscription.unsubscribe();
+    this.searchListChangedSubscription.unsubscribe();
+    this.onErrorSubscription.unsubscribe();
   }
 }
