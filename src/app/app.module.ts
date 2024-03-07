@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { SearchModule } from './search/search.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ListingModule } from './listing/listing.module';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ListingModule } from './listing/listing.module';
     SearchModule,
     ListingModule,
     BrowserAnimationsModule,
+    AuthModule
   ],
   providers: [],
   bootstrap: [AppComponent]

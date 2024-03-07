@@ -60,30 +60,34 @@ export class SearchService {
     // ]
 
     private loadData() {
-        this.onFetching$.next(true);
-        this.dataService.getItems().subscribe(fetchedItems => {
+    this.onFetching$.next(true);
+    this.dataService.getItems().subscribe({
+        next: fetchedItems => {
             this.searchList = fetchedItems;
             this.searchListHasChanged.next(this.searchList.slice());
             this.mapboxService.updateMap.next();
             this.onFetching$.next(false);
         },
-        error => {
-            this.onError$.next(error.message);
-        })
-    }
+        error: error => {  
+            this.onError$.next(error)}
+        });
+}
 
     getAllResults() {
         return this.searchList.slice();
     }
 
     createNewListing(newItem: RealEstateItem) {
-        this.dataService.storeItem(newItem).subscribe(() => {
-            this.loadData();
-        },
-        error => {
-            this.onError$.next(error.message);
-        })
+        this.dataService.storeItem(newItem).subscribe({
+            next: () => {
+                this.loadData();
+            },
+            error: error => {
+                this.onError$.next(error);
+            }
+        });
     }
+    
 
     deleteItem(index: number) {
         this.searchList.splice(index, 1);

@@ -76,6 +76,7 @@ export class SearchListComponent implements OnInit, OnDestroy {
   // Subscribe Methods
   private subscribeToError() {
     this.onErrorSubscription = this.searchService.onError$.subscribe( errorMsg => {
+      this.isFetching = false;
       this.errorMessage = errorMsg;
     });
   }
@@ -163,12 +164,17 @@ export class SearchListComponent implements OnInit, OnDestroy {
     this.mapService.placeAllMarkers(this.paginatedList);
   }
 
-  // Other Methods
+  // Error Handling
   private handleError(error: any) {
     console.log(error);
     return of([]);
   }
+ 
+  onHandleError() {
+    this.errorMessage = null;
+  }
 
+  // Unsubscribe
   private unsubscribeAll() {
     this.filterSubscription.unsubscribe();
     this.sortSubscription.unsubscribe();

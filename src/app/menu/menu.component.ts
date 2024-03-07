@@ -18,4 +18,12 @@ export class MenuComponent {
     goToSearch() {
         this.router.navigate(['/marketplace-search'])
     }
+
+    goToSignUp() {
+        this.router.navigate(['auth'])
+    }
+
+    goToLogin() {
+        this.router.navigate(['auth'], {queryParams: {type: 'login'}})
+    }
 }
