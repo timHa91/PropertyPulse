@@ -19,6 +19,9 @@ import { LoadingSpinnerComponent } from "../shared/loading-spinner/loading-spinn
         MatButtonModule,
         MatInputModule,
         MatCardModule
+    ],
+    exports: [
+        AuthComponent
     ]
 })
 export class AuthModule {

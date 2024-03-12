@@ -5,7 +5,6 @@ import { AuthRequest } from "./auth-request.model";
 import { AuthService } from "./auth.service";
 import { Observable } from "rxjs";
 import { AuthResponse } from "./auth-response.model";
-import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
     selector: 'app-auth',
@@ -55,6 +54,7 @@ export class AuthComponent implements OnInit{
                 next: response => {
                     console.log(response);
                     this.isLoading = false;
+                    this.router.navigate(['/marketplace-search']);
             },
                 error: errorMsg => {
                     this.errorMessage = errorMsg;

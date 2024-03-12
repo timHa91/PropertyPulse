@@ -3,7 +3,7 @@ import { AuthRequest } from "./auth-request.model";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 import { AuthResponse } from "./auth-response.model";
-import { Subject, catchError, tap, throwError } from "rxjs";
+import { BehaviorSubject, catchError, tap, throwError } from "rxjs";
 import { User } from "./user.model";
 
 @Injectable({providedIn: 'root'})
@@ -13,7 +13,7 @@ export class AuthService {
     private loginUrl = environment.firebase.loginUrl;
     private apiKey = environment.firebase.apiKey;
 
-    user = new Subject<User>();
+    user = new BehaviorSubject<User | null>(null);
 
     constructor(private http: HttpClient){}
 
@@ -29,15 +29,17 @@ export class AuthService {
         tap(this.handleAuth));
     }
 
-    private handleAuth(response: AuthResponse) {
-        const experationDate = new Date(new Date().getTime() + +response.expiresIn * 1000)
-        const user = new User(
+    private handleAuth = (response: AuthResponse) => {
+        const expirationDate = new Date(new Date().getTime() + +response.expiresIn * 1000);
+        const logedInUser = new User(
             response.email,
             response.localId,
             response.idToken,
-            experationDate
+            expirationDate
         );
-        this.user.next(user);
+        console.log('next');
+        
+        this.user.next(logedInUser);
     }
 
     private handleError(errorResp: HttpErrorResponse) {

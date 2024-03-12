@@ -6,7 +6,8 @@ import { AppComponent } from './app.component';
 import { SearchModule } from './search/search.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ListingModule } from './listing/listing.module';
-import { AuthModule } from './auth/auth.module';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptorService } from './auth/auth-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -17,10 +18,13 @@ import { AuthModule } from './auth/auth.module';
     AppRoutingModule,
     SearchModule,
     ListingModule,
-    BrowserAnimationsModule,
-    AuthModule
+    BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS, 
+    useClass: AuthInterceptorService,  
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

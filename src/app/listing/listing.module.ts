@@ -14,7 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import {MatRadioModule} from '@angular/material/radio';
 import {FormsModule} from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { MenuModule } from '../menu/menu.module';
+import { MenuComponent } from '../menu/menu.component';
 
 
 @NgModule({
@@ -23,8 +23,8 @@ import { MenuModule } from '../menu/menu.module';
     FilterBarComponent,
     ListingListComponent,
     ListingItemComponent,
-    CreateListingComponent  
-  ],
+    CreateListingComponent
+    ],
   imports: [
     CommonModule,
     MatSelectModule,
@@ -36,7 +36,7 @@ import { MenuModule } from '../menu/menu.module';
     MatRadioModule,
     FormsModule,
     RouterModule,
-    MenuModule
+    MenuComponent
   ]
 })
 export class ListingModule { }

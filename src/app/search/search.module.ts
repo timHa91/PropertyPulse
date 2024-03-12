@@ -21,7 +21,8 @@ import {HttpClientModule} from '@angular/common/http'
 import { PaginationControlsComponent } from "../pagination/pagination-controls/pagination-controls.component";
 import {MatSelectModule} from '@angular/material/select';
 import { RouterModule } from "@angular/router";
-import { MenuModule } from "../menu/menu.module";
+import { AuthModule } from "../auth/auth.module";
+import { MenuComponent } from "../menu/menu.component";
 
 @NgModule({
     declarations: [
@@ -50,7 +51,8 @@ import { MenuModule } from "../menu/menu.module";
         HttpClientModule,
         MatSelectModule,
         RouterModule,
-        MenuModule
+        AuthModule,
+        MenuComponent
     ]
 })
 export class SearchModule {

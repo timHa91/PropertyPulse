@@ -78,7 +78,7 @@ export class SearchService {
     }
 
     createNewListing(newItem: RealEstateItem) {
-        this.dataService.storeItem(newItem).subscribe({
+        this.dataService.publishItem(newItem).subscribe({
             next: () => {
                 this.loadData();
             },
