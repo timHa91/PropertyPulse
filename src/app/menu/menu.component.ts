@@ -53,8 +53,8 @@ export class MenuComponent implements OnInit, OnDestroy{
     }
 
     onLogout() {
-        console.log('hih');
-        
+        this.authService.logout();
+        this.router.navigate(['/marketplace-search'])
     }
 
     ngOnDestroy(): void {

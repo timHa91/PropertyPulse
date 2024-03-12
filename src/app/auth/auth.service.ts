@@ -29,17 +29,33 @@ export class AuthService {
         tap(this.handleAuth));
     }
 
+    logout() {
+        this.user.next(null);
+    }
+
+    autoLogin() {
+        const userData: {
+            email: string,
+            id: string,
+            _token: string,
+            _tokenExperationDate: string
+        } = JSON.parse(localStorage.getItem('userData') || '{}');
+        if (!userData) return;
+
+        const loadedUser = new User(userData.email, userData.id, userData._token, new Date(userData._tokenExperationDate));
+        if (loadedUser.token) this.user.next(loadedUser);
+    }
+
     private handleAuth = (response: AuthResponse) => {
         const expirationDate = new Date(new Date().getTime() + +response.expiresIn * 1000);
-        const logedInUser = new User(
+        const loggedInUser = new User(
             response.email,
             response.localId,
             response.idToken,
             expirationDate
         );
-        console.log('next');
-        
-        this.user.next(logedInUser);
+        this.user.next(loggedInUser);
+        localStorage.setItem('userData', JSON.stringify(loggedInUser));
     }
 
     private handleError(errorResp: HttpErrorResponse) {
