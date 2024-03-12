@@ -20,20 +20,24 @@ export class AuthService {
     signUp(newUser: AuthRequest) {
       return this.http.post<AuthResponse>(`${this.authUrl + this.apiKey}`, { ...newUser, returnSecureToken: true})
       .pipe(catchError (this.handleError), 
-      tap( resp => {
-        const experationDate = new Date(new Date().getTime() + +resp.expiresIn * 1000)
-        const user = new User(
-            resp.email,
-            resp.localId,
-            resp.idToken,
-            experationDate
-        )
-      }));
+      tap(this.handleAuth));
     }
 
     login(user: AuthRequest) {
         return this.http.post<AuthResponse>(`${this.loginUrl + this.apiKey}`, { ...user , returnSecureToken: true})
-        .pipe(catchError (this.handleError), tap);
+        .pipe(catchError (this.handleError), 
+        tap(this.handleAuth));
+    }
+
+    private handleAuth(response: AuthResponse) {
+        const experationDate = new Date(new Date().getTime() + +response.expiresIn * 1000)
+        const user = new User(
+            response.email,
+            response.localId,
+            response.idToken,
+            experationDate
+        );
+        this.user.next(user);
     }
 
     private handleError(errorResp: HttpErrorResponse) {
