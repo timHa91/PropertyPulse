@@ -24,6 +24,6 @@ export class MenuComponent {
     }
 
     goToLogin() {
-        this.router.navigate(['auth'], {queryParams: {type: 'login'}})
+        this.router.navigate(['auth'], {queryParams: {login: 'true'}})
     }
 }

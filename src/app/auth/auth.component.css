@@ -21,3 +21,11 @@ mat-card {
     justify-content: center;
     gap: 20px;
 }
+
+.loading-spinner {
+    text-align: center;
+}
+
+.error-message {
+    margin-top: 10px;
+}

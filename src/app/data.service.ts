@@ -6,7 +6,7 @@ import { environment } from "src/environments/environment";
 
 @Injectable({providedIn: 'root'})
 export class DataService {
-    private apiUrl = environment.apiUrl;
+    private apiUrl = environment.firebase.apiUrl;
     constructor(private http: HttpClient) {
     }
 

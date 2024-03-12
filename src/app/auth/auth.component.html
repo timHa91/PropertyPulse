@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card *ngIf="!isLoading">
     <mat-card-content>
       <form [formGroup]="authForm" (ngSubmit)="onAuth()">
         <h2>{{isLogin ? 'Log In' : 'Sign Up'}}</h2>
@@ -26,6 +26,12 @@
                 <button mat-raised-button (click)="onSwitchMode()" type="button" color="accent">Switch to {{isLogin ? 'Sign Up' : 'Log In'}}</button>
             </div>
         </div>
+        <div class="error-message">
+            <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
+        </div>  
       </form>
     </mat-card-content>
 </mat-card>
+<div class="loading-spinner" *ngIf="isLoading">
+    <app-loading-spinner></app-loading-spinner>
+</div>

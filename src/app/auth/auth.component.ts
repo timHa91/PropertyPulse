@@ -1,6 +1,11 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
+import { AuthRequest } from "./auth-request.model";
+import { AuthService } from "./auth.service";
+import { Observable } from "rxjs";
+import { AuthResponse } from "./auth-response.model";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
     selector: 'app-auth',
@@ -11,12 +16,16 @@ export class AuthComponent implements OnInit{
 
     authForm!: FormGroup;
     isLogin = false;
+    isLoading = false;
+    errorMessage: string | null = null;
+     
     constructor(private router: Router,
-                private route: ActivatedRoute) {}
+                private route: ActivatedRoute,
+                private authService: AuthService) {}
 
     ngOnInit(): void {
         this.route.queryParams.subscribe(params => {
-            this.isLogin = params['type'] === 'login';
+            this.isLogin = params['login'];
         });
         this.authForm = new FormGroup({
             email: new FormControl('', [Validators.required, Validators.email]),
@@ -25,13 +34,35 @@ export class AuthComponent implements OnInit{
     }
 
     onAuth() {
-        if (this.isLogin) {
-            console.log('login');
+        this.isLoading = true;
+        if (this.authForm.valid) {
+            const email = this.authForm.value.email;
+            const password = this.authForm.value.password;
+            const user : AuthRequest = {
+                email: email,
+                password: password
+            }
             
-        } else {
-            console.log('signUp');
-            
+            let authObs: Observable<AuthResponse>;
+
+            if (this.isLogin) {
+               authObs = this.authService.login(user)
+            } else {
+                authObs = this.authService.signUp(user)
+            }
+
+            authObs.subscribe({
+                next: response => {
+                    console.log(response);
+                    this.isLoading = false;
+            },
+                error: errorMsg => {
+                    this.errorMessage = errorMsg;
+                    this.isLoading = false;
+                }
+            })
         }
+        this.authForm.reset();
     }
 
     onSwitchMode() {
@@ -46,4 +77,5 @@ export class AuthComponent implements OnInit{
     private resetForm () {
         this.authForm.reset();
     }
+
 }
