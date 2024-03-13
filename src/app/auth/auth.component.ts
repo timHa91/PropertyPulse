@@ -52,7 +52,6 @@ export class AuthComponent implements OnInit{
 
             authObs.subscribe({
                 next: response => {
-                    console.log(response);
                     this.isLoading = false;
                     this.router.navigate(['/marketplace-search']);
             },

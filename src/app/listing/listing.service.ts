@@ -15,9 +15,7 @@ export class ListingService {
     onFormReset$ = new Subject<void>();
     userList: RealEstateItem[] = [];
 
-    constructor(private dataService: DataService){
-        this.loadData();
-    }
+    constructor(private dataService: DataService){}
 
     // listingResults: RealEstateItem[] = [
     //     {
@@ -67,9 +65,8 @@ export class ListingService {
     //     }
         
     // ]
-    private loadData() {
+    loadData() {
         this.dataService.getUserItems().subscribe( userItems => {
-            console.log(userItems);
             this.userList = userItems;
             this.listingHasChanged$.next(this.userList.slice());
         })
@@ -88,8 +85,6 @@ export class ListingService {
         })
         return statusList;
     }
-
-   
 
     getAllTypes() {
         const typeList: Category[] = [];
@@ -118,6 +113,10 @@ export class ListingService {
 
     resetForm() {
         this.onFormReset$.next();
+    }
+
+    resetUserList() {
+        this.userList = [];
     }
 
     updateItem(item: RealEstateItem, index: number) {
