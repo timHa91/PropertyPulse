@@ -208,7 +208,7 @@ export class CreateListingComponent implements OnInit, OnDestroy {
         if (this.toEditItem) {
             this.toEditItem.status = Status.PUBLISHED;
             this.listingService.updateItem(this.toEditItem, this.editItemIndex);
-            this.searchService.createNewListing(this.toEditItem);
+            this.searchService.publishItem(this.toEditItem);
         }
         this.resetForm();
     }

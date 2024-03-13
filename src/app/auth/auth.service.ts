@@ -12,7 +12,7 @@ export class AuthService {
     private authUrl = environment.firebase.authUrl;
     private loginUrl = environment.firebase.loginUrl;
     private apiKey = environment.firebase.apiKey;
-
+    private tokenExpirationTimer: any;
     user = new BehaviorSubject<User | null>(null);
 
     constructor(private http: HttpClient){}
@@ -31,6 +31,13 @@ export class AuthService {
 
     logout() {
         this.user.next(null);
+        localStorage.removeItem('userData');
+        if (this.tokenExpirationTimer) clearTimeout(this.tokenExpirationTimer);
+        this.tokenExpirationTimer = null;
+    }
+
+    autoLogout(expirationDuration: number) {
+        this.tokenExpirationTimer = setTimeout(this.logout , expirationDuration);
     }
 
     autoLogin() {
@@ -43,7 +50,11 @@ export class AuthService {
         if (!userData) return;
 
         const loadedUser = new User(userData.email, userData.id, userData._token, new Date(userData._tokenExperationDate));
-        if (loadedUser.token) this.user.next(loadedUser);
+        if (loadedUser.token) {
+            const expirationDuration = +new Date(userData._tokenExperationDate).getTime() - +new Date().getTime();
+            this.user.next(loadedUser);            
+            this.autoLogout(expirationDuration)
+        }
     }
 
     private handleAuth = (response: AuthResponse) => {
@@ -55,6 +66,7 @@ export class AuthService {
             expirationDate
         );
         this.user.next(loggedInUser);
+        this.autoLogout(+response.expiresIn * 1000)
         localStorage.setItem('userData', JSON.stringify(loggedInUser));
     }
 

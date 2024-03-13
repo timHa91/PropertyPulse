@@ -77,7 +77,7 @@ export class SearchService {
         return this.searchList.slice();
     }
 
-    createNewListing(newItem: RealEstateItem) {
+    publishItem(newItem: RealEstateItem) {
         this.dataService.publishItem(newItem).subscribe({
             next: () => {
                 this.loadData();
