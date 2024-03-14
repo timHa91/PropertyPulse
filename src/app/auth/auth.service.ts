@@ -17,8 +17,7 @@ export class AuthService {
     userLoggedOut = new BehaviorSubject<void | null>(null);
     userLoggedIn = new BehaviorSubject<void | null>(null);
 
-    constructor(private http: HttpClient
-                ){}
+    constructor(private http: HttpClient){}
 
     signUp(newUser: AuthRequest) {
       return this.http.post<AuthResponse>(`${this.authUrl + this.apiKey}`, { ...newUser, returnSecureToken: true})

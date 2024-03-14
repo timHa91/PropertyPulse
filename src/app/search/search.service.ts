@@ -71,7 +71,7 @@ export class SearchService {
         error: error => {  
             this.onError$.next(error)}
         });
-}
+    }  
 
     getAllResults() {
         return this.searchList.slice();
@@ -87,18 +87,10 @@ export class SearchService {
             }
         });
     }
-    
 
     deleteItem(itemId: string) {
-        console.log(itemId);
-        console.log(this.searchList);
-        
         const itemIndex = this.searchList.findIndex(item => item.id === itemId);
-        console.log(itemIndex);
-        
         if (itemIndex !== -1) {
-            console.log(itemId);
-            
             this.dataService.deleteItem(itemId).subscribe({
                 next: () => {
                     this.searchList.splice(itemIndex, 1);

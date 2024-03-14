@@ -11,16 +11,22 @@ export class DataService {
     constructor(private http: HttpClient,
                 private authService: AuthService) {
     }
-
+  
     // Search Module
-    publishItem(newItem : RealEstateItem): Observable<{name: string}> {
-       return this.http.post<{name: string}>(`${this.apiUrl}/items.json`, newItem)
-            .pipe(
-                catchError(error => {
-                    console.error('API Error', error);
-                    return throwError(() => 'Something went wrong. Pleas try again later');
-                })
-            );
+    publishItem(newItem: RealEstateItem): Observable<{name: string}> {
+        return this.authService.user.pipe(
+            take(1),
+            switchMap(user => {
+                if (!user) {
+                    return throwError(() => 'No user is currently logged in.');
+                }
+                return this.http.put<{name: string}>(`${this.apiUrl}/items/${newItem.id}.json`, newItem);
+            }),
+            catchError(error => {
+                console.error('API Error', error);
+                return throwError(() => 'Something went wrong. Please try again later');
+            })
+        );
     }
 
     getItems() {
@@ -60,9 +66,7 @@ export class DataService {
         })
         )
     }
-
     
-
     // Userspecific Listing Module
     storeNewItem(newItem: RealEstateItem): Observable<{name: string}> {
         return this.authService.user.pipe(
@@ -81,20 +85,14 @@ export class DataService {
         );
     }
 
-    updateUserItem(toUpdateItem: RealEstateItem, userList: RealEstateItem[]): Observable<any> {
+    updateUserItem(toUpdateItem: RealEstateItem): Observable<any> {
         return this.authService.user.pipe(
             take(1),
             switchMap(user => {
                 if (!user) {
                     return throwError(() => 'No user is currently logged in.');
                 }
-                const itemIndex = userList.findIndex(item => item.id === toUpdateItem.id);
-                if (itemIndex !== -1) {
-                    userList[itemIndex] = toUpdateItem;
-                    return this.http.put(`${this.apiUrl}/users/${user.id}/items.json`, userList);
-                } else {
-                    return throwError(() => 'Item not found.');
-                }
+                return this.http.put(`${this.apiUrl}/users/${user.id}/items/${toUpdateItem.id}.json`, toUpdateItem);
             }),
             catchError(error => {
                 console.error('API Error', error);
@@ -117,7 +115,11 @@ export class DataService {
                 const itemArray: RealEstateItem[] = [];
                 for (const key in items) {
                     if(Object.hasOwn(items, key)) {
+                        if(items[key].id) {
+                            itemArray.push({...items[key]})
+                        } else {
                         itemArray.push({...items[key], id: key})
+                        }
                     }
                 }
                 return itemArray;

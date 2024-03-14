@@ -22,7 +22,6 @@ export class CreateListingComponent implements OnInit, OnDestroy {
         { name: 'For Sale', checked: false, value: 'sale'},
         { name: 'Sold', checked: false, value: 'sold'},
     ]
-
     creationForm!: FormGroup;
     startEditSubscription!: Subscription;
     formResetSubscription!: Subscription;
@@ -89,7 +88,7 @@ export class CreateListingComponent implements OnInit, OnDestroy {
         const newPrice = this.creationForm.get('price')?.value;
         const newCategory = this.convertToCategory(this.creationForm.get('type')?.value);
         const newStatus = Status.DRAFT;
-        
+
         const listingItem: RealEstateItem = {
             description: newDescription,    
             geometry: this.toEditItem ? this.toEditItem.geometry : new GeoJson([0, 0]),
@@ -98,7 +97,6 @@ export class CreateListingComponent implements OnInit, OnDestroy {
             price: newPrice,
             category: newCategory,
             status: newStatus,
-            id: this.toEditItem ? this.toEditItem.id : ''
         };
         
         if (this.editMode && newAddress === this.toEditItem.address) {
@@ -194,10 +192,6 @@ export class CreateListingComponent implements OnInit, OnDestroy {
        return this.mapService.getLocationCoordinates(location);
     }
 
-    // checkIfSaveEnabled() {
-    //     return !this.creationForm.valid || this.creationForm.pristine;
-    // }
-
     isItemAdraft() {
         if(this.toEditItem) {
             return this.toEditItem.status === Status.DRAFT ? false : true;
@@ -215,7 +209,11 @@ export class CreateListingComponent implements OnInit, OnDestroy {
     }
 
     onDeleteItem() {
+        console.log(this.toEditItem);
+        
         if(this.toEditItem.id) { 
+            console.log(this.toEditItem.id);
+            
             this.listingService.deleteItem(this.toEditItem.id);
             if(this.toEditItem.status === Status.PUBLISHED) {
                 this.searchService.deleteItem(this.toEditItem.id);
