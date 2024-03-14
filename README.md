@@ -5,9 +5,9 @@ EstateExplorer ist eine Angular-Anwendung, die als Immobilienmarktplatz dient. M
 ## Hauptmerkmale
 
 * **Mapbox Integration**: Wir nutzen Mapbox, eine leistungsstarke Bibliothek für interaktive Karten, um Immobilienstandorte zu visualisieren. Um Mapbox zu verwenden, benötigen Sie einen eigenen Access Token, den Sie in der Datei `environment.ts` Ihres Projekts speichern können (https://docs.mapbox.com/help/getting-started/access-tokens/).
-* **Immobilienanzeige**: Benutzer können eine Liste aller Immobilien anzeigen, sortieren und filtern.
+* **Immobilienanzeige**: Benutzer können eine Liste aller Immobilien anzeigen, sortieren und filtern lassen.
 * **Immobilieneinsatz**: Benutzer können Immobilien direkt im User-Bereich der App einstellen, ändern, löschen und veröffentlichen.
-* * **Firebase**: Es wird Firebase zur Datenspeicherung und Authentifizierung benutzt.
+* **Firebase**: Es wird Firebase zur Datenspeicherung und Authentifizierung benutzt.
 
 ## Installation
 
