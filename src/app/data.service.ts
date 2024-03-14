@@ -45,11 +45,23 @@ export class DataService {
             );
     }
 
-    // storeItems(newItems: RealEstateItem[]) {
-    //     this.http.put<{name: string}[]>(`${this.apiUrl}/items.json`, newItems).subscribe((items) => {
-    //         console.log(items);
-    //     })
-    // }
+    deleteItem(itemId: string) {
+        return this.authService.user.pipe(
+            take(1),
+            switchMap( user => {
+                if(!user) {
+                    return throwError(() => 'No user is currently logged in.');
+                }
+                return this.http.delete(`${this.apiUrl}/items/${itemId}.json`)
+            }),
+            catchError( error => {
+                console.error('API Error', error);
+                return throwError(() => 'Something went wrong. Please try again later');
+        })
+        )
+    }
+
+    
 
     // Userspecific Listing Module
     storeNewItem(newItem: RealEstateItem): Observable<{name: string}> {
@@ -69,13 +81,36 @@ export class DataService {
         );
     }
 
+    updateUserItem(toUpdateItem: RealEstateItem, userList: RealEstateItem[]): Observable<any> {
+        return this.authService.user.pipe(
+            take(1),
+            switchMap(user => {
+                if (!user) {
+                    return throwError(() => 'No user is currently logged in.');
+                }
+                const itemIndex = userList.findIndex(item => item.id === toUpdateItem.id);
+                if (itemIndex !== -1) {
+                    userList[itemIndex] = toUpdateItem;
+                    return this.http.put(`${this.apiUrl}/users/${user.id}/items.json`, userList);
+                } else {
+                    return throwError(() => 'Item not found.');
+                }
+            }),
+            catchError(error => {
+                console.error('API Error', error);
+                return throwError(() => 'Something went wrong. Please try again later.');
+            })
+        );
+    }
+    
+
     getUserItems(): Observable<RealEstateItem[]> {
         return this.authService.user.pipe(
             take(1),
             switchMap(user => {
                 if (user && user.token) {
                     return this.http.get<RealEstateItem[]>(`${this.apiUrl}/users/${user.id}/items.json`
-);
+            );
                 } else return throwError(() => 'No user is currently logged in.');
             }),
             map(items => {
@@ -94,7 +129,7 @@ export class DataService {
         );
     }
 
-    deleteItem(itemId: string) {
+    deleteUserItem(itemId: string) {
        return this.authService.user.pipe(
         take(1),
         switchMap( user => {

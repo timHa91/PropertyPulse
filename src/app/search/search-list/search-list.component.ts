@@ -94,7 +94,7 @@ export class SearchListComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToSearchListChanges() {
-    this.searchListChangedSubscription = this.searchService.searchListHasChanged.subscribe(changedList => {
+    this.searchListChangedSubscription = this.searchService.searchListHasChanged$.subscribe(changedList => {
       this.originalList = changedList;
       this.filterService.setPriceRangeFromList(this.originalList);
       this.filteredList = this.originalList;

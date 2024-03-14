@@ -25,16 +25,10 @@ export class ListingListComponent implements OnInit, OnDestroy{
     ) {}
 
   ngOnInit(): void {
-    this.initLists();
     this.subscribeToListChanged();
     this.subscribeToFilter();
     this.subscribeToUserLogOut();
     this.subscribeToUserLogIn();
-  }
-
-  private initLists() {
-    this.orginalList = this.listingService.getAllListings();
-    this.filteredList = this.orginalList;
   }
 
   private subscribeToUserLogIn() {

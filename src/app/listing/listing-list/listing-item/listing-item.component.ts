@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { RealEstateItem } from 'src/app/shared/real-estate-item.model';
-import { Status } from '../../listing-status.enum';
 import { ListingService } from '../../listing.service';
+import { Status } from '../../listing-status.enum';
 
 @Component({
   selector: 'app-listing-item',

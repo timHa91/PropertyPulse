@@ -6,7 +6,7 @@ import { MapboxService } from "../mapbox/mapbox.service";
 
 @Injectable({providedIn: 'root'})
 export class SearchService {
-    searchListHasChanged = new Subject<RealEstateItem[]>();
+    searchListHasChanged$ = new Subject<RealEstateItem[]>();
     searchList: RealEstateItem[] = [];
     onFetching$ = new Subject<boolean>();
     onError$ = new Subject<string>();
@@ -64,7 +64,7 @@ export class SearchService {
     this.dataService.getItems().subscribe({
         next: fetchedItems => {
             this.searchList = fetchedItems;
-            this.searchListHasChanged.next(this.searchList.slice());
+            this.searchListHasChanged$.next(this.searchList.slice());
             this.mapboxService.updateMap.next();
             this.onFetching$.next(false);
         },
@@ -89,8 +89,25 @@ export class SearchService {
     }
     
 
-    deleteItem(index: number) {
-        this.searchList.splice(index, 1);
-        this.searchListHasChanged.next(this.searchList.slice());
+    deleteItem(itemId: string) {
+        console.log(itemId);
+        console.log(this.searchList);
+        
+        const itemIndex = this.searchList.findIndex(item => item.id === itemId);
+        console.log(itemIndex);
+        
+        if (itemIndex !== -1) {
+            console.log(itemId);
+            
+            this.dataService.deleteItem(itemId).subscribe({
+                next: () => {
+                    this.searchList.splice(itemIndex, 1);
+                    this.searchListHasChanged$.next(this.searchList.slice());
+                },
+                error: error => {
+                    console.error('Error deleting item:', error);
+                }
+            });
+        }
     }
 }

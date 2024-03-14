@@ -102,7 +102,7 @@ export class ListingService {
                 this.loadData();
             },
             error: error => {
-                console.log(error);  
+                console.log('Error storing new item:', error);  
             } 
         });
     }
@@ -119,13 +119,32 @@ export class ListingService {
         this.userList = [];
     }
 
-    updateItem(item: RealEstateItem, index: number) {
-        // this.listingResults[index] = item;
-        // this.listingHasChanged$.next(this.listingResults.slice());
+    updateItem(item: RealEstateItem) {
+        this.dataService.updateUserItem(item, this.userList).subscribe({
+            next: () => {
+                this.userList = this.userList.map(listItem => listItem.id === item.id ? item : listItem);
+                this.listingHasChanged$.next(this.userList.slice());
+            },
+            error: error => {
+                console.error('Error updating item:', error);
+            }
+        });
     }
+    
 
-    deleteItem(index: number) {
-        // this.listingResults.splice(index, 1);
-        // this.listingHasChanged$.next(this.listingResults.slice());
+    deleteItem(itemId: string) {
+        const itemIndex = this.userList.findIndex(item => item.id === itemId);
+        if (itemIndex !== -1) {
+            this.userList.splice(itemIndex, 1);
+            this.dataService.deleteUserItem(itemId).subscribe({
+                next: () => {
+                    this.listingHasChanged$.next(this.userList.slice());
+                },
+                error: error => {
+                    console.error('Error deleting item:', error);
+                }
+            });
+        }
     }
+    
 }

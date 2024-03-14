@@ -5,7 +5,7 @@ import { Status } from "../listing-status.enum";
 import { Category } from "src/app/shared/category.enum";
 import { RealEstateItem } from "src/app/shared/real-estate-item.model";
 import { MapboxService } from "src/app/mapbox/mapbox.service";
-import { Observable, Subscription } from "rxjs";
+import { Observable, Subscription, throwError } from "rxjs";
 import { GeoJson } from "src/app/shared/geo.model";
 import { Option } from "./type-option.model";
 import { SearchService } from "src/app/search/search.service";
@@ -98,6 +98,7 @@ export class CreateListingComponent implements OnInit, OnDestroy {
             price: newPrice,
             category: newCategory,
             status: newStatus,
+            id: this.toEditItem ? this.toEditItem.id : ''
         };
         
         if (this.editMode && newAddress === this.toEditItem.address) {
@@ -108,7 +109,7 @@ export class CreateListingComponent implements OnInit, OnDestroy {
     }
         
     private updateListing(listingItem: RealEstateItem) {
-        this.listingService.updateItem(listingItem, this.editItemIndex);
+        this.listingService.updateItem(listingItem);
         this.resetForm();
     }
         
@@ -124,7 +125,7 @@ export class CreateListingComponent implements OnInit, OnDestroy {
         
     private saveListing(listingItem: RealEstateItem) {
         if (this.editMode) {               
-            this.listingService.updateItem(listingItem, this.editItemIndex);
+            this.listingService.updateItem(listingItem);
         } else {
             this.listingService.addNewListing(listingItem);
         }
@@ -207,15 +208,20 @@ export class CreateListingComponent implements OnInit, OnDestroy {
     publishItem() {
         if (this.toEditItem) {
             this.toEditItem.status = Status.PUBLISHED;
-            this.listingService.updateItem(this.toEditItem, this.editItemIndex);
+            this.listingService.updateItem(this.toEditItem);
             this.searchService.publishItem(this.toEditItem);
         }
         this.resetForm();
     }
 
     onDeleteItem() {
-        this.listingService.deleteItem(this.editItemIndex);
-        this.searchService.deleteItem(this.editItemIndex);
+        if(this.toEditItem.id) { 
+            this.listingService.deleteItem(this.toEditItem.id);
+            if(this.toEditItem.status === Status.PUBLISHED) {
+                this.searchService.deleteItem(this.toEditItem.id);
+            }
+        }
+        else throwError(() => 'Cant find the ID')
         this.resetForm();
     }
 }
