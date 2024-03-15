@@ -66,6 +66,24 @@ export class DataService {
         })
         )
     }
+
+    updateItem(toUpdateItem: RealEstateItem) {
+        return this.authService.user.pipe(
+            take(1),
+            switchMap(user => {
+                console.log(toUpdateItem);
+                
+                if (!user) {
+                    return throwError(() => 'No user is currently logged in.');
+                }
+                return this.http.put(`${this.apiUrl}/items/${toUpdateItem.id}.json`, toUpdateItem);
+            }),
+            catchError(error => {
+                console.error('API Error', error);
+                return throwError(() => 'Something went wrong. Please try again later.');
+            })
+        );
+    }
     
     // Userspecific Listing Module
     storeNewItem(newItem: RealEstateItem): Observable<{name: string}> {
@@ -89,6 +107,8 @@ export class DataService {
         return this.authService.user.pipe(
             take(1),
             switchMap(user => {
+                console.log(toUpdateItem);
+                
                 if (!user) {
                     return throwError(() => 'No user is currently logged in.');
                 }

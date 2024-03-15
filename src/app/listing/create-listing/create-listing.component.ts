@@ -97,10 +97,14 @@ export class CreateListingComponent implements OnInit, OnDestroy {
             price: newPrice,
             category: newCategory,
             status: newStatus,
+            id: this.editMode ? this.toEditItem.id : undefined
         };
         
         if (this.editMode && newAddress === this.toEditItem.address) {
             this.updateListing(listingItem);
+            if(this.toEditItem.status === Status.PUBLISHED) {
+                this.searchService.updateItem(listingItem);
+            }
         } else {
             this.createListing(listingItem);
         }
@@ -124,6 +128,9 @@ export class CreateListingComponent implements OnInit, OnDestroy {
     private saveListing(listingItem: RealEstateItem) {
         if (this.editMode) {               
             this.listingService.updateItem(listingItem);
+            if(this.toEditItem.status === Status.PUBLISHED) {
+                this.searchService.updateItem(listingItem);
+            }
         } else {
             this.listingService.addNewListing(listingItem);
         }
@@ -209,11 +216,7 @@ export class CreateListingComponent implements OnInit, OnDestroy {
     }
 
     onDeleteItem() {
-        console.log(this.toEditItem);
-        
         if(this.toEditItem.id) { 
-            console.log(this.toEditItem.id);
-            
             this.listingService.deleteItem(this.toEditItem.id);
             if(this.toEditItem.status === Status.PUBLISHED) {
                 this.searchService.deleteItem(this.toEditItem.id);

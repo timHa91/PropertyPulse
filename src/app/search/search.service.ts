@@ -102,4 +102,15 @@ export class SearchService {
             });
         }
     }
+
+    updateItem(item: RealEstateItem) {
+        this.dataService.updateItem(item).subscribe({
+            next: () => {
+                this.loadData(); 
+            },
+            error: error => {
+                console.error('Error updating item:', error);
+            }
+        });
+    }
 }

@@ -62,6 +62,10 @@ export class MenuComponent implements OnInit, OnDestroy{
         this.router.navigate(['/marketplace-search'])
     }
 
+    get isOnSearchPage() {
+        return this.router.url === '/marketplace-search'
+    }
+
     ngOnDestroy(): void {
         this.authSubscription.unsubscribe();
     }

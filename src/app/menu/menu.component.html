@@ -10,11 +10,11 @@
       <mat-icon>lock_open</mat-icon>
       <span>Log In</span>
     </button>
-    <button [disabled]="!isAuthenticated" (click)="goToListing()" mat-menu-item>
+    <button *ngIf="isOnSearchPage" [disabled]="!isAuthenticated" (click)="goToListing()" mat-menu-item>
       <mat-icon>view_list</mat-icon>
       <span>Listing</span>
     </button>
-    <button (click)="goToSearch()" mat-menu-item>
+    <button *ngIf="!isOnSearchPage" (click)="goToSearch()" mat-menu-item>
       <mat-icon>view_list</mat-icon>
       <span>Search</span>
     </button>
