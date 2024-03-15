@@ -45,7 +45,8 @@
     <div class="buttons">
       <button *ngIf="editMode" type="button" (click)="onDeleteItem()" mat-raised-button color="warn">Delete</button>
       <button *ngIf="!editMode" type="button" (click)="resetForm()" mat-raised-button color="warn">Clear</button>
-      <button type="submit" [disabled]="creationForm.invalid" mat-raised-button color="accent">Save Draft</button>
-      <button (click)="publishItem()" mat-raised-button [disabled]="isItemAdraft()" color="primary">Publish</button>
+      <button *ngIf="!isitemPublished" type="submit" [disabled]="creationForm.invalid" mat-raised-button color="accent">Save Draft</button>
+      <button *ngIf="isitemPublished" type="submit" [disabled]="creationForm.invalid" mat-raised-button color="accent">Save</button>
+      <button *ngIf="!isitemPublished" (click)="publishItem()" mat-raised-button [disabled]="isItemAdraft()" color="primary">Publish</button>
     </div>
   </form>

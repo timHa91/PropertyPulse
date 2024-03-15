@@ -87,7 +87,7 @@ export class CreateListingComponent implements OnInit, OnDestroy {
         const newAddress = this.creationForm.get('address')?.value;
         const newPrice = this.creationForm.get('price')?.value;
         const newCategory = this.convertToCategory(this.creationForm.get('type')?.value);
-        const newStatus = Status.DRAFT;
+        const newStatus = this.toEditItem ? this.toEditItem.status : Status.DRAFT;
 
         const listingItem: RealEstateItem = {
             description: newDescription,    
@@ -224,5 +224,12 @@ export class CreateListingComponent implements OnInit, OnDestroy {
         }
         else throwError(() => 'Cant find the ID')
         this.resetForm();
+    }
+
+    get isitemPublished() {
+        if(this.toEditItem) {
+            return this.toEditItem.status === Status.PUBLISHED
+        }
+        return false;
     }
 }
