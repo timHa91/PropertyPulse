@@ -71,8 +71,6 @@ export class DataService {
         return this.authService.user.pipe(
             take(1),
             switchMap(user => {
-                console.log(toUpdateItem);
-                
                 if (!user) {
                     return throwError(() => 'No user is currently logged in.');
                 }
@@ -107,8 +105,6 @@ export class DataService {
         return this.authService.user.pipe(
             take(1),
             switchMap(user => {
-                console.log(toUpdateItem);
-                
                 if (!user) {
                     return throwError(() => 'No user is currently logged in.');
                 }
