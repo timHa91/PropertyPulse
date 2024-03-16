@@ -20,10 +20,6 @@ export class AuthInterceptorService implements HttpInterceptor {
                 } else {
                     return next.handle(req);
                 }
-            }),
-            catchError(error => {
-                console.error('Error in AuthInterceptorService', error);
-                return throwError(() => 'Something went wrong. Please try again later');
             })
         );
     }

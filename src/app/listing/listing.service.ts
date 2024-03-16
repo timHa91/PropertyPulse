@@ -20,8 +20,6 @@ export class ListingService {
         return this.dataService.getUserItems().pipe(
             tap( fetchedItems => {
                 this.userList = fetchedItems;
-                console.log('listing has changed');
-                
                 this.listingHasChanged$.next(this.userList.slice());
             }),
             catchError( error => {
