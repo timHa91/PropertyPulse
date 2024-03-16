@@ -24,23 +24,8 @@ export class FilterBarComponent implements OnInit, OnDestroy {
 
  ngOnInit(): void {
     this.initForm();
-    this.initFilter();
     this.subscribeToFilterChanges();
     this.subscribeToListingChanges();
- }
-
- private initFilter() {
-    this.listingService.listingHasChanged$.subscribe( changedList => {
-      const allStatusesInList = this.listingService.getAllStatus();
-      const allTypesInList = this.listingService.getAllTypes();
-      const statusControls = allStatusesInList.map(status => new FormControl(true)); 
-      const typeControls = allTypesInList.map(type => new FormControl(true)); 
-  
-      this.filterForm = this.formBuilder.group({
-          status: this.formBuilder.array(statusControls),
-          type: this.formBuilder.array(typeControls)
-      });
-    });
  }
 
  private initForm(): void {

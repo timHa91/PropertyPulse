@@ -8,7 +8,7 @@ import { DataService } from "../data.service";
 @Injectable({providedIn: 'root'})
 export class ListingService {
 
-    listingHasChanged$ = new Subject<RealEstateItem[]>();
+    listingHasChanged$ = new BehaviorSubject<RealEstateItem[]>([]);
     startedEditing$ = new BehaviorSubject<number>(-1);
     showCreationForm$ = new BehaviorSubject<boolean>(false);
     onFormReset$ = new Subject<void>();
@@ -20,6 +20,8 @@ export class ListingService {
         return this.dataService.getUserItems().pipe(
             tap( fetchedItems => {
                 this.userList = fetchedItems;
+                console.log('listing has changed');
+                
                 this.listingHasChanged$.next(this.userList.slice());
             }),
             catchError( error => {
