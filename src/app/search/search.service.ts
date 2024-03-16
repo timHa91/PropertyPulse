@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { RealEstateItem } from "../shared/real-estate-item.model";
-import { Subject } from "rxjs";
+import { Observable, Subject, catchError, of, tap } from "rxjs";
 import { DataService } from "../data.service";
 import { MapboxService } from "../mapbox/mapbox.service";
 
@@ -11,10 +11,7 @@ export class SearchService {
     onFetching$ = new Subject<boolean>();
     onError$ = new Subject<string>();
 
-    constructor(private dataService: DataService, private mapboxService: MapboxService) {
-        this.loadData();
-        // this.dataService.storeItems(this.searchResults);
-    }
+    constructor(private dataService: DataService, private mapboxService: MapboxService) {}
 
     // searchResults: RealEstateItem[] = [
     //     {
@@ -59,19 +56,20 @@ export class SearchService {
     //     }
     // ]
 
-    private loadData() {
-    this.onFetching$.next(true);
-    this.dataService.getItems().subscribe({
-        next: fetchedItems => {
+    loadData(): Observable<RealEstateItem[]> {
+        this.onFetching$.next(true);
+        return this.dataService.getItems().pipe(
+          tap(fetchedItems => {
             this.searchList = fetchedItems;
             this.searchListHasChanged$.next(this.searchList.slice());
-            this.mapboxService.updateMap.next();
             this.onFetching$.next(false);
-        },
-        error: error => {  
-            this.onError$.next(error)}
-        });
-    }  
+          }),
+          catchError(error => {
+            this.onError$.next(error);
+            return of([]);
+          })
+        );
+     }
 
     getAllResults() {
         return this.searchList.slice();

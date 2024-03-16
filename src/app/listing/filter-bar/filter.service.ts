@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { RealEstateItem } from "src/app/shared/real-estate-item.model";
 import { FilterCriteria } from "./filter-criteria.model";
 import { Subject } from "rxjs";
+import { ListingService } from "../listing.service";
 
 @Injectable({providedIn: 'root'})
 export class FilterService {
@@ -10,8 +11,6 @@ export class FilterService {
 
     filterList(toFilterList: RealEstateItem[], filterCriteria: FilterCriteria) {
         let filteredList: RealEstateItem[] = toFilterList;
-        console.log(filterCriteria);
-        
         if (filterCriteria.status && filterCriteria.status.length > 0) {
             filteredList = filteredList.filter(item => {
                 return item.status && filterCriteria.status && filterCriteria.status.includes(item.status);

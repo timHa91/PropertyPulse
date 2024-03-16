@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { ListingService } from '../listing.service';
 import { Status } from '../listing-status.enum';
 import { Category } from 'src/app/shared/category.enum';
@@ -19,12 +19,28 @@ export class FilterBarComponent implements OnInit, OnDestroy {
  listingChangedSubscription!: Subscription;
 
  constructor(private listingService: ListingService,
-              private filterService: FilterService) {}
+              private filterService: FilterService,
+              private formBuilder: FormBuilder) {}
 
  ngOnInit(): void {
     this.initForm();
+    this.initFilter();
     this.subscribeToFilterChanges();
     this.subscribeToListingChanges();
+ }
+
+ private initFilter() {
+    this.listingService.listingHasChanged$.subscribe( changedList => {
+      const allStatusesInList = this.listingService.getAllStatus();
+      const allTypesInList = this.listingService.getAllTypes();
+      const statusControls = allStatusesInList.map(status => new FormControl(true)); 
+      const typeControls = allTypesInList.map(type => new FormControl(true)); 
+  
+      this.filterForm = this.formBuilder.group({
+          status: this.formBuilder.array(statusControls),
+          type: this.formBuilder.array(typeControls)
+      });
+    });
  }
 
  private initForm(): void {

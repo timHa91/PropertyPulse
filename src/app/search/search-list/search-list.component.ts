@@ -7,6 +7,7 @@ import { MapboxService } from "src/app/mapbox/mapbox.service";
 import { PaginationService } from "../../pagination/pagination.service";
 import { FilterService } from "../filter-bar/filter.service";
 import { SortService } from "./search-list-sort/sort.service";
+import { ActivatedRoute, Route } from "@angular/router";
 
 @Component({
   selector: 'app-search-list',
@@ -44,8 +45,9 @@ export class SearchListComponent implements OnInit, OnDestroy {
     private mapService: MapboxService,
     private paginationService: PaginationService,
     private filterService: FilterService,
-    private sortService: SortService
-  ) {}
+    private sortService: SortService,
+    private route: ActivatedRoute  
+    ) {}
 
   // Lifecycle Methods
   ngOnInit(): void {
@@ -96,6 +98,8 @@ export class SearchListComponent implements OnInit, OnDestroy {
   private subscribeToSearchListChanges() {
     this.searchListChangedSubscription = this.searchService.searchListHasChanged$.subscribe(changedList => {
       this.originalList = changedList;
+      console.log(this.originalList);
+      
       this.filterService.setPriceRangeFromList(this.originalList);
       this.filteredList = this.originalList;
     });
@@ -129,9 +133,11 @@ export class SearchListComponent implements OnInit, OnDestroy {
 
   // List Methods
   private initializeLists() {
-    this.originalList = this.searchService.getAllResults();
-    this.filterService.setPriceRangeFromList(this.originalList);
-    this.filteredList = this.originalList;
+    this.route.data.subscribe(data => {
+      this.originalList = data['searchData'];
+      this.filterService.setPriceRangeFromList(this.originalList);
+      this.filteredList = this.originalList;
+    });
   }
 
   private handlePaginationChanges() {

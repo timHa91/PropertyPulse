@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { RealEstateItem } from "../shared/real-estate-item.model";
 import { Category } from "../shared/category.enum";
 import { Status } from "./listing-status.enum";
-import { BehaviorSubject, Subject } from "rxjs";
+import { BehaviorSubject, Observable, Subject, catchError, of, tap } from "rxjs";
 import { DataService } from "../data.service";
 
 @Injectable({providedIn: 'root'})
@@ -16,19 +16,24 @@ export class ListingService {
 
     constructor(private dataService: DataService){}
 
-  
-    loadData() {
-        this.dataService.getUserItems().subscribe( userItems => {
-            this.userList = userItems;
-            this.listingHasChanged$.next(this.userList.slice());
-        })
+    loadData(): Observable<RealEstateItem[]> {
+        return this.dataService.getUserItems().pipe(
+            tap( fetchedItems => {
+                this.userList = fetchedItems;
+                this.listingHasChanged$.next(this.userList.slice());
+            }),
+            catchError( error => {
+                console.error(error);
+                return of([]);
+            })
+        )
     }
 
-    getAllListings() {
+    getAllListings(): RealEstateItem[] {
         return this.userList.slice();
     }
 
-    getAllStatus() {
+    getAllStatus(): Status[] {
         const statusList: Status[] = [];
         this.userList.map(item => {
             if(item.status && !statusList.includes(item.status)) {
@@ -38,7 +43,7 @@ export class ListingService {
         return statusList;
     }
 
-    getAllTypes() {
+    getAllTypes(): Category[] {
         const typeList: Category[] = [];
         this.userList.map(item => {
             if(item.category && !typeList.includes(item.category)) {
@@ -51,7 +56,8 @@ export class ListingService {
     addNewListing(newItem: RealEstateItem) {
         this.dataService.storeNewItem(newItem).subscribe({
             next: () => {
-                this.loadData();
+                this.userList.push(newItem);
+                this.listingHasChanged$.next(this.userList.slice());
             },
             error: error => {
                 console.error('Error storing new item:', error);  
@@ -59,7 +65,7 @@ export class ListingService {
         });
     }
 
-    getItemByIndex(index: number) {
+    getItemByIndex(index: number): RealEstateItem {
         return this.userList[index];
     }
 
@@ -74,7 +80,11 @@ export class ListingService {
     updateItem(item: RealEstateItem) {
         this.dataService.updateUserItem(item).subscribe({
             next: () => {
-                this.loadData(); 
+                const itemIndex = this.userList.findIndex(listItem => listItem.id === item.id);
+                if (itemIndex !== -1) {
+                    this.userList[itemIndex] = item;
+                    this.listingHasChanged$.next(this.userList.slice());
+                }
             },
             error: error => {
                 console.error('Error updating item:', error);

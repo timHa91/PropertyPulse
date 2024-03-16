@@ -4,6 +4,7 @@ import { RealEstateItem } from 'src/app/shared/real-estate-item.model';
 import { Subscription } from 'rxjs';
 import { FilterService } from '../filter-bar/filter.service';
 import { AuthService } from 'src/app/auth/auth.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-listing-list',
@@ -17,24 +18,24 @@ export class ListingListComponent implements OnInit, OnDestroy{
   listChangedSubscription!: Subscription;
   filterSubscription!: Subscription;
   logOutSubscription!: Subscription;
-  logInSubscription!: Subscription;
-
   constructor(private listingService: ListingService,
               private filterService: FilterService,
-              private authService: AuthService
+              private authService: AuthService,
+              private route: ActivatedRoute
     ) {}
 
   ngOnInit(): void {
+    this.initList();
     this.subscribeToListChanged();
     this.subscribeToFilter();
     this.subscribeToUserLogOut();
-    this.subscribeToUserLogIn();
   }
 
-  private subscribeToUserLogIn() {
-    this.logInSubscription = this.authService.userLoggedIn.subscribe(() => {      
-        this.listingService.loadData();
-    });
+  private initList() {
+    this.route.data.subscribe(data => {
+      this.orginalList = data['listingData'];
+      this.filteredList = this.orginalList;
+    })
 }
 
   private subscribeToUserLogOut() {
@@ -59,6 +60,5 @@ export class ListingListComponent implements OnInit, OnDestroy{
     this.listChangedSubscription.unsubscribe();
     this.filterSubscription.unsubscribe();
     this.logOutSubscription.unsubscribe();
-    this.logInSubscription.unsubscribe();
   }
 }

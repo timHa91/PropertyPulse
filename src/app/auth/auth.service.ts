@@ -3,7 +3,7 @@ import { AuthRequest } from "./auth-request.model";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { environment } from "src/environments/environment";
 import { AuthResponse } from "./auth-response.model";
-import { BehaviorSubject, catchError, tap, throwError } from "rxjs";
+import { BehaviorSubject, Subject, catchError, tap, throwError } from "rxjs";
 import { User } from "./user.model";
 
 @Injectable({providedIn: 'root'})
@@ -14,7 +14,7 @@ export class AuthService {
     private apiKey = environment.firebase.apiKey;
     private tokenExpirationTimer: any;
     user = new BehaviorSubject<User | null>(null);
-    userLoggedOut = new BehaviorSubject<void | null>(null);
+    userLoggedOut = new Subject<void>();
     userLoggedIn = new BehaviorSubject<void | null>(null);
 
     constructor(private http: HttpClient){}

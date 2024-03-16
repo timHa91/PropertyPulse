@@ -2,11 +2,16 @@ import { RouterModule, Routes } from "@angular/router";
 import { ListingComponent } from "./listing.component";
 import { NgModule } from "@angular/core";
 import { listingGuard } from "./listing.guard";
+import { listingResolver } from "./listing.resolver";
 
 const routes: Routes = [
-    {path: 'marketplace-listing', 
+    {
+    path: 'marketplace-listing', 
     component: ListingComponent,
-    canActivate: [listingGuard]
+    canActivate: [listingGuard],
+    resolve: {
+        listingData: listingResolver
+    }
     }
 ]
 
