@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 })
 export class PaginationControlsComponent implements OnInit, OnDestroy{
 
-  @Input() listSize!: number;
+  @Input({required: true}) listSize!: number;
   itemsPerPage!: number;
   page!: number;
   subscription!: Subscription;

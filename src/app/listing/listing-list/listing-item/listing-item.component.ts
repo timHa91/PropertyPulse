@@ -9,8 +9,8 @@ import { Status } from '../../listing-status.enum';
   styleUrls: ['./listing-item.component.css']
 })
 export class ListingItemComponent {
-  @Input() item!: RealEstateItem;
-  @Input() index!: number;
+  @Input({required: true}) item!: RealEstateItem;
+  @Input({required: true}) index!: number;
 
   constructor(private listingService: ListingService){}
 

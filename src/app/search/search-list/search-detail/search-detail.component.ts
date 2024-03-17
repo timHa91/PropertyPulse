@@ -7,7 +7,7 @@ import { RealEstateItem } from "src/app/shared/real-estate-item.model";
     styleUrls: ['./search-detail.component.css']
 })
 export class SearchDetailComponent {
-    @Input() item!: RealEstateItem;
+    @Input({required: true}) item!: RealEstateItem;
     @Output() triggerCloseDetailView = new EventEmitter<void>();
 
     onClose() {

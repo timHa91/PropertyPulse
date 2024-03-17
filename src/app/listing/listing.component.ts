@@ -45,4 +45,12 @@ export class ListingComponent implements OnInit, OnDestroy {
     this.listingService.showCreationForm$.next(!this.showCreationForm)
     this.listingService.startedEditing$.next(-1);
   }
+
+  greatestNumber(list: number[]) {
+    let maxNumber = 0;
+    for(const element of list) {
+    if(element > maxNumber) maxNumber = element;
+  }
+  return maxNumber;
+}
 }

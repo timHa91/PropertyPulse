@@ -8,7 +8,7 @@ import { RealEstateItem } from "src/app/shared/real-estate-item.model";
 })
 export class SearchItemComponent {
 
-    @Input() item!: RealEstateItem;
+    @Input({required: true}) item!: RealEstateItem;
     @Output() triggerDetailView = new EventEmitter<RealEstateItem>();
 
 
