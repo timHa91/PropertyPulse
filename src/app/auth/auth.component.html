@@ -1,37 +1,49 @@
 <mat-card *ngIf="!isLoading">
     <mat-card-content>
       <form [formGroup]="authForm" (ngSubmit)="onAuth()">
-        <h2>{{isLogin ? 'Log In' : 'Sign Up'}}</h2>
+        <h2>{{ isLogin ? 'Log In' : 'Sign Up' }}</h2>
+        
         <mat-error *ngIf="!authForm">
           The username and password were not recognized
         </mat-error>
+        
         <mat-form-field>
-          <input matInput type="email" placeholder="Email" formControlName="email" name="email" required>
-          <mat-error>
+          <input matInput type="email" placeholder="Email" formControlName="email" required>
+          <mat-error *ngIf="authForm.get('email')?.hasError('email') && authForm.get('email')?.touched">
             Please provide a valid email address
           </mat-error>
         </mat-form-field>
+        
         <mat-form-field>
-          <input matInput type="password" placeholder="Password" formControlName="password" name="password" required>
-          <mat-error>
+          <input matInput type="password" placeholder="Password" formControlName="password" required>
+          <mat-error *ngIf="authForm.get('password')?.hasError('required') && authForm.get('password')?.touched">
             Please provide a valid password
           </mat-error>
         </mat-form-field>
+        
         <div class="buttons">
-            <div class="login-buttons">
-                <button mat-raised-button type="submit" color="primary" [disabled]="!authForm.valid">{{ isLogin ? 'Log In' : 'Sign Up'}}</button>
-                <button mat-raised-button (click)="onCancelAuth()" type="button" color="warn">Cancel</button>
-            </div>
-            <div class="switch-button">
-                <button mat-raised-button (click)="onSwitchMode()" type="button" color="accent">Switch to {{isLogin ? 'Sign Up' : 'Log In'}}</button>
-            </div>
+          <div class="login-buttons">
+            <button mat-raised-button type="submit" color="primary" [disabled]="authForm.invalid">
+              {{ isLogin ? 'Log In' : 'Sign Up' }}
+            </button>
+            <button mat-raised-button (click)="onCancelAuth()" type="button" color="warn">Cancel</button>
+          </div>
+          
+          <div class="switch-button">
+            <button mat-raised-button (click)="onSwitchMode()" type="button" color="accent">
+              Switch to {{ isLogin ? 'Sign Up' : 'Log In' }}
+            </button>
+          </div>
         </div>
+        
         <div class="error-message">
-            <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
-        </div>  
+          <mat-error *ngIf="errorMessage">{{ errorMessage }}</mat-error>
+        </div>
       </form>
     </mat-card-content>
-</mat-card>
-<div class="loading-spinner" *ngIf="isLoading">
+  </mat-card>
+  
+  <div class="loading-spinner" *ngIf="isLoading">
     <app-loading-spinner></app-loading-spinner>
-</div>
+  </div>
+  

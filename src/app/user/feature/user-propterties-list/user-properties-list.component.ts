@@ -31,21 +31,21 @@ export class UserPropertiesListComponent implements OnInit, OnDestroy {
     this.subscribeToChanges();
   }
 
-  private initializeList() {
+  private initializeList(): void {
     this.route.data.subscribe(data => {
       this.originalList = data['propertiesData'];
       this.filteredList = this.originalList;
     });
   }
 
-  private subscribeToUserLogOut() {
+  private subscribeToUserLogOut(): void {
     const logoutSubscription = this.authService.userLoggedOut.subscribe(() => {
       this.userService.resetUserPropertiesList();
     });
     this.subscriptions.push(logoutSubscription);
   }
 
-  private subscribeToChanges() {
+  private subscribeToChanges(): void {
     const listChangedSubscription = this.userService.propertiesListHasChanged$.subscribe(changedList => {
       this.filteredList = changedList;
     });

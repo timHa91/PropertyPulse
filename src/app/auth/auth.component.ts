@@ -5,76 +5,93 @@ import { AuthRequest } from "./auth-request.model";
 import { AuthService } from "./auth.service";
 import { Observable } from "rxjs";
 import { AuthResponse } from "./auth-response.model";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
-    selector: 'app-auth',
-    templateUrl: './auth.component.html',
-    styleUrls: ['./auth.component.css']
+  selector: 'app-auth',
+  templateUrl: './auth.component.html',
+  styleUrls: ['./auth.component.css']
 })
-export class AuthComponent implements OnInit{
+export class AuthComponent implements OnInit {
 
-    authForm!: FormGroup;
-    isLogin = false;
-    isLoading = false;
-    errorMessage: string | null = null;
-     
-    constructor(private router: Router,
-                private route: ActivatedRoute,
-                private authService: AuthService) {}
+  authForm!: FormGroup;
+  isLogin = false;
+  isLoading = false;
+  errorMessage: string | null = null;
 
-    ngOnInit(): void {
-        this.route.queryParams.subscribe(params => {
-            this.isLogin = params['login'];
-        });
-        this.authForm = new FormGroup({
-            email: new FormControl('', [Validators.required, Validators.email]),
-            password: new FormControl('', [Validators.required, Validators.min(6)])
-        })
-    }
+  constructor(private router: Router,
+              private route: ActivatedRoute,
+              private authService: AuthService) {}
 
-    onAuth() {
-        this.isLoading = true;
-        if (this.authForm.valid) {
-            const email = this.authForm.value.email;
-            const password = this.authForm.value.password;
-            const user : AuthRequest = {
-                email: email,
-                password: password
-            }
-            
-            let authObs: Observable<AuthResponse>;
+  ngOnInit(): void {
+    this.initializeForm();
+    this.handleQueryParams();
+  }
 
-            if (this.isLogin) {
-               authObs = this.authService.login(user)
-            } else {
-                authObs = this.authService.signUp(user)
-            }
+  initializeForm(): void {
+    this.authForm = new FormGroup({
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required, Validators.minLength(6)])
+    });
+  }
 
-            authObs.subscribe({
-                next: response => {
-                    this.isLoading = false;
-                    this.router.navigate(['/properties']);
-            },
-                error: errorMsg => {
-                    this.errorMessage = errorMsg;
-                    this.isLoading = false;
-                }
-            })
+  handleQueryParams(): void {
+    this.route.queryParams.subscribe(params => {
+      this.isLogin = !!params['login'];
+    });
+  }
+
+  onAuth(): void {
+    this.isLoading = true;
+    if (this.authForm.valid) {
+      const email = this.authForm.value.email;
+      const password = this.authForm.value.password;
+      const user: AuthRequest = { email, password };
+  
+      let authObs: Observable<AuthResponse>;
+  
+      if (this.isLogin) {
+        authObs = this.authService.login(user);
+      } else {
+        authObs = this.authService.signUp(user);
+      }
+  
+      authObs.subscribe({
+        next: () => {
+          this.isLoading = false;
+          this.router.navigate(['/properties']);
+        },
+        error: error => {
+          this.handleError(error);
         }
-        this.authForm.reset();
+      });
     }
+    this.resetForm();
+  }  
 
-    onSwitchMode() {
-        this.isLogin = !this.isLogin;
+  handleError(error: Error): void {
+    if (error instanceof HttpErrorResponse) {
+      if (error.status === 401) {
+        this.errorMessage = 'Unauthorized. Please check your credentials.';
+      } else {
+        this.errorMessage = 'An unexpected error occurred. Please try again later.';
+      }
+    } else {
+      this.errorMessage = 'An unexpected error occurred. Please try again later.';
     }
+    this.isLoading = false;
+  }
 
-    onCancelAuth() {
-        this.resetForm();
-        this.router.navigate(['properties'])
-    }
+  onSwitchMode(): void {
+    this.isLogin = !this.isLogin;
+  }
 
-    private resetForm () {
-        this.authForm.reset();
-    }
+  onCancelAuth(): void {
+    this.resetForm();
+    this.router.navigate(['properties']);
+  }
 
+  resetForm(): void {
+    this.authForm.reset();
+  }
 }

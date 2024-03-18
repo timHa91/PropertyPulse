@@ -8,6 +8,7 @@ import { Category } from "../../shared/model/category.enum";
 
 @Injectable({providedIn: 'root'})
 export class PropertiesFilterService {
+    
     onFilterPropertiesList$ = new Subject<PropertiesFilter>();
     setPriceRange$ = new BehaviorSubject<PropertiesFilterPriceRange>({minPrice: 0, maxPrice: 0});
     filterHasLocation$ = new Subject<{hasValue: boolean, locationValue: string}>

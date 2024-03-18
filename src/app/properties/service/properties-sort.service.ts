@@ -5,6 +5,11 @@ import { PropertiesSortDescriptor, PropertiesSortDirection } from "../model/prop
 import { Property } from "../../shared/model/property.model";
 import { MapboxService } from "src/app/mapbox/mapbox.service";
 
+enum SortCategory {
+    Price = 'price',
+    Distance = 'distance'
+}
+
 @Injectable({ providedIn: 'root' })
 export class PropertiesSortService {
     resetSort = new Subject<void>();
@@ -46,9 +51,4 @@ export class PropertiesSortService {
             return ascending ? distanceA - distanceB : distanceB - distanceA;
         });
     }
-}
-
-enum SortCategory {
-    Price = 'price',
-    Distance = 'distance'
 }
