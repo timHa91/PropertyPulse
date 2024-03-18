@@ -16,7 +16,7 @@ export class UserPropertiesFilterBarComponent implements OnInit, OnDestroy {
  filterStatus!: UserPropertiesStatus[];
  filterTypes!: Category[];
  filterSubscription!: Subscription;
- listingChangedSubscription!: Subscription;
+ propertiesListHasChangedSubscription!: Subscription;
 
  constructor(
             private userService: UserService,
@@ -26,7 +26,7 @@ export class UserPropertiesFilterBarComponent implements OnInit, OnDestroy {
  ngOnInit(): void {
     this.initForm();
     this.subscribeToFilterChanges();
-    this.subscribeToListingChanges();
+    this.subscribeToPropertiesListChanges();
  }
 
  private initForm(): void {
@@ -47,8 +47,8 @@ export class UserPropertiesFilterBarComponent implements OnInit, OnDestroy {
       });
  }
 
- private subscribeToListingChanges(): void {
-    this.listingChangedSubscription = this.userService.listingHasChanged$.subscribe(list => {
+ private subscribeToPropertiesListChanges(): void {
+    this.propertiesListHasChangedSubscription = this.userService.propertiesListHasChanged$.subscribe(() => {
       this.updateFilters();
     });
  }
@@ -60,6 +60,6 @@ export class UserPropertiesFilterBarComponent implements OnInit, OnDestroy {
 
  ngOnDestroy(): void {
     this.filterSubscription.unsubscribe();
-    this.listingChangedSubscription.unsubscribe();
+    this.propertiesListHasChangedSubscription.unsubscribe();
  }
 }

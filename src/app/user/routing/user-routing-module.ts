@@ -6,11 +6,11 @@ import { userResolver } from "./user.resolver";
 
 const routes: Routes = [
     {
-    path: 'marketplace-listing', 
+    path: 'user', 
     component: UserComponent,
     canActivate: [userGuard],
     resolve: {
-        listingData: userResolver
+        propertiesData: userResolver
     }
     }
 ]

@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PropertiesModule } from './properties/properties.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ListingModule } from './user/user.module';
+import { UserModule } from './user/user.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 
@@ -17,7 +17,7 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
     BrowserModule,
     AppRoutingModule,
     PropertiesModule,
-    ListingModule,
+    UserModule,
     BrowserAnimationsModule
   ],
   providers: [{

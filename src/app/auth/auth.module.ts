@@ -5,7 +5,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatInputModule } from "@angular/material/input";
 import { MatCardModule } from "@angular/material/card";
 import { CommonModule } from "@angular/common";
-import { LoadingSpinnerComponent } from "../shared/loading-spinner/loading-spinner.component";
+import { LoadingSpinnerComponent } from "../loading-spinner/loading-spinner.component";
 
 @NgModule({
     declarations: [

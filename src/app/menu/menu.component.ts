@@ -38,12 +38,12 @@ export class MenuComponent implements OnInit, OnDestroy{
         })
     }
 
-    goToListing() {
-        this.router.navigate(['/marketplace-listing'])
+    goToProperties() {
+        this.router.navigate(['/user'])
     }
 
     goToSearch() {
-        if (this.router.url === '/marketplace-listing') {
+        if (this.router.url === '/user') {
             this.lsitingService.startedEditing$.next(-1);
         }
         this.router.navigate(['/properties'])

@@ -37,7 +37,7 @@ export class PropertiesFilterBarComponent implements OnInit, AfterViewInit, OnDe
         )
         .subscribe(searchForm => {
             const convertedSearchForm = this.transformToSearchCriteria(searchForm);
-            this.filterService.onFilterList$.next(convertedSearchForm);
+            this.filterService.onFilterPropertiesList$.next(convertedSearchForm);
             this.updateLocationFilter(convertedSearchForm);
         });
     }

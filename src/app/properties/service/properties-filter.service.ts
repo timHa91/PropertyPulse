@@ -8,56 +8,56 @@ import { Category } from "../../shared/model/category.enum";
 
 @Injectable({providedIn: 'root'})
 export class PropertiesFilterService {
-    onFilterList$ = new Subject<PropertiesFilter>();
+    onFilterPropertiesList$ = new Subject<PropertiesFilter>();
     setPriceRange$ = new BehaviorSubject<PropertiesFilterPriceRange>({minPrice: 0, maxPrice: 0});
     filterHasLocation$ = new Subject<{hasValue: boolean, locationValue: string}>
 
     constructor(private mapService: MapboxService) {}
     
-    filterList(originalList: Property[], searchCriteria: PropertiesFilter): Observable<Property[]> {
+    filterList(originalList: Property[], propertiesFilterCriteria: PropertiesFilter): Observable<Property[]> {
         let filteredList = [... originalList];
-        filteredList = this.applySynchronousFilters(filteredList, searchCriteria);
+        filteredList = this.applySynchronousFilters(filteredList, propertiesFilterCriteria);
 
-        // Handle the radius search criteria asynchronously
-        if (searchCriteria.location && searchCriteria.radius) {
-            return this.applyAsynchronousFilters(filteredList, searchCriteria);
+        // Handle the radius filter criteria asynchronously
+        if (propertiesFilterCriteria.location && propertiesFilterCriteria.radius) {
+            return this.applyAsynchronousFilters(filteredList, propertiesFilterCriteria);
         }   
         // If no asynchronous filters are applied, return an Observable of the filtered list
         return of(filteredList);
     }
     
 
-    private applySynchronousFilters(originalList: Property[], searchCriteria: PropertiesFilter): Property[] {
+    private applySynchronousFilters(originalList: Property[], propertiesFilterCriteria: PropertiesFilter): Property[] {
         let filteredList = originalList;
     
-        if (searchCriteria.category !== undefined) {
-            filteredList = filteredList.filter(item => this.isItemInCategory(item, searchCriteria.category as Category[]));
+        if (propertiesFilterCriteria.category !== undefined) {
+            filteredList = filteredList.filter(item => this.isItemInCategory(item, propertiesFilterCriteria.category as Category[]));
         }
     
-        if (searchCriteria.maxPrice !== undefined) {
-            filteredList = filteredList.filter(item => this.isItemBelowMaxPrice(item, searchCriteria.maxPrice as number));
+        if (propertiesFilterCriteria.maxPrice !== undefined) {
+            filteredList = filteredList.filter(item => this.isItemBelowMaxPrice(item, propertiesFilterCriteria.maxPrice as number));
         }
     
-        if (searchCriteria.minPrice !== undefined) {
-            filteredList = filteredList.filter(item => this.isItemOverMinPrice(item, searchCriteria.minPrice as number));
+        if (propertiesFilterCriteria.minPrice !== undefined) {
+            filteredList = filteredList.filter(item => this.isItemOverMinPrice(item, propertiesFilterCriteria.minPrice as number));
         }
     
-        if (searchCriteria.location && !searchCriteria.radius) {
-            this.emitFilterHasLocation(searchCriteria.location);
-            filteredList = filteredList.filter(item => this.isItemInLocation(item, searchCriteria.location as string));
+        if (propertiesFilterCriteria.location && !propertiesFilterCriteria.radius) {
+            this.emitFilterHasLocation(propertiesFilterCriteria.location);
+            filteredList = filteredList.filter(item => this.isItemInLocation(item, propertiesFilterCriteria.location as string));
         }
     
         return filteredList;
     }
 
-    private applyAsynchronousFilters(originalList: Property[], searchCriteria: PropertiesFilter): Observable<Property[]> {
-        if (searchCriteria.location && searchCriteria.radius) {
-            this.emitFilterHasLocation(searchCriteria.location);
-            return this.mapService.getLocationCoordinates(searchCriteria.location)
+    private applyAsynchronousFilters(originalList: Property[], propertiesFilterCriteria: PropertiesFilter): Observable<Property[]> {
+        if (propertiesFilterCriteria.location && propertiesFilterCriteria.radius) {
+            this.emitFilterHasLocation(propertiesFilterCriteria.location);
+            return this.mapService.getLocationCoordinates(propertiesFilterCriteria.location)
                 .pipe(
-                    switchMap(searchLocationCords => {
+                    switchMap(propertiesLocationCords => {
                         return from(originalList).pipe(
-                            filter(item => this.isItemInRadius(item, searchCriteria.radius as number, searchLocationCords)),
+                            filter(item => this.isItemInRadius(item, propertiesFilterCriteria.radius as number, propertiesLocationCords)),
                             toArray()
                         );
                     })
@@ -94,11 +94,11 @@ export class PropertiesFilterService {
         return item.address.toLocaleLowerCase().includes(location.toLocaleLowerCase());
     }
 
-    private isItemInRadius(item: Property, radius: number, searchLocation: [number, number]): boolean {
+    private isItemInRadius(item: Property, radius: number, propertyLocation: [number, number]): boolean {
         const itemCoords = item.geometry.geometry.coordinates;
         const distanceInMeters = this.mapService.calculateDistance(
-            searchLocation[1], 
-            searchLocation[0], 
+            propertyLocation[1], 
+            propertyLocation[0], 
             itemCoords[1], 
             itemCoords[0]
         );

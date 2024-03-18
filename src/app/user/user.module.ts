@@ -39,4 +39,4 @@ import { MenuComponent } from '../menu/menu.component';
     MenuComponent
   ]
 })
-export class ListingModule { }
+export class UserModule { }

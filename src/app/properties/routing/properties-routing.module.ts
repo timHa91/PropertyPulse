@@ -8,7 +8,7 @@ const routes: Routes = [
     path: 'properties',
     component: PropertiesComponent,
     resolve: {
-      searchData: propertiesResolver
+      propertiesData: propertiesResolver
     }
   }
 ];

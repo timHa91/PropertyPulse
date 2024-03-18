@@ -1,27 +1,27 @@
-.listing-container {
+.user-properties-listing-container {
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.15);
     padding: 20px 20px;
     background-color: white;
 }
 
-.listing-header {
+.user-properties-listing-header {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
 }
 
-.listing-content {
+.user-properties-listing-content {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
 }
 
-.list {
+.user-properties-list {
     flex: 1;
 }
 
-.creation {
+.user-properties-creation {
     flex: 1;
 }
 

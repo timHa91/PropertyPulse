@@ -89,7 +89,7 @@ export class UserCreatePropertyComponent implements OnInit, OnDestroy {
         const newCategory = this.convertToCategory(this.creationForm.get('type')?.value);
         const newStatus = this.toEditItem ? this.toEditItem.status : UserPropertiesStatus.DRAFT;
 
-        const listingItem: Property = {
+        const property: Property = {
             description: newDescription,    
             geometry: this.toEditItem ? this.toEditItem.geometry : new GeoJson([0, 0]),
             image: newImage,    
@@ -101,38 +101,38 @@ export class UserCreatePropertyComponent implements OnInit, OnDestroy {
         };
         
         if (this.editMode && newAddress === this.toEditItem.address) {
-            this.updateListing(listingItem);
+            this.updateproperty(property);
             if(this.toEditItem.status === UserPropertiesStatus.PUBLISHED) {
-                this.propertiesService.updateItem(listingItem);
+                this.propertiesService.updateItem(property);
             }
         } else {
-            this.createListing(listingItem);
+            this.createProperty(property);
         }
     }
         
-    private updateListing(listingItem: Property) {
-        this.userService.updateItem(listingItem);
+    private updateproperty(property: Property) {
+        this.userService.updateItem(property);
         this.resetForm();
     }
         
-    private createListing(listingItem: Property) {
-        this.getCordsForCreatedItem(listingItem.address).subscribe(coords => {
+    private createProperty(property: Property) {
+        this.getCordsForCreatedItem(property.address).subscribe(coords => {
             if (coords !== undefined) {
-                listingItem.geometry = new GeoJson(coords);
+                property.geometry = new GeoJson(coords);
             }
-            this.saveListing(listingItem);
+            this.saveProperty(property);
             this.resetForm();
         });
     }
         
-    private saveListing(listingItem: Property) {
+    private saveProperty(property: Property) {
         if (this.editMode) {               
-            this.userService.updateItem(listingItem);
+            this.userService.updateItem(property);
             if(this.toEditItem.status === UserPropertiesStatus.PUBLISHED) {
-                this.propertiesService.updateItem(listingItem);
+                this.propertiesService.updateItem(property);
             }
         } else {
-            this.userService.addNewListing(listingItem);
+            this.userService.addNewProperty(property);
         }
     }
 

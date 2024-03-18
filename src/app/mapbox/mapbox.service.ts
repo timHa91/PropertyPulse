@@ -41,8 +41,8 @@ removeAllMarkers() {
   }
 }
 
-placeAllMarkers(list: Property[]) {
-  list.forEach( item => {
+placeAllMarkers(properties: Property[]) {
+  properties.forEach( item => {
       this.setMarker(item.geometry.geometry.coordinates)
   });
 }
@@ -72,12 +72,12 @@ private forwardGeocoder(searchText: string): Observable<[number, number]> {
   );
 }
   
-private getCenter(list: Property[]): [number, number] {
+private getCenter(properties: Property[]): [number, number] {
   let longSum = 0;
   let latSum = 0;
   let count = 0;
  
-  list.forEach(item => {
+  properties.forEach(item => {
      longSum += item.geometry.geometry.coordinates[0];
      latSum += item.geometry.geometry.coordinates[1];
      count++;
@@ -90,9 +90,9 @@ private getCenter(list: Property[]): [number, number] {
     }
  }
 
-updateMapCenter(list: Property[]) {
+updateMapCenter(properties: Property[]) {
   if (this.map) {
-    const newCenter = this.getCenter(list);
+    const newCenter = this.getCenter(properties);
     this.map.setCenter(newCenter);
   }
 }

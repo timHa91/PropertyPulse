@@ -39,10 +39,10 @@ export class PropertiesSortService {
         );
     }
 
-    private sortByDistanceCommon(list: Property[], searchLocation: [number, number], ascending: boolean): Property[] {
+    private sortByDistanceCommon(list: Property[], propertyLocation: [number, number], ascending: boolean): Property[] {
         return list.sort((a, b) => {
-            const distanceA = this.mapService.calculateDistance(a.geometry.geometry.coordinates[0], a.geometry.geometry.coordinates[1], searchLocation[0], searchLocation[1]);
-            const distanceB = this.mapService.calculateDistance(b.geometry.geometry.coordinates[0], b.geometry.geometry.coordinates[1], searchLocation[0], searchLocation[1]);
+            const distanceA = this.mapService.calculateDistance(a.geometry.geometry.coordinates[0], a.geometry.geometry.coordinates[1], propertyLocation[0], propertyLocation[1]);
+            const distanceB = this.mapService.calculateDistance(b.geometry.geometry.coordinates[0], b.geometry.geometry.coordinates[1], propertyLocation[0], propertyLocation[1]);
             return ascending ? distanceA - distanceB : distanceB - distanceA;
         });
     }

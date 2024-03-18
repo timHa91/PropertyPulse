@@ -1,4 +1,4 @@
-.listing-item {
+.properties-list-item {
     max-height: 200px;
 }
 
@@ -6,7 +6,7 @@
     display: flex;
 }
 
-.listing-item-header {
+.properties-item-header {
     flex: 2;
   }
   
@@ -15,7 +15,7 @@
   }
   
 
-.listing-item-image {
+.properties-item-image {
     background-size: cover;
     margin-right: 20px;
 }

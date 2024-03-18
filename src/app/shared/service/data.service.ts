@@ -12,7 +12,7 @@ export class DataService {
                 private authService: AuthService) {
     }
   
-    // Search Module
+    // Properties Module
     publishItem(newItem: Property): Observable<{name: string}> {
         return this.authService.user.pipe(
             take(1),
@@ -83,7 +83,7 @@ export class DataService {
         );
     }
     
-    // Userspecific Listing Module
+    // User Module
     storeNewItem(newItem: Property): Observable<{name: string}> {
         return this.authService.user.pipe(
             take(1),

@@ -6,10 +6,10 @@ import { tap, catchError } from "rxjs/operators";
 
 @Injectable({ providedIn: 'root' })
 export class PropertiesService {
-    searchListHasChanged$ = new Subject<Property[]>();
+    propertiesListHasChanged$ = new Subject<Property[]>();
     onFetching$ = new Subject<boolean>();
     onError$ = new Subject<string>();
-    searchList: Property[] = [];
+    propertiesList: Property[] = [];
 
     constructor(private dataService: DataService) {}
 
@@ -17,8 +17,8 @@ export class PropertiesService {
         this.onFetching$.next(true);
         return this.dataService.getItems().pipe(
             tap(fetchedItems => {
-                this.searchList = fetchedItems;
-                this.searchListHasChanged$.next(this.searchList.slice());
+                this.propertiesList = fetchedItems;
+                this.propertiesListHasChanged$.next(this.propertiesList.slice());
                 this.onFetching$.next(false);
             }),
             catchError(error => {
@@ -29,7 +29,7 @@ export class PropertiesService {
     }
 
     getAllResults(): Property[] {
-        return this.searchList.slice();
+        return this.propertiesList.slice();
     }
 
     publishItem(newItem: Property) {
@@ -40,12 +40,12 @@ export class PropertiesService {
     }
 
     deleteItem(itemId: string) {
-        const itemIndex = this.searchList.findIndex(item => item.id === itemId);
+        const itemIndex = this.propertiesList.findIndex(item => item.id === itemId);
         if (itemIndex !== -1) {
             this.dataService.deleteItem(itemId).subscribe({
                 next: () => {
-                    this.searchList.splice(itemIndex, 1);
-                    this.searchListHasChanged$.next(this.searchList.slice());
+                    this.propertiesList.splice(itemIndex, 1);
+                    this.propertiesListHasChanged$.next(this.propertiesList.slice());
                 },
                 error: error => console.error('Error deleting item:', error)
             });

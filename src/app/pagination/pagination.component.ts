@@ -1,13 +1,13 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { PaginationService } from '../pagination.service';
+import { PaginationService } from './pagination.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-pagination-controls',
-  templateUrl: './pagination-controls.component.html',
-  styleUrls: ['./pagination-controls.component.css']
+  selector: 'app-pagination',
+  templateUrl: './pagination.component.html',
+  styleUrls: ['./pagination.component.css']
 })
-export class PaginationControlsComponent implements OnInit, OnDestroy{
+export class PaginationComponent implements OnInit, OnDestroy{
 
   @Input({required: true}) listSize!: number;
   itemsPerPage!: number;

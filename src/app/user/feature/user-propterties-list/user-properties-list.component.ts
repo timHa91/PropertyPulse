@@ -33,7 +33,7 @@ export class UserPropertiesListComponent implements OnInit, OnDestroy{
 
   private initList() {
     this.route.data.subscribe(data => {
-      this.orginalList = data['listingData'];
+      this.orginalList = data['propertiesData'];
       this.filteredList = this.orginalList;
     })
 }
@@ -45,7 +45,7 @@ export class UserPropertiesListComponent implements OnInit, OnDestroy{
   }
 
   private subscribeToListChanged() {
-    this.listChangedSubscription = this.userService.listingHasChanged$.subscribe(changedList => {
+    this.listChangedSubscription = this.userService.propertiesListHasChanged$.subscribe(changedList => {
       this.filteredList = changedList; 
     })
   }

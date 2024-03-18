@@ -54,7 +54,7 @@ export class PropertiesListComponent implements OnInit, OnDestroy {
     this.subscribeToSortChanges();
     this.subscribeToFilterChanges();
     this.subscribeToPaginationChanges();
-    this.subscribeToSearchListChanges();
+    this.subscribeToPropertiesListChanges();
     this.subscribeToUpdateMap();
     this.subscribeToIsFetching();
     this.subscribeToError();
@@ -94,8 +94,8 @@ export class PropertiesListComponent implements OnInit, OnDestroy {
     }));
   }
 
-  private subscribeToSearchListChanges(): void {
-    this.subscriptions.push(this.propertiesService.searchListHasChanged$.subscribe((changedList: Property[]) => {
+  private subscribeToPropertiesListChanges(): void {
+    this.subscriptions.push(this.propertiesService.propertiesListHasChanged$.subscribe((changedList: Property[]) => {
       this.originalList = changedList;
       this.filterService.setPriceRangeFromList(this.originalList);
       this.filteredList = this.originalList;
@@ -103,8 +103,8 @@ export class PropertiesListComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToFilterChanges(): void {
-    this.subscriptions.push(this.filterService.onFilterList$.pipe(
-      switchMap((searchCriteria: PropertiesFilter) => this.filterService.filterList(this.originalList, searchCriteria)),
+    this.subscriptions.push(this.filterService.onFilterPropertiesList$.pipe(
+      switchMap((propertiesFilterCriteria: PropertiesFilter) => this.filterService.filterList(this.originalList, propertiesFilterCriteria)),
       catchError((error: Error) => this.handleError(error))
     ).subscribe((filteredList: Property[]) => {
       this.handleFilteredListChanges(filteredList);
@@ -129,7 +129,7 @@ export class PropertiesListComponent implements OnInit, OnDestroy {
   // List Methods
   private initializeLists(): void {
     this.route.data.subscribe((data: Data) => {
-      this.originalList = data['searchData'];
+      this.originalList = data['propertiesData'];
       this.filterService.setPriceRangeFromList(this.originalList);
       this.filteredList = this.originalList;
     });

@@ -18,7 +18,7 @@ import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
 import { MapComponent } from "../mapbox/mapbox.component";
 import {HttpClientModule} from '@angular/common/http'
-import { PaginationControlsComponent } from "../pagination/pagination-controls/pagination-controls.component";
+import { PaginationComponent } from "../pagination/pagination.component";
 import {MatSelectModule} from '@angular/material/select';
 import { RouterModule } from "@angular/router";
 import { AuthModule } from "../auth/auth.module";
@@ -37,7 +37,7 @@ import { MenuComponent } from "../menu/menu.component";
         PropertiesSortComponent,
         PropertiesItemComponent,
         MapComponent,
-        PaginationControlsComponent
+        PaginationComponent
     ],
     imports: [
         CommonModule,
