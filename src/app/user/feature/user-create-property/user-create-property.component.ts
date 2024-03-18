@@ -81,7 +81,7 @@ export class UserCreatePropertyComponent implements OnInit, OnDestroy {
         });
     }
 
-    onSafeDraft() {
+    onSafeDraft(): void {
         const newDescription = this.creationForm.get('description')?.value;
         const newImage = this.creationForm.get('image')?.value;
         const newAddress = this.creationForm.get('address')?.value;
@@ -110,12 +110,12 @@ export class UserCreatePropertyComponent implements OnInit, OnDestroy {
         }
     }
         
-    private updateproperty(property: Property) {
+    private updateproperty(property: Property): void {
         this.userService.updateItem(property);
         this.resetForm();
     }
         
-    private createProperty(property: Property) {
+    private createProperty(property: Property): void {
         this.getCordsForCreatedItem(property.address).subscribe(coords => {
             if (coords !== undefined) {
                 property.geometry = new GeoJson(coords);
@@ -125,7 +125,7 @@ export class UserCreatePropertyComponent implements OnInit, OnDestroy {
         });
     }
         
-    private saveProperty(property: Property) {
+    private saveProperty(property: Property): void {
         if (this.editMode) {               
             this.userService.updateItem(property);
             if(this.toEditItem.status === UserPropertiesStatus.PUBLISHED) {
@@ -136,7 +136,7 @@ export class UserCreatePropertyComponent implements OnInit, OnDestroy {
         }
     }
 
-    private initForm() {
+    private initForm(): void {
         this.creationForm = new FormGroup({
             'description': new FormControl(null, Validators.required),
             'type': new FormControl(null),
@@ -155,7 +155,7 @@ export class UserCreatePropertyComponent implements OnInit, OnDestroy {
         return '';
     }
 
-    private convertCategoryToString() {
+    private convertCategoryToString(): string {
         let typeValue: string;
         switch (this.toEditItem.category) {
             case Category.Rent:
@@ -199,14 +199,14 @@ export class UserCreatePropertyComponent implements OnInit, OnDestroy {
        return this.mapService.getLocationCoordinates(location);
     }
 
-    isItemAdraft() {
+    isItemAdraft(): boolean {
         if(this.toEditItem) {
             return this.toEditItem.status === UserPropertiesStatus.DRAFT ? false : true;
         }
         return true;
     }
 
-    publishItem() {
+    publishItem(): void {
         if (this.toEditItem) {
             this.toEditItem.status = UserPropertiesStatus.PUBLISHED;
             this.userService.updateItem(this.toEditItem);
@@ -215,7 +215,7 @@ export class UserCreatePropertyComponent implements OnInit, OnDestroy {
         this.resetForm();
     }
 
-    onDeleteItem() {
+    onDeleteItem(): void {
         if(this.toEditItem.id) { 
             this.userService.deleteItem(this.toEditItem.id);
             if(this.toEditItem.status === UserPropertiesStatus.PUBLISHED) {
@@ -226,7 +226,7 @@ export class UserCreatePropertyComponent implements OnInit, OnDestroy {
         this.resetForm();
     }
 
-    get isitemPublished() {
+    get isitemPublished(): boolean {
         if(this.toEditItem) {
             return this.toEditItem.status === UserPropertiesStatus.PUBLISHED
         }

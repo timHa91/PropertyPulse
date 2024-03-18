@@ -1,15 +1,16 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { FormGroup, FormBuilder } from "@angular/forms";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
+import { Subscription } from 'rxjs';
+
 import { PropertiesCategoryFilterComponent } from "./properties-category-filter/properties-category-filter.component";
 import { PropertiesLocationSearchComponent } from "./properties-location-search/properties-location-search.component";
 import { PropertiesPriceRangeFilterComponent } from "./properties-price-range-filter/properties-price-range-filter.component";
 import { PropertiesRadiusFilterComponent } from "./properties-radius-filter/properties-radius-filter.component";
-import { PropertiesFilter } from "../../model/properties-filter.model";
-import { Category } from "src/app/shared/model/category.enum";
-import { debounceTime, distinctUntilChanged } from "rxjs/operators";
-import { Subscription } from 'rxjs';
 import { PropertiesFilterService } from "../../service/properties-filter.service";
 import { PropertiesFilterForm } from "../../model/properties-filter-form.model";
+import { PropertiesFilter } from "../../model/properties-filter.model";
+import { Category } from "src/app/shared/model/category.enum";
 
 @Component({
     selector: 'app-properties-filter-bar',
@@ -25,33 +26,46 @@ export class PropertiesFilterBarComponent implements OnInit, AfterViewInit, OnDe
     searchForm!: FormGroup;
     private subscription!: Subscription;
 
-    constructor(private filterService: PropertiesFilterService) {}
+    constructor(
+        private filterService: PropertiesFilterService,
+        private formBuilder: FormBuilder
+    ) {}
 
     ngOnInit(): void {
-        this.searchForm = new FormGroup({});
-    
-        this.subscription = this.searchForm.valueChanges
-        .pipe(
-            debounceTime(500),
-            distinctUntilChanged()
-        )
-        .subscribe(searchForm => {
-            const convertedSearchForm = this.transformToSearchCriteria(searchForm);
-            this.filterService.onFilterPropertiesList$.next(convertedSearchForm);
-            this.updateLocationFilter(convertedSearchForm);
-        });
+        this.initializeForm();
+        this.subscribeToFormChanges();
     }
 
-    // Add Child Controls after View init 
     ngAfterViewInit(): void {
-        this.searchForm.addControl('category', this.categoryFilter?.categoryForm);
-        this.searchForm.addControl('location', this.locationSearch?.locationForm);
-        this.searchForm.addControl('price', this.priceRange?.priceForm);
-        this.searchForm.addControl('radius', this.radiusFilter?.radiusForm);
+        this.addFormControls();
     }
 
     ngOnDestroy(): void {
         this.subscription.unsubscribe();
+    }
+
+    private initializeForm(): void {
+        this.searchForm = this.formBuilder.group({});
+    }
+
+    private subscribeToFormChanges(): void {
+        this.subscription = this.searchForm.valueChanges
+            .pipe(
+                debounceTime(500),
+                distinctUntilChanged()
+            )
+            .subscribe(searchForm => {
+                const convertedSearchForm = this.transformToSearchCriteria(searchForm);
+                this.filterService.onFilterPropertiesList$.next(convertedSearchForm);
+                this.updateLocationFilter(convertedSearchForm);
+            });
+    }
+
+    private addFormControls(): void {
+        this.searchForm.addControl('category', this.categoryFilter?.categoryForm);
+        this.searchForm.addControl('location', this.locationSearch?.locationForm);
+        this.searchForm.addControl('price', this.priceRange?.priceForm);
+        this.searchForm.addControl('radius', this.radiusFilter?.radiusForm);
     }
 
     private transformToSearchCriteria(searchForm: PropertiesFilterForm): PropertiesFilter {
@@ -76,29 +90,22 @@ export class PropertiesFilterBarComponent implements OnInit, AfterViewInit, OnDe
         return searchCriteria;
     }
 
-    private transformToCategoryArray(searchCategory: { [key: string]: boolean; }) {
+    private transformToCategoryArray(searchCategory: { [key: string]: boolean; }): Category[] {
         const categoryArray: Category[] = [];
-           Object.entries(searchCategory).forEach(([key, value]) => {
-                if (value === true) {
-                    const upperCaseKey = key.charAt(0).toUpperCase() + key.slice(1);
-                    categoryArray.push(Category[upperCaseKey as keyof typeof Category])
-                }
-            });
-            return categoryArray;
+        Object.entries(searchCategory).forEach(([key, value]) => {
+            if (value === true) {
+                const upperCaseKey = key.charAt(0).toUpperCase() + key.slice(1);
+                categoryArray.push(Category[upperCaseKey as keyof typeof Category]);
+            }
+        });
+        return categoryArray;
     }
 
     private updateLocationFilter(convertedSearchForm: PropertiesFilter): void {
-        if (convertedSearchForm.location && convertedSearchForm.location !== '') {
-            this.filterService.filterHasLocation$.next({
-                hasValue: true, 
-                locationValue: convertedSearchForm.location
-            });
-        } else {
-            this.filterService.filterHasLocation$.next({
-                hasValue: false, 
-                locationValue: ''
-            });
-        }
+        const locationValue = convertedSearchForm.location || '';
+        this.filterService.filterHasLocation$.next({
+            hasValue: !!convertedSearchForm.location,
+            locationValue
+        });
     }
-    
 }

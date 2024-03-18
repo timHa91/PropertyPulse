@@ -1,4 +1,4 @@
-.search-bar {
+.filter-bar {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -8,19 +8,19 @@
     
 }
 
-app-category-filter {
+app-properties-category-filter {
     flex: 1.5;
 }
 
-app-location-search {
+app-properties-location-search {
     flex: 2;
 }
 
-app-radius-filter {
+app-properties-radius-filter {
     flex: 1;
 }
 
-app-price-range-filter {
+app-properties-price-range-filter {
     flex: 2;
 }
 

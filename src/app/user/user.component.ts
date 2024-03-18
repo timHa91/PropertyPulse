@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { UserService } from './service/user.service';
 import { Subscription } from 'rxjs';
+
+import { UserService } from './service/user.service';
 import { ViewportService } from '../shared/service/viewport.service';
 
 @Component({
@@ -9,48 +10,53 @@ import { ViewportService } from '../shared/service/viewport.service';
   styleUrls: ['./user.component.css']
 })
 export class UserComponent implements OnInit, OnDestroy {
-  showCreationForm = false; 
+  showCreationForm = false;
   isSmallView = false;
   showCreationFormSubscription!: Subscription;
   viewportSubscription!: Subscription;
-  
 
-  constructor(private userService: UserService,
-              private viewportService: ViewportService){}
+  constructor(
+    private userService: UserService,
+    private viewportService: ViewportService
+  ) {}
 
-  ngOnInit(): void {  
+  ngOnInit(): void {
     this.subscribeToShowCreationForm();
-    this.subscribeToViewport();
+    this.subscribeToSmallViewport();
   }
 
   ngOnDestroy(): void {
-    this.showCreationFormSubscription.unsubscribe();
-    this.viewportSubscription.unsubscribe();
+    this.unsubscribeAll();
   }
 
-  private subscribeToViewport() {
-    this.viewportSubscription = this.viewportService.isSmallView$.subscribe((isStateMatched: boolean) => {
-      this.isSmallView = isStateMatched;
-    })
+  private subscribeToSmallViewport(): void {
+    this.viewportSubscription = this.viewportService.isSmallView$.subscribe(isSmallView => {
+      this.isSmallView = isSmallView;
+    });
   }
 
-  private subscribeToShowCreationForm() {
-    this.showCreationFormSubscription = this.userService.showCreationForm$.subscribe( (showForm: boolean) => {
+  private subscribeToShowCreationForm(): void {
+    this.showCreationFormSubscription = this.userService.showCreationForm$.subscribe(showForm => {
       this.showCreationForm = showForm;
-    })
+    });
   }
- 
-  toogleShowCreationForm() {
+
+  toggleShowCreationForm(): void {
     this.userService.resetForm();
-    this.userService.showCreationForm$.next(!this.showCreationForm)
+    this.userService.showCreationForm$.next(!this.showCreationForm);
     this.userService.startedEditing$.next(-1);
   }
 
-  greatestNumber(list: number[]) {
-    let maxNumber = 0;
-    for(const element of list) {
-    if(element > maxNumber) maxNumber = element;
+  greatestNumber(list: number[]): number {
+    return Math.max(...list);
   }
-  return maxNumber;
-}
+
+  private unsubscribeAll(): void {
+    if (this.showCreationFormSubscription) {
+      this.showCreationFormSubscription.unsubscribe();
+    }
+    if (this.viewportSubscription) {
+      this.viewportSubscription.unsubscribe();
+    }
+  }
 }

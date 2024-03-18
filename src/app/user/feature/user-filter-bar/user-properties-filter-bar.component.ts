@@ -43,7 +43,7 @@ export class UserPropertiesFilterBarComponent implements OnInit, OnDestroy {
         distinctUntilChanged()
       )
       .subscribe(filterForm => {
-        this.filterService.onFilterList$.next(filterForm);
+        this.filterService.onFilterUserPropertiesList$.next(filterForm);
       });
  }
 

@@ -38,11 +38,11 @@ export class MenuComponent implements OnInit, OnDestroy{
         })
     }
 
-    goToProperties() {
+    goToUser() {
         this.router.navigate(['/user'])
     }
 
-    goToSearch() {
+    goToProperties() {
         if (this.router.url === '/user') {
             this.lsitingService.startedEditing$.next(-1);
         }

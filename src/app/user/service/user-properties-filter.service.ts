@@ -3,26 +3,30 @@ import { Property } from "src/app/shared/model/property.model";
 import { UserPropertiesFilter } from "../model/user-properties-filter.model";
 import { Subject } from "rxjs";
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class UserPropertiesFilterService {
 
-    onFilterList$ = new Subject<UserPropertiesFilter>(); 
+    onFilterUserPropertiesList$ = new Subject<UserPropertiesFilter>();
 
-    filterList(toFilterList: Property[], filterCriteria: UserPropertiesFilter) {
-        let filteredList: Property[] = toFilterList;
+    filterList(toFilterProperties: Property[], filterCriteria: UserPropertiesFilter): Property[] {
+        let filteredProperties: Property[] = [...toFilterProperties];
+
         if (filterCriteria.status && filterCriteria.status.length > 0) {
-            filteredList = filteredList.filter(item => {
-                return item.status && filterCriteria.status && filterCriteria.status.includes(item.status);
-            });
-        } 
-    
-        if (filterCriteria.type && filterCriteria.type.length > 0) {
-            filteredList = filteredList.filter(item => {
-                return item.category && filterCriteria.type && filterCriteria.type.includes(item.category);
-            });
+            filteredProperties = this.filterByStatus(filteredProperties, filterCriteria.status);
         }
-    
-        return filteredList;
+
+        if (filterCriteria.type && filterCriteria.type.length > 0) {
+            filteredProperties = this.filterByType(filteredProperties, filterCriteria.type);
+        }
+
+        return filteredProperties;
     }
-    
+
+    private filterByStatus(properties: Property[], statusFilters: string[]): Property[] {
+        return properties.filter(property => property.status && statusFilters.includes(property.status));
+    }
+
+    private filterByType(properties: Property[], typeFilters: string[]): Property[] {
+        return properties.filter(property => property.category && typeFilters.includes(property.category));
+    }
 }

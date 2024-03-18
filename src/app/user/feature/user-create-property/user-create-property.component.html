@@ -1,52 +1,56 @@
-<form  *ngIf="showForm" [formGroup]="creationForm" (ngSubmit)="onSafeDraft()">
-    <div class="description-form">
-      <mat-form-field>
-        <mat-label>Description</mat-label>
-        <input class="description" matInput formControlName="description" required>
-        <mat-error>{{getErrorMessage('description')}}</mat-error>
-      </mat-form-field>
-    </div>
-    <div class="type">
-      <label for="type">Type:</label>
-      <mat-radio-group formControlName="type">
-          <mat-radio-button *ngFor="let option of checkBoxOptions" 
-          [value]="option.value"
-          [checked]="option.checked">
-          {{option.name}}
-        </mat-radio-button>
-      </mat-radio-group>
+<form *ngIf="showForm" [formGroup]="creationForm" (ngSubmit)="onSafeDraft()" class="creation-form">
+  <div class="description-form">
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <input matInput formControlName="description" class="description" required>
+      <mat-error>{{ getErrorMessage('description') }}</mat-error>
+    </mat-form-field>
   </div>
-    <div class="address-form">
-      <mat-form-field>
-        <mat-label>Address</mat-label>
-        <input class="adress" matInput formControlName="address" required>
-        <mat-error>{{getErrorMessage('address')}}</mat-error>
+
+  <div class="type-form">
+    <label for="type">Type:</label>
+    <mat-radio-group formControlName="type">
+      <mat-radio-button *ngFor="let option of checkBoxOptions" [value]="option.value" [checked]="option.checked">
+        {{ option.name }}
+      </mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <div class="address-form">
+    <mat-form-field>
+      <mat-label>Address</mat-label>
+      <input matInput formControlName="address" class="address" required>
+      <mat-error>{{ getErrorMessage('address') }}</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-container">
+    <div class="price-form">
+      <mat-form-field floatLabel="always">
+        <mat-label>Price</mat-label>
+        <input matInput type="number" formControlName="price" class="example-right-align" placeholder="0" required>
+        <span matTextPrefix>€&nbsp;</span>
+        <span matTextSuffix>.00</span>
+        <mat-error>{{ getErrorMessage('price') }}</mat-error>
       </mat-form-field>
     </div>
-    <div class="form-container">
-      <div class="price-form">
-        <mat-form-field floatLabel="always">
-            <mat-label>Price</mat-label>
-            <input matInput type="number" class="example-right-align" placeholder="0" formControlName="price" required>
-            <span matTextPrefix>€&nbsp;</span>
-            <span matTextSuffix>.00</span>
-            <mat-error>{{getErrorMessage('price')}}</mat-error>
-        </mat-form-field>
-      </div>
-      <div class="image-form">
-        <mat-form-field>
-          <mat-label>Image URL</mat-label>
-          <input class="image" matInput formControlName="image" required>
-          <mat-error>{{getErrorMessage('image')}}</mat-error>
-        </mat-form-field>
-      </div>
+
+    <div class="image-form">
+      <mat-form-field>
+        <mat-label>Image URL</mat-label>
+        <input matInput formControlName="image" class="image" required>
+        <mat-error>{{ getErrorMessage('image') }}</mat-error>
+      </mat-form-field>
     </div>
-    <hr>
-    <div class="buttons">
-      <button *ngIf="editMode" type="button" (click)="onDeleteItem()" mat-raised-button color="warn">Delete</button>
-      <button *ngIf="!editMode" type="button" (click)="resetForm()" mat-raised-button color="warn">Clear</button>
-      <button *ngIf="!isitemPublished" type="submit" [disabled]="creationForm.invalid" mat-raised-button color="accent">Save Draft</button>
-      <button *ngIf="isitemPublished" type="submit" [disabled]="creationForm.invalid" mat-raised-button color="accent">Save</button>
-      <button *ngIf="!isitemPublished" (click)="publishItem()" mat-raised-button [disabled]="isItemAdraft()" color="primary">Publish</button>
-    </div>
-  </form>
+  </div>
+
+  <hr>
+
+  <div class="buttons">
+    <button *ngIf="editMode" type="button" (click)="onDeleteItem()" mat-raised-button color="warn">Delete</button>
+    <button *ngIf="!editMode" type="button" (click)="resetForm()" mat-raised-button color="warn">Clear</button>
+    <button *ngIf="!isitemPublished" type="submit" [disabled]="creationForm.invalid" mat-raised-button color="accent">Save Draft</button>
+    <button *ngIf="isitemPublished" type="submit" [disabled]="creationForm.invalid" mat-raised-button color="accent">Save</button>
+    <button *ngIf="!isitemPublished" (click)="publishItem()" mat-raised-button [disabled]="isItemAdraft()" color="primary">Publish</button>
+  </div>
+</form>

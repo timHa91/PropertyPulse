@@ -10,13 +10,13 @@
       <mat-icon>lock_open</mat-icon>
       <span>Log In</span>
     </button>
-    <button *ngIf="isOnSearchPage" [disabled]="!isAuthenticated" (click)="goToProperties()" mat-menu-item>
+    <button *ngIf="isOnSearchPage" [disabled]="!isAuthenticated" (click)="goToUser()" mat-menu-item>
+      <mat-icon>view_list</mat-icon>
+      <span>User</span>
+    </button>
+    <button *ngIf="!isOnSearchPage" (click)="goToProperties()" mat-menu-item>
       <mat-icon>view_list</mat-icon>
       <span>Properties</span>
-    </button>
-    <button *ngIf="!isOnSearchPage" (click)="goToSearch()" mat-menu-item>
-      <mat-icon>view_list</mat-icon>
-      <span>Search</span>
     </button>
     <button [disabled]="!isAuthenticated" (click)="onLogout()" mat-menu-item>
       <mat-icon>lock_closed</mat-icon>

@@ -1,11 +1,13 @@
 import { Injectable } from "@angular/core";
+import { Observable, Subject, BehaviorSubject, of } from "rxjs";
+import { catchError, tap } from "rxjs/operators";
+
 import { Property } from "../../shared/model/property.model";
 import { Category } from "../../shared/model/category.enum";
 import { UserPropertiesStatus } from "../model/user-properties-status.enum";
-import { BehaviorSubject, Observable, Subject, catchError, of, tap } from "rxjs";
 import { DataService } from "../../shared/service/data.service";
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class UserService {
 
     propertiesListHasChanged$ = new BehaviorSubject<Property[]>([]);
@@ -14,19 +16,23 @@ export class UserService {
     onFormReset$ = new Subject<void>();
     userList: Property[] = [];
 
-    constructor(private dataService: DataService){}
+    constructor(private dataService: DataService) {}
 
     loadData(): Observable<Property[]> {
         return this.dataService.getUserItems().pipe(
-            tap( fetchedItems => {
+            tap(fetchedItems => {
                 this.userList = fetchedItems;
-                this.propertiesListHasChanged$.next(this.userList.slice());
+                this.updatePropertiesList();
             }),
-            catchError( error => {
-                console.error(error);
+            catchError(error => {
+                console.error('Error loading data:', error);
                 return of([]);
             })
-        )
+        );
+    }
+
+    private updatePropertiesList(): void {
+        this.propertiesListHasChanged$.next(this.userList.slice());
     }
 
     getAllProperties(): Property[] {
@@ -34,34 +40,34 @@ export class UserService {
     }
 
     getAllStatus(): UserPropertiesStatus[] {
-        const propertiesStatusList: UserPropertiesStatus[] = [];
-        this.userList.map(item => {
-            if(item.status && !propertiesStatusList.includes(item.status)) {
-                propertiesStatusList.push(item.status)
+        const statusList: UserPropertiesStatus[] = [];
+        this.userList.forEach(item => {
+            if (item.status && !statusList.includes(item.status)) {
+                statusList.push(item.status);
             }
-        })
-        return propertiesStatusList;
+        });
+        return statusList;
     }
 
     getAllTypes(): Category[] {
         const typeList: Category[] = [];
-        this.userList.map(item => {
-            if(item.category && !typeList.includes(item.category)) {
+        this.userList.forEach(item => {
+            if (item.category && !typeList.includes(item.category)) {
                 typeList.push(item.category);
             }
-        })
+        });
         return typeList;
     }
 
-    addNewProperty(newItem: Property) {
+    addNewProperty(newItem: Property): void {
         this.dataService.storeNewItem(newItem).subscribe({
             next: () => {
                 this.userList.push(newItem);
-                this.propertiesListHasChanged$.next(this.userList.slice());
+                this.updatePropertiesList();
             },
             error: error => {
-                console.error('Error storing new item:', error);  
-            } 
+                console.error('Error adding new item:', error);
+            }
         });
     }
 
@@ -69,21 +75,22 @@ export class UserService {
         return this.userList[index];
     }
 
-    resetForm() {
+    resetForm(): void {
         this.onFormReset$.next();
     }
 
-    resetUserList() {
+    resetUserPropertiesList(): void {
         this.userList = [];
+        this.updatePropertiesList();
     }
 
-    updateItem(item: Property) {
+    updateItem(item: Property): void {
         this.dataService.updateUserItem(item).subscribe({
             next: () => {
-                const itemIndex = this.userList.findIndex(listItem => listItem.id === item.id);
-                if (itemIndex !== -1) {
-                    this.userList[itemIndex] = item;
-                    this.propertiesListHasChanged$.next(this.userList.slice());
+                const index = this.userList.findIndex(listItem => listItem.id === item.id);
+                if (index !== -1) {
+                    this.userList[index] = item;
+                    this.updatePropertiesList();
                 }
             },
             error: error => {
@@ -92,13 +99,13 @@ export class UserService {
         });
     }
 
-    deleteItem(itemId: string) {
-        const itemIndex = this.userList.findIndex(item => item.id === itemId);
-        if (itemIndex !== -1) {
+    deleteItem(itemId: string): void {
+        const index = this.userList.findIndex(item => item.id === itemId);
+        if (index !== -1) {
             this.dataService.deleteUserItem(itemId).subscribe({
                 next: () => {
-                    this.userList.splice(itemIndex, 1);
-                    this.propertiesListHasChanged$.next(this.userList.slice());
+                    this.userList.splice(index, 1);
+                    this.updatePropertiesList();
                 },
                 error: error => {
                     console.error('Error deleting item:', error);
@@ -106,5 +113,4 @@ export class UserService {
             });
         }
     }
-    
 }
