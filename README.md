@@ -1,19 +1,20 @@
-# EstateExplorer
+# Property Pulse
 
-EstateExplorer ist eine Angular-Anwendung, die als Immobilienmarktplatz dient. Mit unserer App können Benutzer die Art und Weise, wie sie nach und in Immobilien suchen und investieren, revolutionieren.
+Property Pulse is an Angular application that serves as a real estate marketplace. With our app, users can revolutionize the way they search for and invest in properties.
 
-## Hauptmerkmale
+## Key Features
 
-* **Mapbox Integration**: Wir nutzen Mapbox, eine leistungsstarke Bibliothek für interaktive Karten, um Immobilienstandorte zu visualisieren. Um Mapbox zu verwenden, benötigen Sie einen eigenen Access Token, den Sie in der Datei `environment.ts` Ihres Projekts speichern können (https://docs.mapbox.com/help/getting-started/access-tokens/).
-* **Immobilienanzeige**: Benutzer können eine Liste aller Immobilien anzeigen, sortieren und filtern lassen.
-* **Immobilieneinsatz**: Benutzer können Immobilien direkt im User-Bereich der App einstellen, ändern, löschen und veröffentlichen.
-* **Firebase**: Es wird Firebase zur Datenspeicherung und Authentifizierung benutzt.
+- **Mapbox Integration**: Utilizes Mapbox, a powerful library for interactive maps, to visualize property locations. To use Mapbox, you'll need your own access token, which you can store in the `environment.ts` file of your project ([Mapbox Access Tokens](https://docs.mapbox.com/help/getting-started/access-tokens/)).
+- **Property Listings**: Users can view, sort, and filter a list of all available properties.
+- **Property Management**: Users can list, edit, delete, and publish properties directly within the app's user area.
+- **Firebase**: Utilizes Firebase for data storage and authentication.
 
 ## Installation
 
-Um das Projekt lokal zu installieren und auszuführen, führen Sie bitte die folgenden Schritte aus:
+To install and run the project locally, please follow these steps:
 
-1. Klonen Sie das Repository: `git clone https://github.com/timHa91/EstateExplorer.git`
-2. Navigieren Sie in das Projektverzeichnis: `cd EstateExplorer`
-3. Installieren Sie die Abhängigkeiten: `npm install` (oder `yarn`, je nachdem, was Sie verwenden)
-4. Starten Sie die Entwicklungsumgebung: `npm start` (oder `yarn start`)
+1. Clone the repository: `git clone https://github.com/timHa91/EstateExplorer.git`
+2. Navigate to the project directory: `cd EstateExplorer`
+3. Install dependencies: `npm install` (or `yarn`, depending on what you're using)
+4. Start the development environment: `npm start` (or `yarn start`)
+
