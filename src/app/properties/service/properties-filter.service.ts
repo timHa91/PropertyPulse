@@ -1,5 +1,5 @@
 import { Observable, Subject, from, of, toArray, filter, switchMap, BehaviorSubject} from "rxjs";
-import { Property } from "../../shared/model/property.model";
+import { Property } from "../../data/property.model";
 import { PropertiesFilter } from "../model/properties-filter.model";
 import { PropertiesFilterPriceRange } from "../model/properties-filter-price-range.model";
 import { Injectable } from "@angular/core";
@@ -8,7 +8,7 @@ import { Category } from "../../shared/model/category.enum";
 
 @Injectable({providedIn: 'root'})
 export class PropertiesFilterService {
-    
+
     onFilterPropertiesList$ = new Subject<PropertiesFilter>();
     setPriceRange$ = new BehaviorSubject<PropertiesFilterPriceRange>({minPrice: 0, maxPrice: 0});
     filterHasLocation$ = new Subject<{hasValue: boolean, locationValue: string}>

@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { AuthService } from 'src/app/auth/service/auth.service';
-import { Property } from 'src/app/shared/model/property.model';
+import { Property } from 'src/app/data/property.model';
 import { UserService } from '../../service/user.service';
 import { UserPropertiesFilterService } from '../../service/user-properties-filter.service';
 

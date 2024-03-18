@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from "@angular/core";
 import { Subscription, Subject, of, Observable } from "rxjs";
 import { catchError, switchMap } from "rxjs/operators";
 
-import { Property } from "src/app/shared/model/property.model";
+import { Property } from "src/app/data/property.model";
 import { PropertiesService } from "../../service/properties.service";
 import { MapboxService } from "src/app/mapbox/mapbox.service";
 import { PaginationService } from "../../../pagination/pagination.service";

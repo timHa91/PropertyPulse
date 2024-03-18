@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
-import { Property } from "../../shared/model/property.model";
+import { Property } from "../../data/property.model";
 import { Observable, Subject, of } from "rxjs";
-import { DataService } from "../../shared/service/data.service";
+import { DataService } from "../../data/data.service";
 import { tap, catchError } from "rxjs/operators";
 
 @Injectable({ providedIn: 'root' })
@@ -15,7 +15,7 @@ export class PropertiesService {
 
     fetchData(): Observable<Property[]> {
         this.onFetching$.next(true);
-        return this.dataService.getItems().pipe(
+        return this.dataService.getAllProperties().pipe(
             tap(fetchedItems => {
                 this.propertiesList = fetchedItems;
                 this.propertiesListHasChanged$.next(this.propertiesList.slice());
@@ -33,7 +33,7 @@ export class PropertiesService {
     }
 
     publishItem(newItem: Property) {
-        this.dataService.publishItem(newItem).subscribe({
+        this.dataService.publisProperty(newItem).subscribe({
             next: () => this.fetchData(),
             error: error => this.onError$.next(error)
         });
@@ -42,7 +42,7 @@ export class PropertiesService {
     deleteItem(itemId: string) {
         const itemIndex = this.propertiesList.findIndex(item => item.id === itemId);
         if (itemIndex !== -1) {
-            this.dataService.deleteItem(itemId).subscribe({
+            this.dataService.deleteProperty(itemId).subscribe({
                 next: () => {
                     this.propertiesList.splice(itemIndex, 1);
                     this.propertiesListHasChanged$.next(this.propertiesList.slice());
@@ -53,7 +53,7 @@ export class PropertiesService {
     }
 
     updateItem(item: Property) {
-        this.dataService.updateItem(item).subscribe({
+        this.dataService.updateProperty(item).subscribe({
             next: () => this.fetchData(),
             error: error => console.error('Error updating item:', error)
         });

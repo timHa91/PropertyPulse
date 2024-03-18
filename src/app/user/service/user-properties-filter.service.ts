@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Property } from "src/app/shared/model/property.model";
+import { Property } from "src/app/data/property.model";
 import { UserPropertiesFilter } from "../model/user-properties-filter.model";
 import { Subject } from "rxjs";
 

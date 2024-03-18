@@ -2,10 +2,10 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject, BehaviorSubject, of } from "rxjs";
 import { catchError, tap } from "rxjs/operators";
 
-import { Property } from "../../shared/model/property.model";
+import { Property } from "../../data/property.model";
 import { Category } from "../../shared/model/category.enum";
 import { UserPropertiesStatus } from "../model/user-properties-status.enum";
-import { DataService } from "../../shared/service/data.service";
+import { DataService } from "../../data/data.service";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -19,7 +19,7 @@ export class UserService {
     constructor(private dataService: DataService) {}
 
     loadData(): Observable<Property[]> {
-        return this.dataService.getUserItems().pipe(
+        return this.dataService.getUserProperties().pipe(
             tap(fetchedItems => {
                 this.userList = fetchedItems;
                 this.updatePropertiesList();
@@ -60,7 +60,7 @@ export class UserService {
     }
 
     addNewProperty(newItem: Property): void {
-        this.dataService.storeNewItem(newItem).subscribe({
+        this.dataService.storeNewProperty(newItem).subscribe({
             next: () => {
                 this.userList.push(newItem);
                 this.updatePropertiesList();
@@ -85,7 +85,7 @@ export class UserService {
     }
 
     updateItem(item: Property): void {
-        this.dataService.updateUserItem(item).subscribe({
+        this.dataService.updateUserProperty(item).subscribe({
             next: () => {
                 const index = this.userList.findIndex(listItem => listItem.id === item.id);
                 if (index !== -1) {
@@ -102,7 +102,7 @@ export class UserService {
     deleteItem(itemId: string): void {
         const index = this.userList.findIndex(item => item.id === itemId);
         if (index !== -1) {
-            this.dataService.deleteUserItem(itemId).subscribe({
+            this.dataService.deleteUserProperty(itemId).subscribe({
                 next: () => {
                     this.userList.splice(index, 1);
                     this.updatePropertiesList();

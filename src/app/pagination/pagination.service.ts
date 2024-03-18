@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
-import { Property } from "../shared/model/property.model";
+import { Property } from "../data/property.model";
 
 @Injectable({providedIn: 'root'})
 export class PaginationService {

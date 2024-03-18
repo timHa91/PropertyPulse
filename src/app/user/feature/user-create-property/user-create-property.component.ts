@@ -3,7 +3,7 @@ import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/fo
 import { UserService } from "../../service/user.service";
 import { UserPropertiesStatus } from "../../model/user-properties-status.enum";
 import { Category } from "src/app/shared/model/category.enum";
-import { Property } from "src/app/shared/model/property.model";
+import { Property } from "src/app/data/property.model";
 import { MapboxService } from "src/app/mapbox/mapbox.service";
 import { Observable, Subscription, throwError } from "rxjs";
 import { GeoJson } from "src/app/shared/model/geo.model";

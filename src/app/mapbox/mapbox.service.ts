@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as mapboxgl from 'mapbox-gl';
 import { environment } from 'src/environments/environment';
-import { Property } from '../shared/model/property.model';
+import { Property } from '../data/property.model';
 import { Observable, Subject, map } from 'rxjs';
 import { FeatureCollection } from '../shared/model/geo.model';
 

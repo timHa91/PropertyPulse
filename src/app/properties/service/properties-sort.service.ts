@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject, of } from "rxjs";
 import { map } from "rxjs/operators";
 import { PropertiesSortDescriptor, PropertiesSortDirection } from "../model/properties-sort-descriptor.model";
-import { Property } from "../../shared/model/property.model";
+import { Property } from "../../data/property.model";
 import { MapboxService } from "src/app/mapbox/mapbox.service";
 
 enum SortCategory {
