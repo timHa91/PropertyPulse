@@ -7,7 +7,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { ListingService } from "../listing/listing.service";
+import { UserService } from "../user/service/user.service";
 
 @Component({
     selector: 'app-menu',
@@ -30,7 +30,7 @@ export class MenuComponent implements OnInit, OnDestroy{
 
     constructor (private router: Router,
                  private authService: AuthService,
-                 private lsitingService: ListingService) {}
+                 private lsitingService: UserService) {}
 
     ngOnInit(): void {
         this.authSubscription = this.authService.user.subscribe( user => {
@@ -46,7 +46,7 @@ export class MenuComponent implements OnInit, OnDestroy{
         if (this.router.url === '/marketplace-listing') {
             this.lsitingService.startedEditing$.next(-1);
         }
-        this.router.navigate(['/marketplace-search'])
+        this.router.navigate(['/properties'])
     }
 
     goToSignUp() {
@@ -59,11 +59,11 @@ export class MenuComponent implements OnInit, OnDestroy{
 
     onLogout() {
         this.authService.logout();
-        this.router.navigate(['/marketplace-search'])
+        this.router.navigate(['/properties'])
     }
 
     get isOnSearchPage() {
-        return this.router.url === '/marketplace-search'
+        return this.router.url === '/properties'
     }
 
     ngOnDestroy(): void {

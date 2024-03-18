@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SearchRoutingComponent } from './search/search-routing.module';
-import { ListingRoutingComponent } from './listing/listing-routing-module';
+import { PropertiesRoutingModule } from './properties/routing/properties-routing.module';
+import { UserRoutingComponent } from './user/routing/user-routing-module';
 import { AuthComponent } from './auth/auth.component';
 import { authGuard } from './auth/auth.guard';
 
@@ -11,7 +11,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes), SearchRoutingComponent, ListingRoutingComponent],
+  imports: [RouterModule.forRoot(routes), PropertiesRoutingModule, UserRoutingComponent],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

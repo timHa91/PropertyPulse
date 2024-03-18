@@ -3,9 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SearchModule } from './search/search.module';
+import { PropertiesModule } from './properties/properties.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ListingModule } from './listing/listing.module';
+import { ListingModule } from './user/user.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 
@@ -16,7 +16,7 @@ import { AuthInterceptorService } from './auth/auth-interceptor.service';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    SearchModule,
+    PropertiesModule,
     ListingModule,
     BrowserAnimationsModule
   ],

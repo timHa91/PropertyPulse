@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as mapboxgl from 'mapbox-gl';
 import { environment } from 'src/environments/environment';
-import { RealEstateItem } from '../shared/real-estate-item.model';
+import { Property } from '../shared/model/property.model';
 import { Observable, Subject, map } from 'rxjs';
-import { FeatureCollection } from '../shared/geo.model';
+import { FeatureCollection } from '../shared/model/geo.model';
 
 @Injectable({
   providedIn: 'root'
@@ -41,7 +41,7 @@ removeAllMarkers() {
   }
 }
 
-placeAllMarkers(list: RealEstateItem[]) {
+placeAllMarkers(list: Property[]) {
   list.forEach( item => {
       this.setMarker(item.geometry.geometry.coordinates)
   });
@@ -72,7 +72,7 @@ private forwardGeocoder(searchText: string): Observable<[number, number]> {
   );
 }
   
-private getCenter(list: RealEstateItem[]): [number, number] {
+private getCenter(list: Property[]): [number, number] {
   let longSum = 0;
   let latSum = 0;
   let count = 0;
@@ -90,7 +90,7 @@ private getCenter(list: RealEstateItem[]): [number, number] {
     }
  }
 
-updateMapCenter(list: RealEstateItem[]) {
+updateMapCenter(list: Property[]) {
   if (this.map) {
     const newCenter = this.getCenter(list);
     this.map.setCenter(newCenter);

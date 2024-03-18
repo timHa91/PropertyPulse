@@ -1,0 +1,43 @@
+/* Backdrop */
+.backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 50;
+}
+
+/* Item Detail */
+.item-detail {
+    position: fixed;
+    top: 30vh;
+    left: 20vw;
+    width: 60vw;
+    padding: 16px;
+    z-index: 100;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    text-align: center;
+}
+
+/* Item Detail Images */
+.item-detail img {
+    max-width: 100%; /* Ensure images are responsive */
+    max-height: 80vh; /* Limit the height to 80% of viewport height */
+    margin-bottom: 16px; /* Add some space below images */
+}
+
+/* Description */
+.description {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px; /* Reduce padding for better alignment */
+    font-weight: 500;
+}
+
+/* Category */
+.category {
+    color: violet;
+}

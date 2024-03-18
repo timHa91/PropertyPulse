@@ -1,0 +1,11 @@
+<div class="properties-container">
+    <app-properties-filter-bar></app-properties-filter-bar>
+    <div class="properties-content">
+        <div class="properties-list-container">
+            <app-properties-list></app-properties-list>
+        </div>
+        <div *ngIf="!isSmallView" class="map-container">
+            <app-mapbox></app-mapbox>
+        </div>
+    </div>
+</div>

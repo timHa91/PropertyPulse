@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Subject } from "rxjs";
-import { RealEstateItem } from "../shared/real-estate-item.model";
+import { Property } from "../shared/model/property.model";
 
 @Injectable({providedIn: 'root'})
 export class PaginationService {
@@ -10,7 +10,7 @@ export class PaginationService {
     itemsPerPage = 3;
     onPaginationChanged$ = new Subject<void>();
 
-  setPaginationList(list: RealEstateItem[]): RealEstateItem[] {
+  setPaginationList(list: Property[]): Property[] {
     if(list.length <= 1) return list;
     let sliceStart = 0;
     let sliceEnd = 0;

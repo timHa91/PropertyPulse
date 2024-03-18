@@ -53,7 +53,7 @@ export class AuthComponent implements OnInit{
             authObs.subscribe({
                 next: response => {
                     this.isLoading = false;
-                    this.router.navigate(['/marketplace-search']);
+                    this.router.navigate(['/properties']);
             },
                 error: errorMsg => {
                     this.errorMessage = errorMsg;
@@ -70,7 +70,7 @@ export class AuthComponent implements OnInit{
 
     onCancelAuth() {
         this.resetForm();
-        this.router.navigate(['marketplace-search'])
+        this.router.navigate(['properties'])
     }
 
     private resetForm () {

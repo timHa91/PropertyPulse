@@ -1,0 +1,16 @@
+.mat-card.search-item {
+  max-height: 200px;
+}
+
+.propterties-item-header {
+  flex: 2;
+}
+
+.mat-card-content {
+  flex: 1;
+}
+
+.properties-item-image {
+  background-size: cover;
+  margin-right: 20px;
+}

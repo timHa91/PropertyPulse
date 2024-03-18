@@ -1,9 +1,0 @@
-<ng-container *ngIf="orginalList.length >= 0">
-    <app-listing-item 
-    [item]="result"
-    [index]="i"
-    *ngFor="let result of filteredList; index as i"></app-listing-item>
-</ng-container>
-<ng-container *ngIf="orginalList.length < 0">
-    <p>Create a new Item!</p>
-</ng-container>

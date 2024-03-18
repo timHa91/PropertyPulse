@@ -1,0 +1,17 @@
+<div class="listing-container">
+    <div class="listing-header">
+      <div class="left-bar">
+        <app-user-properties-filter-bar></app-user-properties-filter-bar>
+      </div>
+        <div class="right-bar">
+          <button class="creation-button" *ngIf="!showCreationForm" (click)="toogleShowCreationForm()" mat-raised-button color="primary">Create a New Listing</button>
+          <button *ngIf="showCreationForm" (click)="toogleShowCreationForm()" mat-raised-button color="primary">Hide Creation</button>
+          <app-menu></app-menu>
+      </div>
+  </div>
+  <hr>
+  <div class="listing-content">
+    <app-user-properties-list *ngIf="!isSmallView || !showCreationForm" class="list"></app-user-properties-list>
+    <app-user-create-property class="creation" *ngIf="showCreationForm"></app-user-create-property>
+  </div>
+</div>
