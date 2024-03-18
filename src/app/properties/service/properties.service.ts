@@ -33,7 +33,7 @@ export class PropertiesService {
     }
 
     publishItem(newItem: Property) {
-        this.dataService.publisProperty(newItem).subscribe({
+        this.dataService.publishProperty(newItem).subscribe({
             next: () => this.fetchData(),
             error: error => this.onError$.next(error)
         });

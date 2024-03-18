@@ -15,7 +15,7 @@ export class DataService {
 
     // Properties Module
 
-    publisProperty(property: Property): Observable<{name: string}> {
+    publishProperty(property: Property): Observable<{name: string}> {
         return this.authService.user.pipe(
             take(1),
             switchMap(user => {
