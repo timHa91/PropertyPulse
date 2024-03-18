@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Property } from "../model/property.model";
 import { Observable, catchError, map, switchMap, take, throwError } from "rxjs";
 import { environment } from "src/environments/environment";
-import { AuthService } from "../../auth/auth.service";
+import { AuthService } from "../../auth/service/auth.service";
 
 @Injectable({providedIn: 'root'})
 export class DataService {

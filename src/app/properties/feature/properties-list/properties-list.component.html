@@ -1,34 +1,28 @@
-<!-- List Header -->
 <div class="list-header">
     <app-properties-sort></app-properties-sort>
     <app-pagination [listSize]="filteredList.length"></app-pagination>
 </div>
 
-<!-- List Content -->
 <ng-container *ngIf="!isFetching && filteredList.length > 0">
     <app-properties-item
-        [item]="result"
+        [property]="result"
         *ngFor="let result of paginatedList; index as i"
         (triggerDetailView)="onDetailView($event)"
     ></app-properties-item>
 </ng-container>
 
-<!-- Detail View -->
 <app-properties-detail
     *ngIf="isDetailView"
     [item]="detailViewItem"
     (triggerCloseDetailView)="onCloseDetailView()"
 ></app-properties-detail>
 
-<!-- No Results Message -->
 <p *ngIf="!isFetching && filteredList.length < 1 && !errorMessage">
     There are no search results.
 </p>
 
-<!-- Loading Message -->
 <p *ngIf="isFetching && !errorMessage">Loading...</p>
 
-<!-- Error Message -->
 <div class="error" *ngIf="errorMessage">
     <h1>An Error Occurred!</h1>
     <p>{{ errorMessage }}</p>

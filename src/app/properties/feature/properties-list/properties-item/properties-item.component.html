@@ -1,18 +1,20 @@
 <mat-card class="propterties-item">
     <mat-card-header class="propterties-item-header">
         <div class="properties-item-image">
-            <img mat-card-lg-image [src]="item.image" alt="">
+            <img mat-card-lg-image [src]="property.image" alt="">
         </div>
         <div class="properties-item-title">
-            <mat-card-title>{{ item.address }}</mat-card-title>
-            <mat-card-subtitle>{{ item.description }}</mat-card-subtitle>
+            <mat-card-title>{{ property.address }}</mat-card-title>
+            <mat-card-subtitle>{{ property.description }}</mat-card-subtitle>
         </div>
     </mat-card-header>
-    <mat-card-content align="end">
-        <mat-card-actions align="end">
-            <button (click)="onDetailView()" mat-button>Detail</button>
-        </mat-card-actions>
-        <p>€ {{ item.price }}</p>
-        <p>{{ item.category }}</p>
-    </mat-card-content>
+    <div class="properties-content">
+        <mat-card-content align="end">
+            <mat-card-actions align="end">
+                <button (click)="onDetailView()" mat-button>Detail</button>
+            </mat-card-actions>
+            <p>€ {{ property.price }}</p>
+            <p>{{ property.category }}</p>
+        </mat-card-content>
+    </div>
 </mat-card>

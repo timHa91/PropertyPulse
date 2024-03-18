@@ -8,12 +8,11 @@ import { Property } from "src/app/shared/model/property.model";
 })
 export class PropertiesItemComponent {
 
-    @Input({required: true}) item!: Property;
+    @Input({required: true}) property!: Property;
     @Output() triggerDetailView = new EventEmitter<Property>();
 
-
-    onDetailView() {
-        this.triggerDetailView.emit(this.item);
+    onDetailView(): void {
+        this.triggerDetailView.emit(this.property);
     }
 
 }

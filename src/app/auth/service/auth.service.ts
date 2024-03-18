@@ -2,9 +2,9 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { BehaviorSubject, Observable, Subject, throwError } from "rxjs";
 import { catchError, tap } from "rxjs/operators";
-import { AuthRequest } from "./auth-request.model";
-import { AuthResponse } from "./auth-response.model";
-import { User } from "./user.model";
+import { AuthRequest } from "../model/auth-request.model";
+import { AuthResponse } from "../model/auth-response.model";
+import { User } from "../model/user.model";
 import { environment } from "src/environments/environment";
 
 @Injectable({ providedIn: 'root' })

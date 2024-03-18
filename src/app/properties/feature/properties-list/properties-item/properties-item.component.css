@@ -1,16 +1,27 @@
-.mat-card.search-item {
+.propterties-item {
+  display: flex;
+  flex-direction: row;
   max-height: 200px;
+  justify-content: center; 
 }
 
 .propterties-item-header {
   flex: 2;
 }
 
-.mat-card-content {
+.properties-content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  text-align: center;
 }
 
 .properties-item-image {
   background-size: cover;
   margin-right: 20px;
+}
+
+.properties-content p {
+  text-align: center; 
 }

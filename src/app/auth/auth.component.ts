@@ -1,11 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { AuthRequest } from "./auth-request.model";
-import { AuthService } from "./auth.service";
+import { AuthRequest } from "./model/auth-request.model";
+import { AuthService } from "./service/auth.service";
 import { Observable } from "rxjs";
-import { AuthResponse } from "./auth-response.model";
-import { HttpErrorResponse } from "@angular/common/http";
+import { AuthResponse } from "./model/auth-response.model";
 
 @Component({
   selector: 'app-auth',
@@ -24,20 +23,23 @@ export class AuthComponent implements OnInit {
               private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.initializeForm();
     this.handleQueryParams();
   }
 
-  initializeForm(): void {
+  initForm(): void {
     this.authForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required, Validators.minLength(6)])
+      password: new FormControl('', 
+      [
+        Validators.required, this.isLogin ? Validators.nullValidator : Validators.minLength(6)
+      ])
     });
   }
 
   handleQueryParams(): void {
     this.route.queryParams.subscribe(params => {
       this.isLogin = !!params['login'];
+      this.initForm();
     });
   }
 
@@ -62,28 +64,17 @@ export class AuthComponent implements OnInit {
           this.router.navigate(['/properties']);
         },
         error: error => {
-          this.handleError(error);
+          this.errorMessage = error;
+          this.isLoading = false;
         }
       });
     }
     this.resetForm();
   }  
 
-  handleError(error: Error): void {
-    if (error instanceof HttpErrorResponse) {
-      if (error.status === 401) {
-        this.errorMessage = 'Unauthorized. Please check your credentials.';
-      } else {
-        this.errorMessage = 'An unexpected error occurred. Please try again later.';
-      }
-    } else {
-      this.errorMessage = 'An unexpected error occurred. Please try again later.';
-    }
-    this.isLoading = false;
-  }
-
   onSwitchMode(): void {
     this.isLogin = !this.isLogin;
+    this.initForm();
   }
 
   onCancelAuth(): void {

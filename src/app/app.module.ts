@@ -7,7 +7,7 @@ import { PropertiesModule } from './properties/properties.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UserModule } from './user/user.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptorService } from './auth/auth-interceptor.service';
+import { AuthInterceptorService } from './auth/service/auth-interceptor.service';
 
 @NgModule({
   declarations: [

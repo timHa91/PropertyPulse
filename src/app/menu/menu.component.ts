@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { AuthService } from "../auth/auth.service";
+import { AuthService } from "../auth/service/auth.service";
 import { Subscription } from "rxjs";
 import { MatMenuModule } from "@angular/material/menu";
 import { BrowserModule } from "@angular/platform-browser";
