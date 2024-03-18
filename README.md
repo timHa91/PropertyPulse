@@ -1,7 +1,6 @@
 # Property Pulse
 
-Property Pulse is an Angular application that serves as a real estate marketplace. With our app, users can revolutionize the way they search for and invest in properties.
-
+Property Pulse is an Angular application that serves as a real estate marketplace.
 ## Key Features
 
 - **Mapbox Integration**: Utilizes Mapbox, a powerful library for interactive maps, to visualize property locations. To use Mapbox, you'll need your own access token, which you can store in the `environment.ts` file of your project ([Mapbox Access Tokens](https://docs.mapbox.com/help/getting-started/access-tokens/)).
