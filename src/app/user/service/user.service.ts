@@ -3,7 +3,7 @@ import { Observable, Subject, BehaviorSubject, of } from "rxjs";
 import { catchError, tap } from "rxjs/operators";
 
 import { Property } from "../../data/property.model";
-import { Category } from "../../shared/model/category.enum";
+import { Category } from "../../properties/model/category.enum";
 import { UserPropertiesStatus } from "../model/user-properties-status.enum";
 import { DataService } from "../../data/data.service";
 

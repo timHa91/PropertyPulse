@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/forms";
 import { UserService } from "../../service/user.service";
 import { UserPropertiesStatus } from "../../model/user-properties-status.enum";
-import { Category } from "src/app/shared/model/category.enum";
+import { Category } from "src/app/properties/model/category.enum";
 import { Property } from "src/app/data/property.model";
 import { MapboxService } from "src/app/mapbox/mapbox.service";
 import { Observable, Subscription, throwError } from "rxjs";
@@ -103,7 +103,7 @@ export class UserCreatePropertyComponent implements OnInit, OnDestroy {
         if (this.editMode && newAddress === this.toEditItem.address) {
             this.updateproperty(property);
             if(this.toEditItem.status === UserPropertiesStatus.PUBLISHED) {
-                this.propertiesService.updateItem(property);
+                this.propertiesService.updateProperty(property);
             }
         } else {
             this.createProperty(property);
@@ -129,7 +129,7 @@ export class UserCreatePropertyComponent implements OnInit, OnDestroy {
         if (this.editMode) {               
             this.userService.updateItem(property);
             if(this.toEditItem.status === UserPropertiesStatus.PUBLISHED) {
-                this.propertiesService.updateItem(property);
+                this.propertiesService.updateProperty(property);
             }
         } else {
             this.userService.addNewProperty(property);
@@ -210,7 +210,7 @@ export class UserCreatePropertyComponent implements OnInit, OnDestroy {
         if (this.toEditItem) {
             this.toEditItem.status = UserPropertiesStatus.PUBLISHED;
             this.userService.updateItem(this.toEditItem);
-            this.propertiesService.publishItem(this.toEditItem);
+            this.propertiesService.publishProperty(this.toEditItem);
         }
         this.resetForm();
     }
@@ -219,7 +219,7 @@ export class UserCreatePropertyComponent implements OnInit, OnDestroy {
         if(this.toEditItem.id) { 
             this.userService.deleteItem(this.toEditItem.id);
             if(this.toEditItem.status === UserPropertiesStatus.PUBLISHED) {
-                this.propertiesService.deleteItem(this.toEditItem.id);
+                this.propertiesService.deleteProperty(this.toEditItem.id);
             }
         }
         else throwError(() => 'Cant find the ID')

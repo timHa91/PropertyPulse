@@ -1,4 +1,4 @@
-import { Category } from "src/app/shared/model/category.enum";
+import { Category } from "src/app/properties/model/category.enum";
 import { UserPropertiesStatus } from "./user-properties-status.enum";
 
 export class UserPropertiesFilter {

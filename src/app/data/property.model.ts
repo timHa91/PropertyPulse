@@ -1,5 +1,5 @@
 import { UserPropertiesStatus } from "../user/model/user-properties-status.enum"
-import { Category } from "../shared/model/category.enum"
+import { Category } from "../properties/model/category.enum"
 import { GeoJson } from "../shared/model/geo.model"
 
 export class Property {

@@ -32,14 +32,14 @@ export class PropertiesService {
         return this.propertiesList.slice();
     }
 
-    publishItem(newItem: Property) {
+    publishProperty(newItem: Property) {
         this.dataService.publishProperty(newItem).subscribe({
             next: () => this.fetchData(),
             error: error => this.onError$.next(error)
         });
     }
 
-    deleteItem(itemId: string) {
+    deleteProperty(itemId: string) {
         const itemIndex = this.propertiesList.findIndex(item => item.id === itemId);
         if (itemIndex !== -1) {
             this.dataService.deleteProperty(itemId).subscribe({
@@ -52,7 +52,7 @@ export class PropertiesService {
         }
     }
 
-    updateItem(item: Property) {
+    updateProperty(item: Property) {
         this.dataService.updateProperty(item).subscribe({
             next: () => this.fetchData(),
             error: error => console.error('Error updating item:', error)

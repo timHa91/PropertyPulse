@@ -4,7 +4,7 @@ import { PropertiesFilter } from "../model/properties-filter.model";
 import { PropertiesFilterPriceRange } from "../model/properties-filter-price-range.model";
 import { Injectable } from "@angular/core";
 import { MapboxService } from "../../mapbox/mapbox.service";
-import { Category } from "../../shared/model/category.enum";
+import { Category } from "../model/category.enum";
 
 @Injectable({providedIn: 'root'})
 export class PropertiesFilterService {

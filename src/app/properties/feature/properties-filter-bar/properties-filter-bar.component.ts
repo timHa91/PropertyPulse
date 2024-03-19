@@ -8,9 +8,8 @@ import { PropertiesLocationSearchComponent } from "./properties-location-search/
 import { PropertiesPriceRangeFilterComponent } from "./properties-price-range-filter/properties-price-range-filter.component";
 import { PropertiesRadiusFilterComponent } from "./properties-radius-filter/properties-radius-filter.component";
 import { PropertiesFilterService } from "../../service/properties-filter.service";
-import { PropertiesFilterForm } from "../../model/properties-filter-form.model";
 import { PropertiesFilter } from "../../model/properties-filter.model";
-import { Category } from "src/app/shared/model/category.enum";
+import { transformToSearchCriteria } from "../../utils/transform-to-search-criteria";
 
 @Component({
     selector: 'app-properties-filter-bar',
@@ -55,7 +54,7 @@ export class PropertiesFilterBarComponent implements OnInit, AfterViewInit, OnDe
                 distinctUntilChanged()
             )
             .subscribe(searchForm => {
-                const convertedSearchForm = this.transformToSearchCriteria(searchForm);
+                const convertedSearchForm = transformToSearchCriteria(searchForm);
                 this.filterService.onFilterPropertiesList$.next(convertedSearchForm);
                 this.updateLocationFilter(convertedSearchForm);
             });
@@ -66,39 +65,6 @@ export class PropertiesFilterBarComponent implements OnInit, AfterViewInit, OnDe
         this.searchForm.addControl('location', this.locationSearch?.locationForm);
         this.searchForm.addControl('price', this.priceRange?.priceForm);
         this.searchForm.addControl('radius', this.radiusFilter?.radiusForm);
-    }
-
-    private transformToSearchCriteria(searchForm: PropertiesFilterForm): PropertiesFilter {
-        const searchCriteria = new PropertiesFilter();
-
-        if (searchForm.category) {
-            searchCriteria.category = this.transformToCategoryArray(searchForm.category);
-        }
-
-        if (searchForm.location) {
-            searchCriteria.location = searchForm.location.location;
-        }
-
-        if (searchForm.price) {
-            searchCriteria.minPrice = searchForm.price.minPrice;
-            searchCriteria.maxPrice = searchForm.price.maxPrice;
-        }
-
-        if (searchForm.radius) {
-            searchCriteria.radius = searchForm.radius.radius;
-        }
-        return searchCriteria;
-    }
-
-    private transformToCategoryArray(searchCategory: { [key: string]: boolean; }): Category[] {
-        const categoryArray: Category[] = [];
-        Object.entries(searchCategory).forEach(([key, value]) => {
-            if (value === true) {
-                const upperCaseKey = key.charAt(0).toUpperCase() + key.slice(1);
-                categoryArray.push(Category[upperCaseKey as keyof typeof Category]);
-            }
-        });
-        return categoryArray;
     }
 
     private updateLocationFilter(convertedSearchForm: PropertiesFilter): void {

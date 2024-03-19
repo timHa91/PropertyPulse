@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { UserService } from '../../service/user.service';
 import { UserPropertiesStatus } from '../../model/user-properties-status.enum';
-import { Category } from 'src/app/shared/model/category.enum';
+import { Category } from 'src/app/properties/model/category.enum';
 import { UserPropertiesFilterService } from '../../service/user-properties-filter.service';
 import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 

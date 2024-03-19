@@ -1,4 +1,4 @@
-import { Category } from "../../shared/model/category.enum";
+import { Category } from "./category.enum";
 
 export class PropertiesFilter {
     constructor(
