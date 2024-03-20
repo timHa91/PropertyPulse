@@ -16,8 +16,8 @@ export class PropertiesService {
     fetchData(): Observable<Property[]> {
         this.onFetching$.next(true);
         return this.dataService.getAllProperties().pipe(
-            tap(fetchedItems => {
-                this.propertiesList = fetchedItems;
+            tap(fetchedProperties => {
+                this.propertiesList = fetchedProperties;
                 this.propertiesListHasChanged$.next(this.propertiesList.slice());
                 this.onFetching$.next(false);
             }),
@@ -32,30 +32,30 @@ export class PropertiesService {
         return this.propertiesList.slice();
     }
 
-    publishProperty(newItem: Property) {
-        this.dataService.publishProperty(newItem).subscribe({
+    publishProperty(newProperty: Property) {
+        this.dataService.publishProperty(newProperty).subscribe({
             next: () => this.fetchData(),
             error: error => this.onError$.next(error)
         });
     }
 
-    deleteProperty(itemId: string) {
-        const itemIndex = this.propertiesList.findIndex(item => item.id === itemId);
+    deleteProperty(propertyId: string) {
+        const itemIndex = this.propertiesList.findIndex(property => property.id === propertyId);
         if (itemIndex !== -1) {
-            this.dataService.deleteProperty(itemId).subscribe({
+            this.dataService.deleteProperty(propertyId).subscribe({
                 next: () => {
                     this.propertiesList.splice(itemIndex, 1);
                     this.propertiesListHasChanged$.next(this.propertiesList.slice());
                 },
-                error: error => console.error('Error deleting item:', error)
+                error: error => console.error('Error deleting property:', error)
             });
         }
     }
 
-    updateProperty(item: Property) {
-        this.dataService.updateProperty(item).subscribe({
+    updateProperty(property: Property) {
+        this.dataService.updateProperty(property).subscribe({
             next: () => this.fetchData(),
-            error: error => console.error('Error updating item:', error)
+            error: error => console.error('Error updating property:', error)
         });
     }
 }

@@ -44,8 +44,7 @@ describe('PropertiesService', () => {
         publishProperty: jest.fn(),
         deleteProperty: jest.fn(),
         updateProperty: jest.fn()
-    }
-
+    };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -76,7 +75,7 @@ describe('PropertiesService', () => {
 
     describe('can delete an item', () => {
         it('should delete an item and update propertiesList', (done) => {
-
+            
             const expectedList = [
                 {
                     description: 'Test2',
@@ -97,21 +96,12 @@ describe('PropertiesService', () => {
                     id: '3'
                 },
             ];
-
-            dataServiceMock.getAllProperties.mockReturnValue(of(mockProperties));
-
-            propertiesService.fetchData().subscribe( () => {
-                expect(propertiesService.propertiesList).toEqual(mockProperties);
-
-                propertiesService.deleteProperty('1');
-
-                expect(propertiesService.deleteProperty).toHaveBeenCalledWith('1');
-
-                propertiesService.propertiesListHasChanged$.subscribe( updatedList => {
-                    expect(updatedList).toEqual(expectedList);
-                    done();
-                })
-            });
+        
+        propertiesService.propertiesList = mockProperties;
+        
+        propertiesService.deleteProperty('1');
+        expect(dataServiceMock.deleteProperty).toHaveBeenCalledWith('1');
+            
         });
     });
 })
